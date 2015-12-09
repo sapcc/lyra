@@ -12,3 +12,7 @@
 !/log/.keep
 /tmp
 .idea
+/bin
+!/bin/rails
+!/bin/rake
+!/bin/bundle
