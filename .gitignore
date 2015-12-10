@@ -16,3 +16,4 @@
 !/bin/rails
 !/bin/rake
 !/bin/bundle
+/spec/examples.txt

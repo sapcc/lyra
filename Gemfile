@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
+gem 'rails-api'
 
 # Database
 gem 'pg', '~> 0.15'
@@ -19,7 +20,7 @@ gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
-# bundle exec rake doc:rails generates the API under doc/api.
+# bundle exec rake doc:rails generates the API under doc/v1.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use ActiveModel has_secure_password
@@ -38,5 +39,10 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
+  # testing
+  gem "rspec-rails"
+  gem "factory_girl_rails"
+  gem "database_cleaner"
 end
 
