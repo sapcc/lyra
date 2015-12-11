@@ -8,6 +8,8 @@ class CreateAutomations < ActiveRecord::Migration
       t.string :git_url
       t.json :tags
 
+      # t.string :instances # should we save insntaces
+
       t.timestamps null: false # creates automatically created_at and updated_at
 
     # add Index???
