@@ -40,9 +40,17 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
+  # debugging
+  gem 'pry-rails'
+
   # testing
   gem "rspec-rails"
   gem "factory_girl_rails"
   gem "database_cleaner"
+  gem "capybara"
+  gem 'poltergeist' # Poltergeist is a headless web driver for capybara
+  gem 'phantomjs', :require => 'phantomjs/poltergeist' # required by poltergeist
+  gem 'capybara-screenshot'
+  gem "cucumber-rails", require: false
 end
 
