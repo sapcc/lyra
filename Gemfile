@@ -48,9 +48,5 @@ group :development, :test do
   gem "factory_girl_rails"
   gem "database_cleaner"
   gem "capybara"
-  gem 'poltergeist' # Poltergeist is a headless web driver for capybara
-  gem 'phantomjs', :require => 'phantomjs/poltergeist' # required by poltergeist
-  gem 'capybara-screenshot'
-  gem "cucumber-rails", require: false
 end
 

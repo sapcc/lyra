@@ -83,6 +83,3 @@ production:
   database: monsoon-automation_production
   username: monsoon-automation
   password: <%= ENV['MONSOON-AUTOMATION_DATABASE_PASSWORD'] %>
-
-cucumber:
-  <<: *test
