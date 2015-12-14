@@ -1,4 +1,6 @@
 class Api::V1::AutomationsController < ApplicationController
+  api_authentication_required rescope: false # do not rescope after authentication
+
   before_action :set_automation, only: [:show, :edit, :update, :destroy]
 
   # GET api/v1/automations.json

@@ -7,12 +7,17 @@ gem 'rails-api'
 # Database
 gem 'pg', '~> 0.15'
 
+# Openstack
+gem 'monsoon-fog', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-fog.git', :ref => '52f4b2'
+gem 'fog', git: 'git://gitHub.***REMOVED*** /monsoon/fog.git', branch:'master', :ref => 'b3c62'
+gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: :master
+gem 'net-ssh' # needed because fog do not required the gem but fog use it
+
 # Views and Assets
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
-
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -33,6 +38,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  # load .env
+  gem 'dotenv-rails'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   # Access an IRB console on exception pages or by using <%= console %> in views
