@@ -1,1 +1,1 @@
-json.merge! @automation.as_json
+json.merge!(@automation.attributes)

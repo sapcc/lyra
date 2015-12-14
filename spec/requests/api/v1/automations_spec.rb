@@ -49,18 +49,32 @@ RSpec.describe "Test Automations API" do
 
   describe 'show an automation' do
 
-    it 'return the automation' do
-      name = 'production'
-      script_atuomation = FactoryGirl.create(:script1, name: name, project_id: project)
+    context 'Script' do
 
-      # request
-      get "/api/v1/automations/#{name}", nil, {'X-Auth-Token' => token}
-      json = JSON.parse(response.body)
+      it 'return the automation' do
+        name = 'production'
+        script_atuomation = FactoryGirl.create(:script1, name: name, project_id: project)
 
-      # test for the 200 status-code
-      expect(response).to be_success
-      expect(json['id']).to be == script_atuomation.id
-      expect(json['name']).to be == script_atuomation.name
+        # request
+        get "/api/v1/automations/#{name}", nil, {'X-Auth-Token' => token}
+        json = JSON.parse(response.body)
+
+        # test for the 200 status-code
+        expect(response).to be_success
+        expect(json['id']).to be == script_atuomation.id
+        expect(json['name']).to be == script_atuomation.name
+        expect(json['type']).to be == script_atuomation.class.name
+        expect(json['project_id']).to be == project
+        expect(json['git_url']).to be == script_atuomation.git_url
+        expect(json['tags']).to be == script_atuomation.tags
+      end
+
+    end
+
+    context 'Chef' do
+
+      it "return an automation"
+
     end
 
     it 'returns a 404 if automation not found' do
@@ -86,12 +100,36 @@ RSpec.describe "Test Automations API" do
 
   describe 'create an automation' do
 
-    context 'script' do
+    describe 'script' do
 
-      it 'creates an automation'
+      it 'creates an automation in the right project' do
 
-      it 'returns validation errors' do
-        
+        # name already exists
+        post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+        json = JSON.parse(response.body)
+
+        expect(response.status).to eq(201)
+        expect(json['type']).to be == 'Script'
+      end
+
+      describe 'validations' do
+
+        it 'check name error show up' do
+          name = "production"
+          FactoryGirl.create(:script1, name: name, project_id: project)
+
+          # name already exists
+          post "/api/v1/automations/", {automation: {type: "Script", name: name, project_id: project, git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          json = JSON.parse(response.body)
+
+          expect(response.status).to eq(422)
+          expect(json['name']).not_to be_empty
+        end
+
+        it 'checks git url error shows up'
+
+        it 'checks tags are valid error shows up'
+
       end
 
     end

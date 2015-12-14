@@ -4,23 +4,41 @@ RSpec.describe Automation, type: :model do
 
   describe 'automation' do
 
-    it 'should not save automations with same name within the same project' do
-      FactoryGirl.create(:script1)
-      expect { FactoryGirl.create(:script1) }.to raise_error(ActiveRecord::RecordInvalid)
+    describe 'validation' do
 
-      FactoryGirl.create(:chef1)
-      expect { FactoryGirl.create(:chef1) }.to raise_error(ActiveRecord::RecordInvalid)
-    end
+      describe 'name' do
 
-    it 'should set name length max to 256' do
-      name_to_long = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec."
-      expect( FactoryGirl.build(:script1,  name: name_to_long) ).not_to be_valid
-      expect( FactoryGirl.build(:chef1,  name: name_to_long) ).not_to be_valid
-    end
+        it 'should not save automations with same name within the same project' do
+          FactoryGirl.create(:script1)
+          expect { FactoryGirl.create(:script1) }.to raise_error(ActiveRecord::RecordInvalid)
 
-    it 'should validate json for tags' do
-      expect( FactoryGirl.build(:script1, tags: "this is not json") ).not_to be_valid
-      expect( FactoryGirl.build(:script1, tags: "{'this_is_json':'well_formated'}".to_json ) ).to be_valid
+          FactoryGirl.create(:chef1)
+          expect { FactoryGirl.create(:chef1) }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+        it 'should set name length max to 256' do
+          name_to_long = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec."
+          expect( FactoryGirl.build(:script1,  name: name_to_long) ).not_to be_valid
+          expect( FactoryGirl.build(:chef1,  name: name_to_long) ).not_to be_valid
+        end
+
+        it "should set name length min to 3" do
+          name_to_short = "ab"
+          expect( FactoryGirl.build(:script1,  name: name_to_short) ).not_to be_valid
+          expect( FactoryGirl.build(:chef1,  name: name_to_short) ).not_to be_valid
+        end
+
+      end
+
+      describe 'tags' do
+
+        it 'should validate json for tags' do
+          expect( FactoryGirl.build(:script1, tags: "this is not json") ).not_to be_valid
+          expect( FactoryGirl.build(:script1, tags: "{'this_is_json':'well_formated'}".to_json ) ).to be_valid
+        end
+
+      end
+
     end
 
     describe 'all_from_project' do

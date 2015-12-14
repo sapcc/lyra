@@ -10,18 +10,16 @@ class Api::V1::AutomationsController < ApplicationController
 
   # GET /automations/1.json
   def show
-  rescue ActiveRecord::RecordNotFound
-
   end
 
   # POST api/v1/automations.json
   def create
-    @automation = Automation.new(automation_params)
+    @automation = Automation.new(automation_params.merge!(project_id: @project))
 
     if @automation.save
-      format.json { render :show, status: :created, location: @automation }
+      render :show, status: :created
     else
-      format.json { render json: @automation.errors, status: :unprocessable_entity }
+      render json: @automation.errors, status: :unprocessable_entity
     end
   end
 
@@ -48,7 +46,7 @@ class Api::V1::AutomationsController < ApplicationController
     end
 
     def automation_params
-      params.require(:automation).permit(:type, :name, :project_id, :git_url, :tags)
+      params.require(:automation).permit(:type, :name, :git_url, :tags)
     end
 
     def set_project
