@@ -6,6 +6,16 @@ class Automation < ActiveRecord::Base
 
   # validate project_id really exists??
 
+  def self.all_from_project(project)
+    self.where(project_id: project).reorder('updated_at DESC')
+  end
+
+  def self.all_from_project!(project)
+    automations = self.all_from_project(project)
+    raise ActiveRecord::RecordNotFound if automation.nil?
+    automations
+  end
+
   def self.find_by_name(name, project)
     self.where(name: name, project_id: project).first
   end

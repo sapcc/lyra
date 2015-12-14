@@ -12,7 +12,7 @@ class CreateAutomations < ActiveRecord::Migration
 
       t.timestamps null: false # creates automatically created_at and updated_at
 
-    # add Index???
+    # add Index??? Project
     end
   end
 end

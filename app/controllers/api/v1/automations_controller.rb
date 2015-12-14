@@ -1,15 +1,17 @@
 class Api::V1::AutomationsController < ApplicationController
   api_authentication_required rescope: false # do not rescope after authentication
-
+  before_action :set_project
   before_action :set_automation, only: [:show, :edit, :update, :destroy]
 
   # GET api/v1/automations.json
   def index
-    @automations = Automation.all
+    @automations = Automation.all_from_project(@project)
   end
 
   # GET /automations/1.json
   def show
+  rescue ActiveRecord::RecordNotFound
+
   end
 
   # POST api/v1/automations.json
@@ -41,11 +43,18 @@ class Api::V1::AutomationsController < ApplicationController
   private
 
     def set_automation
-      @automation = Automation.find(params[:id])
+      name = params[:id]
+      @automation = Automation.find_by_name!(name, @project)
     end
 
     def automation_params
       params.require(:automation).permit(:type, :name, :project_id, :git_url, :tags)
+    end
+
+    def set_project
+      @project = current_user.context['project']['id']
+    rescue
+      return @project = ""
     end
 
 end
