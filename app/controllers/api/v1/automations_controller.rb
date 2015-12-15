@@ -50,9 +50,10 @@ class Api::V1::AutomationsController < ApplicationController
     end
 
     def set_project
-      @project = current_user.context['project']['id']
-    rescue
-      return @project = ""
+      @project = current_user.project_id
+      if @project.nil? || @project.blank?
+        render :json  => "{'error':'Project id not found in token.'}".to_json, :status => :forbidden
+      end
     end
 
 end

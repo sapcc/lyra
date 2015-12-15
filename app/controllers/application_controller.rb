@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
   end
 
   def render_401(exception)
-    render :nothing  => true, :status => :unauthorized
+    render :json  => "{'error':'#{exception.message}'}".to_json, :status => :unauthorized
   end
 
 end

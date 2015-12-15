@@ -45,6 +45,17 @@ RSpec.describe "Test Automations API" do
       expect(response.status).to eq(401)
     end
 
+    it "return status forbiden if token has no project" do
+      # stub project id
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double("current_user", :project_id => nil))
+
+      # request
+      get '/api/v1/automations', nil, {'X-Auth-Token' => token}
+
+      # test for the 403 status-code
+      expect(response.status).to eq(403)
+    end
+
   end
 
   describe 'show an automation' do
@@ -96,6 +107,17 @@ RSpec.describe "Test Automations API" do
       expect(response.status).to eq(401)
     end
 
+    it "return status forbiden if taken has no project" do
+      # stub project id
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double("current_user", :project_id => nil))
+
+      # request
+      get "/api/v1/automations/some_automation", nil, {'X-Auth-Token' => token}
+
+      # test for the 403 status-code
+      expect(response.status).to eq(403)
+    end
+
   end
 
   describe 'create an automation' do
@@ -103,13 +125,13 @@ RSpec.describe "Test Automations API" do
     describe 'script' do
 
       it 'creates an automation in the right project' do
-
         # name already exists
         post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
         json = JSON.parse(response.body)
 
         expect(response.status).to eq(201)
         expect(json['type']).to be == 'Script'
+        expect(json['project_id']).to be == project
       end
 
       describe 'validations' do
@@ -126,20 +148,66 @@ RSpec.describe "Test Automations API" do
           expect(json['name']).not_to be_empty
         end
 
-        it 'checks git url error shows up'
+        it 'checks git url error shows up' do
+          # name already exists
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project, git_url: 'not_a_url', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          json = JSON.parse(response.body)
 
-        it 'checks tags are valid error shows up'
+          expect(response.status).to eq(422)
+          expect(json['git_url']).not_to be_empty
+        end
+
+        it 'checks tags are valid error shows up' do
+          # name already exists
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project, git_url: 'not_a_url', tags:'not_json'}}, {'X-Auth-Token' => token}
+          json = JSON.parse(response.body)
+
+          expect(response.status).to eq(422)
+          expect(json['tags']).not_to be_empty
+        end
 
       end
 
     end
 
-    it 'return an authorization error 401'
+    describe 'Chef' do
+
+      it 'creates an automation in the right project'
+
+      describe 'validations'
+
+    end
+
+    it 'return an authorization error 401' do
+      # name already exists
+      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => 'not_valid_token'}
+
+      expect(response.status).to eq(401)
+    end
+
+    it "return status forbiden if taken has no project" do
+      # stub project id
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double("current_user", :project_id => nil))
+
+      # name already exists
+      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+
+      # test for the 403 status-code
+      expect(response.status).to eq(403)
+    end
 
   end
 
-  describe 'update an automation'
+  describe 'update an automation' do
 
-  describe 'delete an automation'
+    it "return status forbiden if taken has no project"
+
+  end
+
+  describe 'delete an automation' do
+
+    it "return status forbiden if taken has no project"
+
+  end
 
 end

@@ -30,6 +30,8 @@ RSpec.describe Automation, type: :model do
 
       end
 
+      describe 'project_id'
+
       describe 'tags' do
 
         it 'should validate json for tags' do
