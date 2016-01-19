@@ -1,8 +1,5 @@
 MonsoonOpenstackAuth.configure do |auth|
   auth.connection_driver.api_endpoint = ENV['MONSOON_OPENSTACK_AUTH_API_ENDPOINT']
-  auth.connection_driver.api_userid   = ENV['MONSOON_OPENSTACK_AUTH_API_USERID']
-  auth.connection_driver.api_domain   = ENV['MONSOON_OPENSTACK_AUTH_API_DOMAIN']
-  auth.connection_driver.api_password = ENV['MONSOON_OPENSTACK_AUTH_API_PASSWORD']
   auth.connection_driver.ssl_verify_peer = false
 
   # optional, default=true
@@ -15,8 +12,6 @@ MonsoonOpenstackAuth.configure do |auth|
   auth.form_auth_allowed  = false
   # optional, default=false
   auth.access_key_auth_allowed = false
-
-  auth.default_region = 'europe'
 
   # optional, default=sap_default
   auth.default_domain_name = 'sap_default'

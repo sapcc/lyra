@@ -8,10 +8,7 @@ gem 'rails-api'
 gem 'pg', '~> 0.15'
 
 # Openstack
-gem 'monsoon-fog', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-fog.git', :ref => '52f4b2'
-gem 'fog', git: 'git://gitHub.***REMOVED*** /monsoon/fog.git', branch:'master', :ref => 'b3c62'
-gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: :master
-gem 'net-ssh' # needed because fog do not required the gem but fog use it
+gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: 'no-fog' 
 
 #JSON
 gem 'jbuilder', '~> 2.0'
