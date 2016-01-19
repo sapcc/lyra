@@ -2,14 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Test Automations API" do
 
-  let(:token) { ENV['AUTOMATION_AUTH_TOKEN'] }
-  let(:project) { ENV['AUTOMATION_AUTH_PROJECT'] }
-
-  describe "Get all automation " do
+  describe "Get all automation" do
 
     it 'return all automation' do
-      script_atuomation = FactoryGirl.create(:script1, project_id: project)
-      chef_atuomation = FactoryGirl.create(:chef1, project_id: project)
+      script_automation = FactoryGirl.create(:script1, project_id: project_id)
+      chef_automation = FactoryGirl.create(:chef1, project_id: project_id)
       FactoryGirl.create(:chef1, project_id: "some_other_project")
 
       # request
@@ -21,8 +18,8 @@ RSpec.describe "Test Automations API" do
 
       # check to make sure the right amount of messages are returned
       expect(json.length).to eq(2)
-      expect(json[0]['id']).to eq(chef_atuomation.id)
-      expect(json[1]['id']).to eq(script_atuomation.id)
+      expect(json[0]['id']).to eq(chef_automation.id)
+      expect(json[1]['id']).to eq(script_automation.id)
     end
 
     it 'return an empty array if no automations found' do
@@ -64,7 +61,7 @@ RSpec.describe "Test Automations API" do
 
       it 'return the automation' do
         name = 'production'
-        script_atuomation = FactoryGirl.create(:script1, name: name, project_id: project)
+        script_automation = FactoryGirl.create(:script1, name: name, project_id: project_id)
 
         # request
         get "/api/v1/automations/#{name}", nil, {'X-Auth-Token' => token}
@@ -72,12 +69,12 @@ RSpec.describe "Test Automations API" do
 
         # test for the 200 status-code
         expect(response).to be_success
-        expect(json['id']).to be == script_atuomation.id
-        expect(json['name']).to be == script_atuomation.name
-        expect(json['type']).to be == script_atuomation.class.name
-        expect(json['project_id']).to be == project
-        expect(json['git_url']).to be == script_atuomation.git_url
-        expect(json['tags']).to be == script_atuomation.tags
+        expect(json['id']).to be == script_automation.id
+        expect(json['name']).to be == script_automation.name
+        expect(json['type']).to be == script_automation.class.name
+        expect(json['project_id']).to be == project_id
+        expect(json['git_url']).to be == script_automation.git_url
+        expect(json['tags']).to be == script_automation.tags
       end
 
     end
@@ -98,7 +95,7 @@ RSpec.describe "Test Automations API" do
 
     it 'return an authorization error 401' do
       name = 'production'
-      script_atuomation = FactoryGirl.create(:script1, name: name, project_id: project)
+      script_automation = FactoryGirl.create(:script1, name: name, project_id: project_id)
 
       # request
       get "/api/v1/automations/#{name}"
@@ -131,17 +128,17 @@ RSpec.describe "Test Automations API" do
 
         expect(response.status).to eq(201)
         expect(json['type']).to be == 'Script'
-        expect(json['project_id']).to be == project
+        expect(json['project_id']).to be == project_id
       end
 
       describe 'validations' do
 
         it 'check name error show up' do
           name = "production"
-          FactoryGirl.create(:script1, name: name, project_id: project)
+          FactoryGirl.create(:script1, name: name, project_id: project_id)
 
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: name, project_id: project, git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: name, project_id: project_id, git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -150,7 +147,7 @@ RSpec.describe "Test Automations API" do
 
         it 'checks git url error shows up' do
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project, git_url: 'not_a_url', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, git_url: 'not_a_url', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -159,7 +156,7 @@ RSpec.describe "Test Automations API" do
 
         it 'checks tags are valid error shows up' do
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project, git_url: 'not_a_url', tags:'not_json'}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, git_url: 'not_a_url', tags:'not_json'}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)

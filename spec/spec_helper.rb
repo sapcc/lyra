@@ -14,9 +14,29 @@
 #
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
+
+require File.join(Gem.loaded_specs['monsoon-openstack-auth'].full_gem_path,'spec/support/authentication_stub')
+
+module AuthLetDeclarations
+  extend RSpec::SharedContext
+  let(:token) { AuthenticationStub.test_token["value"] }
+  let(:project_id) { AuthenticationStub.project_id } 
+end
+
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.include AuthLetDeclarations
+  config.before :each, type: :request do
+    self.class.include AuthenticationStub
+    stub_authentication
+    #allow_any_instance_of(MonsoonOpenstackAuth::ApiClient).to receive(:validate_token)
+    #    .and_return(nil)
+    #allow_any_instance_of(MonsoonOpenstackAuth::ApiClient).to receive(:validate_token).
+    #    with(AuthenticationStub.test_token["value"])
+    #    .and_return(AuthenticationStub.test_token)
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
