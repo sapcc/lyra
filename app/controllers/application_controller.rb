@@ -8,11 +8,11 @@ class ApplicationController < ActionController::API
   rescue_from "MonsoonOpenstackAuth::Authentication::NotAuthorized", with: :render_401
 
   def render_404(exception)
-    render :nothing  => true, :status => :not_found
+    render :json  => '{"error": "not found"}', :status => :not_found
   end
 
   def render_401(exception)
-    render :json  => "{'error':'#{exception.message}'}".to_json, :status => :unauthorized
+    render :json  => {error: exception.message}.to_json, :status => :unauthorized
   end
 
 end
