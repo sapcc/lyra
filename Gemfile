@@ -14,6 +14,8 @@ gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-
 gem 'jbuilder', '~> 2.0'
 
 group :development, :test do
+  #Avoid No route matches [GET] "/apple-touch-icon.png") errors 
+  gem 'quiet_safari'
   # load .env
   gem 'dotenv-rails'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
