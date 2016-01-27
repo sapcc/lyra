@@ -9,4 +9,7 @@ Rails.application.routes.draw do
 
   get :healthcheck, to: "health#show"
 
+  require "que/web"
+  mount Que::Web => "/que"
+
 end

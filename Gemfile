@@ -13,6 +13,10 @@ gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-
 #JSON
 gem 'jbuilder', '~> 2.0'
 
+#Asynchronous jobs via postgres
+gem 'que'
+gem 'que-web' #at some point this should be remove and started standalone
+
 group :development, :test do
   gem 'annotate'
   #Avoid No route matches [GET] "/apple-touch-icon.png") errors 
