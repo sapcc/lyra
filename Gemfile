@@ -14,6 +14,7 @@ gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-
 gem 'jbuilder', '~> 2.0'
 
 group :development, :test do
+  gem 'annotate'
   #Avoid No route matches [GET] "/apple-touch-icon.png") errors 
   gem 'quiet_safari'
   # load .env
