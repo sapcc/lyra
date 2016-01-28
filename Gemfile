@@ -18,6 +18,7 @@ gem 'que'
 gem 'que-web' #at some point this should be remove and started standalone
 
 group :development, :test do
+  # annotate models with database schema
   gem 'annotate'
   #Avoid No route matches [GET] "/apple-touch-icon.png") errors 
   gem 'quiet_safari'

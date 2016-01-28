@@ -19,3 +19,6 @@
 /spec/examples.txt
 /features/reports
 features/screenshots
+/build
+/image
+/postgres
