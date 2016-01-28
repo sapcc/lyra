@@ -102,9 +102,9 @@ RSpec.describe Automation, type: :model do
 
   describe 'script' do
 
-    it 'should validate the git url as url' do
-      expect( FactoryGirl.build(:script1, git_url: "not_valid_url") ).not_to be_valid
-      expect( FactoryGirl.build(:script1, git_url: "http://valid_url") ).to be_valid
+    it 'should validate the repository url' do
+      expect( FactoryGirl.build(:script1, repository: "not_valid_url") ).not_to be_valid
+      expect( FactoryGirl.build(:script1, repository: "http://valid_url") ).to be_valid
     end
 
   end

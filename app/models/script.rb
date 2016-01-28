@@ -2,19 +2,31 @@
 #
 # Table name: automations
 #
-#  id         :integer          not null, primary key
-#  type       :string
-#  name       :string
-#  project_id :string
-#  git_url    :string
-#  tags       :json
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                  :integer          not null, primary key
+#  type                :string           not null
+#  name                :string           not null
+#  project_id          :string
+#  repository          :string
+#  repository_revision :string
+#  tags                :jsonb
+#  timeout             :integer          default(3600), not null
+#  run_list            :string           is an Array
+#  chef_attributes     :jsonb
+#  log_level           :string
+#  path                :string
+#  arguments           :string           is an Array
+#  environment         :jsonb
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#
+# Indexes
+#
+#  index_automations_on_project_id  (project_id)
 #
 
 class Script < Automation
 
-  validates_presence_of :git_url
-  validates :git_url, format: { with: URI.regexp }
+  validates_presence_of :repository, :path
+  validates :repository, format: { with: URI.regexp }
 
 end

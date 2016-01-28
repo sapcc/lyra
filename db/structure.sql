@@ -39,11 +39,19 @@ SET default_with_oids = false;
 
 CREATE TABLE automations (
     id integer NOT NULL,
-    type character varying,
-    name character varying,
+    type character varying NOT NULL,
+    name character varying NOT NULL,
     project_id character varying,
-    git_url character varying,
-    tags json,
+    repository character varying,
+    repository_revision character varying,
+    tags jsonb,
+    timeout integer DEFAULT 3600 NOT NULL,
+    run_list character varying[],
+    chef_attributes jsonb,
+    log_level character varying,
+    path character varying,
+    arguments character varying[],
+    environment jsonb,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -147,6 +155,13 @@ ALTER TABLE ONLY automations
 
 ALTER TABLE ONLY que_jobs
     ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
+
+
+--
+-- Name: index_automations_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_automations_on_project_id ON automations USING btree (project_id);
 
 
 --

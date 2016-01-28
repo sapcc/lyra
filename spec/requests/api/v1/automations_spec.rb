@@ -73,7 +73,7 @@ RSpec.describe "Test Automations API" do
         expect(json['name']).to be == script_automation.name
         expect(json['type']).to be == script_automation.class.name
         expect(json['project_id']).to be == project_id
-        expect(json['git_url']).to be == script_automation.git_url
+        expect(json['repository']).to be == script_automation.repository
         expect(json['tags']).to be == script_automation.tags
       end
 
@@ -123,8 +123,9 @@ RSpec.describe "Test Automations API" do
 
       it 'creates an automation in the right project' do
         # name already exists
-        post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+        post "/api/v1/automations", {automation: {type: "Script", name: 'prod_auto', path: '/script', repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
         json = JSON.parse(response.body)
+        puts json
 
         expect(response.status).to eq(201)
         expect(json['type']).to be == 'Script'
@@ -138,7 +139,7 @@ RSpec.describe "Test Automations API" do
           FactoryGirl.create(:script1, name: name, project_id: project_id)
 
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: name, project_id: project_id, git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: name, project_id: project_id, repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -147,16 +148,16 @@ RSpec.describe "Test Automations API" do
 
         it 'checks git url error shows up' do
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, git_url: 'not_a_url', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, repository: 'not_a_url', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
-          expect(json['git_url']).not_to be_empty
+          expect(json['repository']).not_to be_empty
         end
 
         it 'checks tags are valid error shows up' do
           # name already exists
-          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, git_url: 'not_a_url', tags:'not_json'}}, {'X-Auth-Token' => token}
+          post "/api/v1/automations/", {automation: {type: "Script", name: 'test_automation', project_id: project_id, repository: 'not_a_url', tags:'not_json'}}, {'X-Auth-Token' => token}
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -177,7 +178,7 @@ RSpec.describe "Test Automations API" do
 
     it 'return an authorization error 401' do
       # name already exists
-      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => 'not_valid_token'}
+      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => 'not_valid_token'}
 
       expect(response.status).to eq(401)
     end
@@ -187,7 +188,7 @@ RSpec.describe "Test Automations API" do
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double("current_user", :project_id => nil))
 
       # name already exists
-      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', git_url: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
 
       # test for the 403 status-code
       expect(response.status).to eq(403)

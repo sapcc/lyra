@@ -46,7 +46,9 @@ class Api::V1::AutomationsController < ApplicationController
     end
 
     def automation_params
-      params.require(:automation).permit(:type, :name, :git_url, :tags)
+      #TODO: This needs fixing for sti, take a look at this:
+      # https://gist.github.com/danielpuglisi/3c679531672a76cb9a91#file-users_controller-rb
+      params.require(:automation).permit(:type, :name, :repository, :path, :tags)
     end
 
     def set_project
