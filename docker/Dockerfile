@@ -1,4 +1,4 @@
-FROM docker.***REMOVED***/monsoon/docker-passenger-rails-ruby22:1.17.5
+FROM docker.***REMOVED***/monsoon/docker-passenger-rails-ruby22:1.17.4
 
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
