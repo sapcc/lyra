@@ -7,7 +7,6 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
     apt-get install -y postgresql-client-9.5 && \
     rm -rf /var/lib/apt/lists/*
 
-ADD docker/environment.conf /etc/nginx/main.d/
 
 WORKDIR /home/app/webapp
 ADD Gemfile ./
@@ -15,4 +14,5 @@ ADD Gemfile.lock ./
 
 RUN bundle install --system
 
+ADD docker/environment.conf /etc/nginx/main.d/
 ADD . /home/app/webapp/
