@@ -8,7 +8,7 @@ gem 'rails-api'
 gem 'pg', '~> 0.15'
 
 # Openstack
-gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: 'no-fog' 
+gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: 'master' 
 
 #JSON
 gem 'jbuilder', '~> 2.0'
