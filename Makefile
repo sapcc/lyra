@@ -35,7 +35,7 @@ image: build
 #build: MTIMES_OPTS = -v $(shell pwd):/src
 build: 
 	#$(MTIMES)
-	$(DOCKER) pull $(REPOSITORY):latest || true
+	$(DOCKER) pull $(REPOSITORY):build.latest || true
 	$(DOCKER) build -f docker/Dockerfile -t $(IMAGE) --rm . 
 	echo $(IMAGE) > build
 
