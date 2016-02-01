@@ -6,8 +6,7 @@ DB_IMAGE    := docker.***REMOVED***/monsoon/postgres:9.4-alpine
 
 ### Executables
 DOCKER      = docker
-BUILD_IMAGE = docker.***REMOVED***/monsoon/docker-build:1.5.0 
-WAIT        = $(DOCKER) run --rm --link $(WAIT_ID):wait $(BUILD_IMAGE) wait $(WAIT_OPTS) || ($(DOCKER) logs $(WAIT_ID) && false)
+WAIT        = $(DOCKER) run --rm --link $(WAIT_ID):wait docker.***REMOVED***/monsoon-docker/wait || ($(DOCKER) logs $(WAIT_ID) && false)
 #MTIMES      = $(DOCKER) run --rm $(MTIMES_OPTS)         $(BUILD_IMAGE) reset_mtimes
 
 ### Variables that are expanded dynamically
