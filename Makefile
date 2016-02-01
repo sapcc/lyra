@@ -2,6 +2,7 @@ SHELL       := /bin/sh
 REPOSITORY  := docker.***REMOVED***/monsoon/monsoon-automation
 TAG         ?= latest
 IMAGE       := $(REPOSITORY):$(TAG)
+DB_IMAGE    := docker.***REMOVED***/monsoon/postgres:9.4-alpine
 
 ### Executables
 DOCKER      = docker
@@ -97,7 +98,7 @@ webapp: migrate-production
 postgres: WAIT_ID = $$(cat postgres)
 postgres: WAIT_OPTS =
 postgres: 
-	$(DOCKER) run -d postgres > postgres 
+	$(DOCKER) run -d $(DB_IMAGE) > postgres 
 	$(WAIT)
 
 # ----------------------------------------------------------------------------------
