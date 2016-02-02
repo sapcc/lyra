@@ -4,6 +4,10 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.5'
 gem 'rails-api'
 
+gem 'puma'
+# We are not using the railtie because it comes to late, we are seting the logger in produciton.rb
+gem 'rails_stdout_logging', require: 'rails_stdout_logging/rails'
+
 # Database
 gem 'pg', '~> 0.15'
 
