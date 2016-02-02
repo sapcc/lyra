@@ -37,7 +37,6 @@ build:
 	#$(MTIMES)
 	$(DOCKER) pull $(REPOSITORY):build.latest || true
 	$(DOCKER) build -f docker/Dockerfile -t $(IMAGE) --rm . 
-	echo $(IMAGE) > build
 
 # ----------------------------------------------------------------------------------
 #   precompile 
