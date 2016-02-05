@@ -107,7 +107,7 @@ postgres:
 #
 .PHONY: 
 migrate-%: postgres 
-	$(DOCKER) run --rm --link $(postgres):postgres -e RAILS_ENV=$* $(IMAGE) \
+	$(DOCKER) run --user=root --rm --link $(postgres):postgres -e RAILS_ENV=$* $(IMAGE) \
 		bundle exec rake db:setup db:migrate db:seed
 
 # ----------------------------------------------------------------------------------
