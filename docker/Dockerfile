@@ -14,9 +14,9 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/
 RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.0.0/dumb-init_1.0.0_amd64 && \
     chmod +x /usr/bin/dumb-init && \
     dumb-init -V
-ENTRYPOINT ["dumb-init", "-c", "--", "env.sh"]
 RUN useradd -ms /bin/bash app
 WORKDIR /home/app/webapp
+ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
 ADD Gemfile Gemfile.lock ./
 RUN bundle install --system
 ADD . /home/app/webapp/
