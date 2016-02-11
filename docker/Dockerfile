@@ -21,4 +21,4 @@ ADD Gemfile Gemfile.lock ./
 RUN bundle install --system
 ADD . /home/app/webapp/
 USER app
-CMD ["puma", "-C", "config/puma.rb"]
+CMD ["docker/start.sh"]
