@@ -2,7 +2,7 @@ FROM ruby:2.3-slim
 
 ENV http_proxy=http://proxy.***REMOVED***:8080 \
     https_proxy=http://proxy.***REMOVED***:8080 \
-    no_proxy=***REMOVED***,127.0.0.1,localhost
+    no_proxy=***REMOVED***.***REMOVED***,corp.sap,127.0.0.1,localhost
 
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
