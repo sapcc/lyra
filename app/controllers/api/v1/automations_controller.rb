@@ -46,9 +46,26 @@ class Api::V1::AutomationsController < ApplicationController
     end
 
     def automation_params
-      #TODO: This needs fixing for sti, take a look at this:
+      # TODO: This needs fixing for sti, take a look at this:
       # https://gist.github.com/danielpuglisi/3c679531672a76cb9a91#file-users_controller-rb
-      params.require(:automation).permit(:type, :name, :repository, :path, :tags)
+      # TODO: Issue: strong parameters allow hashes with unknown keys to be permitted?
+      # https://github.com/rails/rails/issues/9454
+
+      # global params
+      permited_params = params.require(:automation).permit(:type, :name, :repository, :repository_revision, :timeout)
+      permited_params.merge!( {'tags' => params[:automation][:tags]} ) unless params.fetch('automation', {}).fetch('tags', nil).nil?
+      # specific params sti
+      if params.fetch('automation', {}).fetch('type', '').downcase == 'chef'
+        permited_params.merge!( params.require(:automation).permit(:log_level) )
+        permited_params.merge!( {'chef_attributes' => params[:automation][:chef_attributes]} ) unless params.fetch('automation', {}).fetch('chef_attributes', nil).nil?
+        permited_params.merge!( {'run_list' => params[:automation][:run_list]} ) unless params.fetch('automation', {}).fetch('run_list', nil).nil?
+      elsif params.fetch('automation', {}).fetch('type', '').downcase == 'script'
+        permited_params.merge!( params.require(:automation).permit(:path) )
+        permited_params.merge!( {environment: params[:automation][:environment]} ) unless params.fetch('automation', {}).fetch('environment', nil).nil?
+        permited_params.merge!( {arguments: params[:automation][:arguments]} ) unless params.fetch('automation', {}).fetch('arguments', nil).nil?
+      end
+
+      return permited_params
     end
 
     def set_project
