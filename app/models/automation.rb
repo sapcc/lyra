@@ -52,4 +52,9 @@ class Automation < ActiveRecord::Base
     automation
   end
 
+  # https://github.com/rails/rails/issues/3508#issuecomment-29858772
+  def serializable_hash(options=nil)
+    super.merge "type" => type
+  end
+
 end
