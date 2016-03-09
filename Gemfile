@@ -5,7 +5,7 @@ gem 'rails', '4.2.5'
 gem 'rails-api'
 
 gem 'puma'
-# We are not using the railtie because it comes to late, we are seting the logger in produciton.rb
+# We are not using the railtie because it comes to late, we are setting the logger in production.rb
 gem 'rails_stdout_logging', require: 'rails_stdout_logging/rails'
 
 # Database
