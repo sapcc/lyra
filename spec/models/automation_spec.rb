@@ -34,10 +34,10 @@ RSpec.describe Automation, type: :model do
 
       describe 'tags' do
 
-        it 'should validate json for tags' do
-          expect( FactoryGirl.build(:script1, tags: "this is not json") ).not_to be_valid
-          expect( FactoryGirl.build(:script1, tags: "{'this_is_json':'well_formated'}".to_json ) ).to be_valid
-        end
+        # it 'should validate json for tags' do
+        #   expect( FactoryGirl.build(:script1, tags: "this is not json") ).not_to be_valid
+        #   expect( FactoryGirl.build(:script1, tags: "{'this_is_json':'well_formated'}".to_json ) ).to be_valid
+        # end
 
       end
 

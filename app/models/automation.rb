@@ -26,7 +26,7 @@
 
 class Automation < ActiveRecord::Base
 
-  validates_presence_of :type, :name, :project_id, :tags
+  validates_presence_of :type, :name, :project_id
   validates_uniqueness_of :name, scope: :project_id
   validates_length_of :name, minimum: 3, maximum: 256
 

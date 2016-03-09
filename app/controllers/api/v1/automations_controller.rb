@@ -19,7 +19,8 @@ class Api::V1::AutomationsController < ApplicationController
     if @automation.save
       render :show, status: :created
     else
-      render json: @automation.errors, status: :unprocessable_entity
+      Rails.logger.error @automation.errors.inspect
+      render json: {errors: @automation.errors}, status: :unprocessable_entity
     end
   end
 
@@ -28,7 +29,8 @@ class Api::V1::AutomationsController < ApplicationController
     if @automation.update(automation_params)
       render :show, status: :ok, location: @automation
     else
-      render json: @automation.errors, status: :unprocessable_entity
+      Rails.logger.error @automation.errors.inspect
+      render json: {errors: @automation.errors}, status: :unprocessable_entity
     end
   end
 
@@ -52,17 +54,17 @@ class Api::V1::AutomationsController < ApplicationController
       # https://github.com/rails/rails/issues/9454
 
       # global params
-      permited_params = params.require(:automation).permit(:type, :name, :repository, :repository_revision, :timeout)
-      permited_params.merge!( {'tags' => params[:automation][:tags]} ) unless params.fetch('automation', {}).fetch('tags', nil).nil?
+      permited_params = params.permit(:type, :name, :repository, :repository_revision, :timeout)
+      permited_params.merge!( {'tags' => params[:tags]} ) unless params.fetch('tags', nil).nil?
       # specific params sti
-      if params.fetch('automation', {}).fetch('type', '').downcase == 'chef'
-        permited_params.merge!( params.require(:automation).permit(:log_level) )
-        permited_params.merge!( {'chef_attributes' => params[:automation][:chef_attributes]} ) unless params.fetch('automation', {}).fetch('chef_attributes', nil).nil?
-        permited_params.merge!( {'run_list' => params[:automation][:run_list]} ) unless params.fetch('automation', {}).fetch('run_list', nil).nil?
-      elsif params.fetch('automation', {}).fetch('type', '').downcase == 'script'
-        permited_params.merge!( params.require(:automation).permit(:path) )
-        permited_params.merge!( {environment: params[:automation][:environment]} ) unless params.fetch('automation', {}).fetch('environment', nil).nil?
-        permited_params.merge!( {arguments: params[:automation][:arguments]} ) unless params.fetch('automation', {}).fetch('arguments', nil).nil?
+      if params.fetch('type', '').downcase == 'chef'
+        permited_params.merge!( params.permit(:log_level) )
+        permited_params.merge!( {'chef_attributes' => params[:chef_attributes]} ) unless params.fetch('chef_attributes', nil).nil?
+        permited_params.merge!( {'run_list' => params[:run_list]} ) unless params.fetch('run_list', nil).nil?
+      elsif params.fetch('type', '').downcase == 'script'
+        permited_params.merge!( params.permit(:path) )
+        permited_params.merge!( {environment: params[:environment]} ) unless params.fetch('environment', nil).nil?
+        permited_params.merge!( {arguments: params[:arguments]} ) unless params.fetch('arguments', nil).nil?
       end
 
       return permited_params
