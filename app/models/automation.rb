@@ -29,6 +29,7 @@ class Automation < ActiveRecord::Base
   validates_presence_of :type, :name, :project_id
   validates_uniqueness_of :name, scope: :project_id
   validates_length_of :name, minimum: 3, maximum: 256
+  validates :tags, json: true
 
   # validate project_id really exists??
 
@@ -38,8 +39,18 @@ class Automation < ActiveRecord::Base
 
   def self.all_from_project!(project)
     automations = self.all_from_project(project)
-    raise ActiveRecord::RecordNotFound if automation.nil?
+    raise ActiveRecord::RecordNotFound if automations.nil?
     automations
+  end
+
+  def self.find_by_id(id, project)
+    self.where(id: id, project_id: project).first
+  end
+
+  def self.find_by_id!(id, project)
+    automation = self.where(id: id, project_id: project).first
+    raise ActiveRecord::RecordNotFound if automation.nil?
+    automation
   end
 
   def self.find_by_name(name, project)

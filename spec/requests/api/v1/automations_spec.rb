@@ -60,11 +60,10 @@ RSpec.describe "Test Automations API" do
     context 'Script' do
 
       it 'return the automation' do
-        name = 'production'
-        script_automation = FactoryGirl.create(:script1, name: name, project_id: project_id)
+        script_automation = FactoryGirl.create(:script1, name: 'production', project_id: project_id)
 
         # request
-        get "/api/v1/automations/#{name}", nil, {'X-Auth-Token' => token}
+        get "/api/v1/automations/#{script_automation.id}", nil, {'X-Auth-Token' => token}
         json = JSON.parse(response.body)
 
         # test for the 200 status-code
@@ -74,7 +73,7 @@ RSpec.describe "Test Automations API" do
         expect(json['type']).to be == script_automation.class.name
         expect(json['project_id']).to be == project_id
         expect(json['repository']).to be == script_automation.repository
-        expect(json['tags']).to be == script_automation.tags
+        expect(json['tags'].to_json).to be == script_automation.tags
       end
 
     end

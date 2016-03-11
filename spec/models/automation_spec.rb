@@ -28,16 +28,34 @@ RSpec.describe Automation, type: :model do
           expect( FactoryGirl.build(:chef1,  name: name_to_short) ).not_to be_valid
         end
 
+        it "should be present" do
+          expect( FactoryGirl.build(:script1,  name: nil) ).not_to be_valid
+        end
+
       end
 
-      describe 'project_id'
+      describe 'type' do
+
+        it "should be present" do
+          expect( FactoryGirl.build(:script1,  type: nil) ).not_to be_valid
+        end
+
+      end
+
+      describe 'project_id' do
+
+        it "should be present" do
+          expect( FactoryGirl.build(:script1,  project_id: nil) ).not_to be_valid
+        end
+
+      end
 
       describe 'tags' do
 
-        # it 'should validate json for tags' do
-        #   expect( FactoryGirl.build(:script1, tags: "this is not json") ).not_to be_valid
-        #   expect( FactoryGirl.build(:script1, tags: "{'this_is_json':'well_formated'}".to_json ) ).to be_valid
-        # end
+        it 'should validate json' do
+          expect( FactoryGirl.build(:script1, tags: 'no_valid_json'.to_json) ).not_to be_valid
+          expect( FactoryGirl.build(:script1, tags: '{"this_is_json":"well_formated"}'.to_json ) ).to be_valid
+        end
 
       end
 
@@ -60,6 +78,42 @@ RSpec.describe Automation, type: :model do
         automations = Automation.all_from_project("non_existing_group")
         expect(automations.count()).to be == 0
       end
+
+    end
+
+    describe 'find by id' do
+
+      it "success" do
+        script_automation = FactoryGirl.create(:script1)
+        found = Automation.find_by_id script_automation.id, script_automation.project_id
+        expect(script_automation.id).to be == found.id
+
+        chef_automation = FactoryGirl.create(:chef1)
+        found = Automation.find_by_id chef_automation.id, chef_automation.project_id
+        expect(chef_automation.id).to be == found.id
+      end
+
+      describe 'fail' do
+
+        context 'failing silent' do
+
+          it 'should return nil if not found' do
+            found = Automation.find_by_id 'non_existing_id', 'non_exisiting_project'
+            expect(found).to be == nil
+          end
+
+        end
+
+        context 'throwing exceptions' do
+
+          it "should raise an exception" do
+            expect {  Automation.find_by_id! 'non_existing_id', 'non_exisiting_project' }.to raise_exception(ActiveRecord::RecordNotFound)
+          end
+
+        end
+
+      end
+
 
     end
 
@@ -95,6 +149,22 @@ RSpec.describe Automation, type: :model do
         end
 
       end
+
+    end
+
+    describe 'type' do
+
+      # it "should return the attribute" do
+      #   script_automation = FactoryGirl.create(:script1)
+      #   founds = Automation.all_from_project script_automation.project_id
+      #   expect( founds.first.type).to be == 'Script'
+      #
+      #   binding.pry
+      #
+      #   chef_automation = FactoryGirl.create(:chef1)
+      #   found = Automation.find_by_id chef_automation.id, chef_automation.project_id
+      #   expect(found.type).to be == 'Chef'
+      # end
 
     end
 

@@ -43,8 +43,7 @@ class Api::V1::AutomationsController < ApplicationController
   private
 
     def set_automation
-      name = params[:id]
-      @automation = Automation.find_by_name!(name, @project)
+      @automation = Automation.find_by_id!(params[:id], @project)
     end
 
     def automation_params
@@ -53,17 +52,19 @@ class Api::V1::AutomationsController < ApplicationController
       # TODO: Issue: strong parameters allow hashes with unknown keys to be permitted?
       # https://github.com/rails/rails/issues/9454
 
+      # JSON attributes tags, chef_attributes and environment should be converted to JSON to be able to make a validation in the model.
+
       # global params
       permited_params = params.permit(:type, :name, :repository, :repository_revision, :timeout)
-      permited_params.merge!( {'tags' => params[:tags]} ) unless params.fetch('tags', nil).nil?
+      permited_params.merge!( {'tags' => params[:tags].to_json} ) unless params.fetch('tags', nil).nil?
       # specific params sti
       if params.fetch('type', '').downcase == 'chef'
         permited_params.merge!( params.permit(:log_level) )
-        permited_params.merge!( {'chef_attributes' => params[:chef_attributes]} ) unless params.fetch('chef_attributes', nil).nil?
+        permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} ) unless params.fetch('chef_attributes', nil).nil?
         permited_params.merge!( {'run_list' => params[:run_list]} ) unless params.fetch('run_list', nil).nil?
       elsif params.fetch('type', '').downcase == 'script'
         permited_params.merge!( params.permit(:path) )
-        permited_params.merge!( {environment: params[:environment]} ) unless params.fetch('environment', nil).nil?
+        permited_params.merge!( {environment: params[:environment].to_json} ) unless params.fetch('environment', nil).nil?
         permited_params.merge!( {arguments: params[:arguments]} ) unless params.fetch('arguments', nil).nil?
       end
 

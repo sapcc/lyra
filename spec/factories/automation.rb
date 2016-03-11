@@ -7,7 +7,7 @@ FactoryGirl.define do
     project_id "some_project_id"
     repository "http://some_git_url.git"
     path "/some_script"
-    tags { { pool: "red" }.to_json }
+    tags '{"pool":"red"}'.to_json
   end
 
   # Chef
@@ -17,7 +17,7 @@ FactoryGirl.define do
     project_id "some_project_id"
     repository "http://some_git_url.git"
     run_list ["recipe[cookbook]", "role[a-role]"]
-    tags { { pool: "red" }.to_json }
+    tags '{"pool":"red"}'.to_json
   end
 
 end
