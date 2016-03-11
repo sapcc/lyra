@@ -56,15 +56,15 @@ class Api::V1::AutomationsController < ApplicationController
 
       # global params
       permited_params = params.permit(:type, :name, :repository, :repository_revision, :timeout)
-      permited_params.merge!( {'tags' => params[:tags].to_json} ) unless params.fetch('tags', nil).nil?
+      params['tags'].blank? ? permited_params.merge!( {'tags' => nil} ) : permited_params.merge!( {'tags' => params[:tags].to_json} )
       # specific params sti
       if params.fetch('type', '').downcase == 'chef'
         permited_params.merge!( params.permit(:log_level) )
-        permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} ) unless params.fetch('chef_attributes', nil).nil?
+        params['chef_attributes'].blank? ? permited_params.merge!( {'chef_attributes' => nil} ) : permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} )
         permited_params.merge!( {'run_list' => params[:run_list]} ) unless params.fetch('run_list', nil).nil?
       elsif params.fetch('type', '').downcase == 'script'
         permited_params.merge!( params.permit(:path) )
-        permited_params.merge!( {environment: params[:environment].to_json} ) unless params.fetch('environment', nil).nil?
+        params['environment'].blank? ? permited_params.merge!( {'environment' => nil} ) : permited_params.merge!( {'environment' => params[:environment].to_json} )
         permited_params.merge!( {arguments: params[:arguments]} ) unless params.fetch('arguments', nil).nil?
       end
 

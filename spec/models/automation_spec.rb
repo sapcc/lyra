@@ -57,6 +57,8 @@ RSpec.describe Automation, type: :model do
           expect( FactoryGirl.build(:script1, tags: '{"this_is_json":"well_formated"}'.to_json ) ).to be_valid
         end
 
+        it "should set the tags attribut to nil if an empty string is being set"
+
       end
 
     end
