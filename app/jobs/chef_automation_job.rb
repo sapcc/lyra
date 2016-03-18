@@ -28,11 +28,11 @@ class ChefAutomationJob < ActiveJob::Base
     @run.log "Selecting nodes with selector #{selector}"
     selected_agents = list_agents(selector)
     raise "No nodes selected by filter" if selected_agents.empty?
-    @run.log "Selected nodes:" + selected_agents.map {|a| "#{a.identity} #{a.facts["hostname"]}"}.join("\n")
+    @run.log "Selected nodes:" + selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
 
     offline_agents = selected_agents.find_all { |a|!a.facts["online"] }
     if offline_agents.present?
-      @run.log "The following nodes are not online:\n" + offline_agents.map {|a| "#{a.identity} #{a.facts["hostname"]}"}.join("\n")
+      @run.log "The following nodes are not online:\n" + offline_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
       raise "Agent(s) are unavailable"
     end
 
@@ -80,13 +80,13 @@ class ChefAutomationJob < ActiveJob::Base
     jids = agents.find_all {|a| a.facts["agents"]["chef"] == "disabled" }.map do | agent |
       #TODO: handle individual errors 
       jid = arc.execute_job!(current_user.token, {
-        to: agent.identity,
+        to: agent.agent_id,
         timeout: 600,
         agent: 'chef',
         action: 'enable',
         payload: {chef_version: chef_version}.to_json
       })
-      @run.log "Enabling chef on node #{agent.identity}/#{agent.facts["hostname"]} (job: #{jid})"
+      @run.log "Enabling chef on node #{agent.agent_id}/#{agent.facts["hostname"]} (job: #{jid})"
       jid
     end
     failed = false
@@ -115,7 +115,7 @@ class ChefAutomationJob < ActiveJob::Base
     agents.map do |agent|
       #TODO: handle individual errors
       arc.execute_job!(current_user.token, {
-        to: agent.identity,
+        to: agent.agent_id,
         timeout: automation.timeout,
         agent: 'chef',
         action: 'provision',
