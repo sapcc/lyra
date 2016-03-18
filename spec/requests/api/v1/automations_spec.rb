@@ -5,9 +5,9 @@ RSpec.describe "Test Automations API" do
   describe "Get all automation" do
 
     it 'return all automation' do
-      script_automation = FactoryGirl.create(:script1, project_id: project_id)
-      chef_automation = FactoryGirl.create(:chef1, project_id: project_id)
-      FactoryGirl.create(:chef1, project_id: "some_other_project")
+      script_automation = FactoryGirl.create(:script, project_id: project_id)
+      chef_automation = FactoryGirl.create(:chef, project_id: project_id)
+      FactoryGirl.create(:chef, project_id: "some_other_project")
 
       # request
       get '/api/v1/automations', nil, {'X-Auth-Token' => token}
@@ -60,7 +60,7 @@ RSpec.describe "Test Automations API" do
     context 'Script' do
 
       it 'return the automation' do
-        script_automation = FactoryGirl.create(:script1, name: 'production', project_id: project_id)
+        script_automation = FactoryGirl.create(:script, name: 'production', project_id: project_id)
 
         # request
         get "/api/v1/automations/#{script_automation.id}", nil, {'X-Auth-Token' => token}
@@ -94,7 +94,7 @@ RSpec.describe "Test Automations API" do
 
     it 'return an authorization error 401' do
       name = 'production'
-      script_automation = FactoryGirl.create(:script1, name: name, project_id: project_id)
+      script_automation = FactoryGirl.create(:script, name: name, project_id: project_id)
 
       # request
       get "/api/v1/automations/#{name}"
@@ -134,7 +134,7 @@ RSpec.describe "Test Automations API" do
 
         it 'check name error show up' do
           name = "production"
-          FactoryGirl.create(:script1, name: name, project_id: project_id)
+          FactoryGirl.create(:script, name: name, project_id: project_id)
 
           # name already exists
           post "/api/v1/automations/", {type: "Script", name: name, project_id: project_id, path: 'script_path', repository: 'https://miau', tags:'{}'.to_json}, {'X-Auth-Token' => token}
