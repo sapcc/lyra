@@ -15,7 +15,7 @@ class ChefAutomationJob < ActiveJob::Base
   end
 
   rescue_from(StandardError) do |exception|
-    @run.log exception.message
+    @run.log exception.message + ":\n" + exception.backtrace.join("\n")
     @run.update(state: 'failed')
   end
 
