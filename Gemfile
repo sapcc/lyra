@@ -21,6 +21,14 @@ gem 'jbuilder', '~> 2.0'
 gem 'que'
 gem 'que-web' #at some point this should be remove and started standalone
 
+source 'https://gems.***REMOVED***' do
+  gem 'ruby-arc-client'
+  gem 'gitmirror'
+end
+gem 'posix-spawn'
+
+gem 'swift_client'
+
 group :development, :test do
   # annotate models with database schema
   gem 'annotate'

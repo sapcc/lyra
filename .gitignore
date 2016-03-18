@@ -22,4 +22,5 @@ features/screenshots
 /build
 /image
 /postgres
+/spec/tmp
 /.env

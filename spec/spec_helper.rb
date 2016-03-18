@@ -27,15 +27,15 @@ end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include AuthLetDeclarations
-  config.before :each, type: :request do
+  config.before :each do
     self.class.include AuthenticationStub
     stub_authentication
-    #allow_any_instance_of(MonsoonOpenstackAuth::ApiClient).to receive(:validate_token)
-    #    .and_return(nil)
-    #allow_any_instance_of(MonsoonOpenstackAuth::ApiClient).to receive(:validate_token).
-    #    with(AuthenticationStub.test_token["value"])
-    #    .and_return(AuthenticationStub.test_token)
   end
+
+  require_relative 'support/git_helpers'
+  config.include(Gitmirror::RSpec::GitHelpers)
+  require_relative 'support/path_helpers'
+  config.include(Gitmirror::RSpec::PathHelpers)
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

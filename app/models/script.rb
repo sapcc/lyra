@@ -18,6 +18,7 @@
 #  environment         :jsonb
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  chef_version        :string
 #
 # Indexes
 #

@@ -18,6 +18,7 @@
 #  environment         :jsonb
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  chef_version        :string
 #
 # Indexes
 #
@@ -30,6 +31,8 @@ class Automation < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :project_id
   validates_length_of :name, minimum: 3, maximum: 256
   validates :tags, json: true
+
+  has_many :runs
 
   # validate project_id really exists??
 

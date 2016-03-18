@@ -53,7 +53,8 @@ CREATE TABLE automations (
     arguments character varying[],
     environment jsonb,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    chef_version character varying
 );
 
 
@@ -119,6 +120,46 @@ ALTER SEQUENCE que_jobs_job_id_seq OWNED BY que_jobs.job_id;
 
 
 --
+-- Name: runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE runs (
+    id integer NOT NULL,
+    job_id character varying NOT NULL,
+    automation_id integer,
+    selector character varying,
+    repository_revision character varying,
+    automation_attributes jsonb,
+    state character varying DEFAULT 'preparing'::character varying NOT NULL,
+    log character varying,
+    jobs character varying[],
+    owner character varying NOT NULL,
+    project_id character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE runs_id_seq OWNED BY runs.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -142,6 +183,13 @@ ALTER TABLE ONLY que_jobs ALTER COLUMN job_id SET DEFAULT nextval('que_jobs_job_
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs ALTER COLUMN id SET DEFAULT nextval('runs_id_seq'::regclass);
+
+
+--
 -- Name: automations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -158,10 +206,39 @@ ALTER TABLE ONLY que_jobs
 
 
 --
+-- Name: runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT runs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_automations_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_automations_on_project_id ON automations USING btree (project_id);
+
+
+--
+-- Name: index_runs_on_automation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_runs_on_automation_id ON runs USING btree (automation_id);
+
+
+--
+-- Name: index_runs_on_job_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_runs_on_job_id ON runs USING btree (job_id);
+
+
+--
+-- Name: index_runs_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_runs_on_project_id ON runs USING btree (project_id);
 
 
 --
@@ -180,4 +257,8 @@ SET search_path TO "$user", public;
 INSERT INTO schema_migrations (version) VALUES ('20151209143356');
 
 INSERT INTO schema_migrations (version) VALUES ('20160120095306');
+
+INSERT INTO schema_migrations (version) VALUES ('20160309121739');
+
+INSERT INTO schema_migrations (version) VALUES ('20160318135530');
 
