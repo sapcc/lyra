@@ -130,7 +130,7 @@ class ChefAutomationJob < ActiveJob::Base
     loop do
       resp = arc.list_agents!(current_user.token, filter, %w{online hostname agents}, page, 100)
       agents.concat(resp.data)
-      break if page >= respo.pagination.total_pages
+      break if page >= resp.pagination.total_pages
       page += 1
     end
     return agents
