@@ -118,8 +118,8 @@ class ChefAutomationJob < ActiveJob::Base
         to: agent.agent_id,
         timeout: automation.timeout,
         agent: 'chef',
-        action: 'provision',
-        payload: chef_payload.to_json 
+        action: 'zero',
+        payload: chef_payload.to_json
       })
     end
   end
