@@ -26,7 +26,17 @@ RSpec.describe ChefAutomationJob, type: :job do
       add_commit("Berksfile", "source 'https://supermarket.chef.io'\nmetadata", "add Berksfile", remote: true)
       add_commit("metadata.rb", "name 'cookbook1'\nversion '1.0.0'", "add metadata.rb", remote: true)
       expect_any_instance_of(ChefAutomationJob).to receive(:list_agents).with("bla=fasel").and_return([agent])
-      expect_any_instance_of(ChefAutomationJob).to receive(:publish_tarball).with(instance_of(String)).and_return("http://url")
+      expect_any_instance_of(ChefAutomationJob).to receive(:publish_tarball) do |_, tarball|
+        expect(`tar -ztf #{tarball}`). to eq(<<EOT)
+.
+cookbooks
+cookbooks/cookbook1
+cookbooks/cookbook1/Berksfile
+cookbooks/cookbook1/Berksfile.lock
+cookbooks/cookbook1/configure
+cookbooks/cookbook1/metadata.json
+EOT
+      end.and_return("http://url")
       expect_any_instance_of(ChefAutomationJob).to receive(:schedule_jobs).with([agent], chef_automation, "http://url").and_return(["a-job-jid"])
       ChefAutomationJob.perform_later(token, "someowner", chef_automation, "bla=fasel")
       run = Run.first
@@ -43,7 +53,12 @@ RSpec.describe ChefAutomationJob, type: :job do
       chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test")) 
 
       expect_any_instance_of(ChefAutomationJob).to receive(:list_agents).with("bla=fasel").and_return([agent])
-      expect_any_instance_of(ChefAutomationJob).to receive(:publish_tarball).with(instance_of(String)).and_return("http://url")
+      expect_any_instance_of(ChefAutomationJob).to receive(:publish_tarball) do |_, tarball|
+        expect(`tar -ztf #{tarball}`).to eq(<<EOT)
+./
+./configure
+EOT
+      end.and_return("http://url")
       expect_any_instance_of(ChefAutomationJob).to receive(:schedule_jobs).with([agent], chef_automation, "http://url").and_return(["a-job-jid"])
       ChefAutomationJob.perform_later(token, "someowner", chef_automation, "bla=fasel")
       run = Run.first
