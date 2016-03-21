@@ -4,6 +4,11 @@ ENV http_proxy=http://proxy.***REMOVED***:8080 \
     https_proxy=http://proxy.***REMOVED***:8080 \
     no_proxy=***REMOVED***.***REMOVED***,corp.sap,127.0.0.1,localhost
 
+RUN curl http://aia.pki.co.sap.com/aia/SAP%20Global%20Root%20CA.crt | tr -d '\r' > /usr/local/share/ca-certificates/SAP_Global_Root.crt && \
+    update-ca-certificates && \
+    curl -f -I https://gems.***REMOVED*** && \
+    ruby -ropen-uri -e 'open("https://gems.***REMOVED***").read'
+
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     apt-get update && \
@@ -19,6 +24,12 @@ WORKDIR /home/app/webapp
 ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
 ADD Gemfile Gemfile.lock ./
 RUN bundle install --system
+
+#appbundle berks
+RUN ln -s /home/app/webapp /tmp/berkshelf && \
+    appbundler /tmp/berkshelf /usr/local/bin && \
+    rm /tmp/berkshelf && \
+    berks -v
 ADD . /home/app/webapp/
 USER app
 CMD ["docker/start.sh"]

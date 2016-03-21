@@ -25,6 +25,9 @@ source 'https://gems.***REMOVED***' do
   gem 'ruby-arc-client'
   gem 'gitmirror'
 end
+#Avoid g++ dependency https://github.com/knu/ruby-domain_name/issues/3
+#unf is pulled in by the ruby-arc-client
+gem 'unf', '>= 0.2.0beta2'
 gem 'posix-spawn'
 
 gem 'swift_client'
@@ -54,5 +57,10 @@ group :development, :test do
   gem "factory_girl_rails"
   gem "database_cleaner"
   gem "capybara"
+end
+
+group :berkshelf do
+  gem 'appbundler', require: false
+  gem 'berkshelf', require: false
 end
 
