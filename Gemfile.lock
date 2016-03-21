@@ -118,7 +118,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (3.1.0)
+    puma (3.2.0)
     que (0.11.2)
     que-web (0.4.0)
       erubis
