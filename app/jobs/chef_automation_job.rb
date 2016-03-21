@@ -60,7 +60,7 @@ class ChefAutomationJob < ActiveJob::Base
       else
         #TODO: check for correct folder structure
         #tar the checkout dir
-        execute "tar -c -z -C #{dir} -f #{tarball} ."
+        execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
       end
       publish_tarball(tarball)
     end
