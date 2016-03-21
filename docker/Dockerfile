@@ -31,5 +31,6 @@ RUN ln -s /home/app/webapp /tmp/berkshelf && \
     rm /tmp/berkshelf && \
     berks -v
 ADD . /home/app/webapp/
+RUN mkdir -p spec/tmp && chown app spec/tmp
 USER app
 CMD ["docker/start.sh"]
