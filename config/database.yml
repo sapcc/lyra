@@ -19,7 +19,7 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch('MAX_THREADS', 5) %>
+  pool: <%= [ ENV.fetch('MAX_THREADS', 0).to_i + ENV.fetch('QUE_WORKER_COUNT', 0).to_i, 5 ].max %>
   username: <%= ENV.fetch('MONSOON_DB_USER', 'postgres') %>
   password: <%= ENV['MONSOON_DB_PASSWORD'] %>
   host: <%= ENV['POSTGRES_PORT_5432_TCP_ADDR'] || ENV['POSTGRES_SERVICE_HOST'] || 'localhost' %>

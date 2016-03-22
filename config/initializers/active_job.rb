@@ -1,5 +1,6 @@
 Rails.configuration.active_job.queue_adapter = :que
 
+Que.logger = Rails.logger
 #Start some Que workers in development (when running 'rails s') 
 if Rails.env.development? && defined? Rails::Server
   #Silence Que workers in rails server
