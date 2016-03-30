@@ -29,6 +29,6 @@ class Script < Automation
 
   validates_presence_of :repository, :path
   validates :repository, format: { with: URI.regexp }
-  validates :environment, json: true
+  validates :environment, json: true, allow_blank: true
 
 end

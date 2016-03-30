@@ -7,8 +7,24 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
   rescue_from "MonsoonOpenstackAuth::Authentication::NotAuthorized", with: :render_401
 
+  private
+
+  def require_project 
+    @project = current_user.project_id
+    if @project.nil? || @project.blank?
+      render :json  => "{'error':'Project id not found in token.'}".to_json, :status => :forbidden
+    end
+  end
+
   def render_404(exception)
-    render :json  => '{"error": "not found"}', :status => :not_found
+    message = if exception.respond_to?(:model)
+      "#{exception.model} not found"
+    elsif exception.message =~ /Couldn't find ([^ ]+)/
+      "#{$1} not found"
+    else
+      "not found"
+    end
+    render :json  => {error: message}.to_json, :status => :not_found
   end
 
   def render_401(exception)

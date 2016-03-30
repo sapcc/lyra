@@ -32,6 +32,10 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active_model_serializers (0.10.0.rc4)
+      actionpack (>= 4.0)
+      activemodel (>= 4.0)
+      railties (>= 4.0)
     activejob (4.2.6)
       activesupport (= 4.2.6)
       globalid (>= 0.3.0)
@@ -137,10 +141,11 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.7.1)
     i18n (0.7.0)
-    jbuilder (2.4.1)
-      activesupport (>= 3.0.0, < 5.1)
-      multi_json (~> 1.2)
     json (1.8.3)
+    json-schema (2.2.5)
+    json_matchers (0.5.0)
+      activesupport (>= 3.0.0)
+      json-schema (~> 2.2.5)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -160,7 +165,6 @@ GEM
     mixlib-log (1.6.0)
     mixlib-shellout (2.2.6)
     molinillo (0.4.4)
-    multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     netrc (0.11.0)
@@ -242,6 +246,9 @@ GEM
       retryable (~> 2.0)
       semverse (~> 1.1)
       varia_model (~> 0.4.0)
+    rspec-activejob (0.6.1)
+      activejob (>= 4.2)
+      rspec-mocks
     rspec-core (3.4.4)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
@@ -310,6 +317,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers (>= 0.10.0.rc4)
   annotate
   appbundler
   berkshelf
@@ -319,7 +327,7 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   gitmirror!
-  jbuilder (~> 2.0)
+  json_matchers
   monsoon-openstack-auth!
   pg (~> 0.15)
   posix-spawn
@@ -331,6 +339,7 @@ DEPENDENCIES
   rails (= 4.2.6)
   rails-api
   rails_stdout_logging
+  rspec-activejob
   rspec-rails
   ruby-arc-client!
   spring

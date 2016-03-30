@@ -9,26 +9,28 @@ class ChefAutomationJob < ActiveJob::Base
 
 
   #TODO: This is crap, we need a better way to create a run and the correponding job
-  before_enqueue do |job|
-    token, owner, automation, selector = job.arguments
-    Run.create!(job_id: job.job_id, automation_id: automation.id, owner: owner, selector: selector, project_id: automation.project_id, automation_attributes: automation.attributes)
-  end
+  #before_enqueue do |job|
+  #  token, owner, automation, selector = job.arguments
+  #  Run.create!(job_id: job.job_id, automation_id: automation.id, owner: owner, selector: selector, project_id: automation.project_id, automation_attributes: automation.attributes)
+  #end
 
   rescue_from(StandardError) do |exception|
+    logger.error exception.message + ":\n" + exception.backtrace.join("\n")
+
     @run.log exception.message + ":\n" + exception.backtrace.join("\n")
-    @run.update(state: 'failed')
+    @run.update!(state: 'failed')
   end
 
   #TODO: remove owner argument (only needed for persiting the run entry atm  )
-  def perform(token, owner, chef_automation, selector)
+  def perform(token, chef_automation, selector)
 
     Rails.logger.info "Running #{self.class.to_s} for automation(id=#{chef_automation.id})" 
     @run = Run.find_by_job_id!(job_id)
 
-    @run.log "Selecting nodes with selector #{selector}"
+    @run.log "Selecting nodes with selector #{selector}\n"
     selected_agents = list_agents(selector)
     raise "No nodes selected by filter" if selected_agents.empty?
-    @run.log "Selected nodes:" + selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
+    @run.log "Selected nodes:\n" + selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
 
     offline_agents = selected_agents.find_all { |a|!a.facts["online"] }
     if offline_agents.present?
@@ -66,7 +68,7 @@ class ChefAutomationJob < ActiveJob::Base
     end
 
     jobs = schedule_jobs(selected_agents, chef_automation, url)
-    @run.update(jobs: jobs, state: 'executing')
+    @run.update!(jobs: jobs, state: 'executing')
 
   end 
 

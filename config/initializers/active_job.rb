@@ -1,4 +1,4 @@
-Rails.configuration.active_job.queue_adapter = :que
+# active_job.queue_adapter is set in application.rb, overridden in environments/*.rb
 
 Que.logger = Rails.logger
 #Start some Que workers in development (when running 'rails s') 

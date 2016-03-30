@@ -15,7 +15,7 @@ gem 'pg', '~> 0.15'
 gem 'monsoon-openstack-auth', git: 'git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git', branch: 'master' 
 
 #JSON
-gem 'jbuilder', '~> 2.0'
+gem 'active_model_serializers', '>= 0.10.0.rc4'
 
 #Asynchronous jobs via postgres
 gem 'que'
@@ -54,6 +54,8 @@ group :development, :test do
 
   # testing
   gem "rspec-rails"
+  gem "rspec-activejob"
+  gem "json_matchers"
   gem "factory_girl_rails"
   gem "database_cleaner"
   gem "capybara"

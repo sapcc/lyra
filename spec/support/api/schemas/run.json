@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "required": ["id", "state"],
+  "properties": {
+    "id": { "type": "string"},
+    "state": { "type": "string", "enum": ["preparing", "executing", "failed", "completed"]}
+  }
+}

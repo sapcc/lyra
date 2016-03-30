@@ -3,7 +3,7 @@ FactoryGirl.define do
   # Script
 
   factory :script, :class => 'Script' do
-    name "my script automation"
+    sequence(:name) {|n| "script_automation_#{n}"}
     project_id "some_project_id"
     repository "http://some_git_url.git"
     repository_revision "master"
@@ -14,7 +14,7 @@ FactoryGirl.define do
   # Chef
 
   factory :chef, :class => 'Chef' do
-    name "my chef automation"
+    sequence(:name) {|n| "chef_automation_#{n}"}
     project_id "some_project_id"
     repository "http://some_git_url.git"
     repository_revision "master"

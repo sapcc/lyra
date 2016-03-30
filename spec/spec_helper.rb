@@ -15,22 +15,13 @@
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 
-require File.join(Gem.loaded_specs['monsoon-openstack-auth'].full_gem_path,'spec/support/authentication_stub')
-
-module AuthLetDeclarations
-  extend RSpec::SharedContext
-  let(:token) { AuthenticationStub.test_token["value"] }
-  let(:project_id) { AuthenticationStub.project_id } 
-end
-
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require_relative "support/monsoon_auth_helper"
+require_relative "support/active_job_helper"
+
 RSpec.configure do |config|
-  config.include AuthLetDeclarations
-  config.before :each do
-    self.class.include AuthenticationStub
-    stub_authentication
-  end
 
   require_relative 'support/git_helpers'
   config.include(Gitmirror::RSpec::GitHelpers)

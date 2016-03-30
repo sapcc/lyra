@@ -9,11 +9,11 @@ RSpec.describe Automation, type: :model do
       describe 'name' do
 
         it 'should not save automations with same name within the same project' do
-          FactoryGirl.create(:script)
-          expect { FactoryGirl.create(:script) }.to raise_error(ActiveRecord::RecordInvalid)
+          FactoryGirl.create(:script, name: 'script')
+          expect { FactoryGirl.create(:script, name: 'script') }.to raise_error(ActiveRecord::RecordInvalid)
 
-          FactoryGirl.create(:chef)
-          expect { FactoryGirl.create(:chef) }.to raise_error(ActiveRecord::RecordInvalid)
+          FactoryGirl.create(:chef, name: 'chef')
+          expect { FactoryGirl.create(:chef, name: 'chef') }.to raise_error(ActiveRecord::RecordInvalid)
         end
 
         it 'should set name length max to 256' do
@@ -55,101 +55,38 @@ RSpec.describe Automation, type: :model do
         it 'should validate json' do
           expect( FactoryGirl.build(:script, tags: 'no_valid_json'.to_json) ).not_to be_valid
           expect( FactoryGirl.build(:script, tags: '{"this_is_json":"well_formated"}'.to_json ) ).to be_valid
+
+          #Test 
+          automation = FactoryGirl.create(:chef)
+          expect(Automation.find(automation.id)).to be_valid
         end
 
-        it "should set the tags attribut to nil if an empty string is being set"
+        it "nullifies an empty string" do
+          expect( FactoryGirl.create(:script, tags: "").tags ).to be_nil
+        end
+
+        pending "validate that tags are a simple key/value pairs"
 
       end
 
     end
 
-    describe 'all_from_project' do
+    describe 'by_project' do
 
       it 'success and sorted descending by updated_at' do
         teamA_script_automation = FactoryGirl.create(:script, project_id: "TeamA")
         teamA_chef_automation = FactoryGirl.create(:chef, project_id: "TeamA")
         teamB_script_automation = FactoryGirl.create(:script, project_id: "TeamB")
         teamB_chef_automation = FactoryGirl.create(:chef, project_id: "TeamB")
-        automations = Automation.all_from_project("TeamB")
+        automations = Automation.by_project("TeamB")
         expect(automations.count()).to be == 2
         expect(automations[0].id).to be == teamB_chef_automation.id
         expect(automations[1].id).to be == teamB_script_automation.id
       end
 
       it "should return an empty array if nothing found" do
-        automations = Automation.all_from_project("non_existing_group")
+        automations = Automation.by_project("non_existing_group")
         expect(automations.count()).to be == 0
-      end
-
-    end
-
-    describe 'find by id' do
-
-      it "success" do
-        script_automation = FactoryGirl.create(:script)
-        found = Automation.find_by_id script_automation.id, script_automation.project_id
-        expect(script_automation.id).to be == found.id
-
-        chef_automation = FactoryGirl.create(:chef)
-        found = Automation.find_by_id chef_automation.id, chef_automation.project_id
-        expect(chef_automation.id).to be == found.id
-      end
-
-      describe 'fail' do
-
-        context 'failing silent' do
-
-          it 'should return nil if not found' do
-            found = Automation.find_by_id 'non_existing_id', 'non_exisiting_project'
-            expect(found).to be == nil
-          end
-
-        end
-
-        context 'throwing exceptions' do
-
-          it "should raise an exception" do
-            expect {  Automation.find_by_id! 'non_existing_id', 'non_exisiting_project' }.to raise_exception(ActiveRecord::RecordNotFound)
-          end
-
-        end
-
-      end
-
-
-    end
-
-    describe 'find by name' do
-
-      it 'success' do
-        script_automation = FactoryGirl.create(:script)
-        found = Automation.find_by_name script_automation.name, script_automation.project_id
-        expect(script_automation.id).to be == found.id
-
-        chef_automation = FactoryGirl.create(:chef)
-        found = Automation.find_by_name chef_automation.name, chef_automation.project_id
-        expect(chef_automation.id).to be == found.id
-      end
-
-      describe 'fail' do
-
-        context 'failing silent' do
-
-          it 'should return nil if not found' do
-            found = Automation.find_by_name 'non_existing_name', 'non_exisiting_project'
-            expect(found).to be == nil
-          end
-
-        end
-
-        context 'throwing exceptions' do
-
-          it "should raise an exception" do
-            expect {  Automation.find_by_name! 'non_existing_name', 'non_exisiting_project' }.to raise_exception(ActiveRecord::RecordNotFound)
-          end
-
-        end
-
       end
 
     end

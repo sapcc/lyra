@@ -28,6 +28,6 @@
 class Chef < Automation
   validates_presence_of :repository, :run_list
   validates :repository, format: { with: URI.regexp }
-  validates :chef_attributes, json: true
+  validates :chef_attributes, json: true, allow_blank: true
 
 end

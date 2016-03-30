@@ -32,6 +32,9 @@ module MonsoonAutomation
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # we override this in test.rb to :test
+    config.active_job.queue_adapter = :que
+
     #to properly save Que's schema we store the schema as sql
     config.active_record.schema_format = :sql
   end
