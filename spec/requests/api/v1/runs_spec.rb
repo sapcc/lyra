@@ -23,12 +23,11 @@ RSpec.describe "Test Run API" do
     expect(response.status).to eq(200) 
     expect(response).to match_response_schema("run")
   end
-
-  it "returns an automation by job_id" do
-    run = FactoryGirl.create(:run, automation: automation, job_id: "some-job-id")
-    get "/api/v1/runs/#{run.job_id}", nil, {'X-Auth-Token' => token}
-    expect(response.status).to eq(200) 
-    expect(response).to match_response_schema("run")
+  
+  it "prevents accessing runs from other projects" do
+    run = FactoryGirl.create(:run, job_id: "a-job-in-another-project")
+    get "/api/v1/runs/#{run.id}", nil, {'X-Auth-Token' => token}
+    expect(response.status).to eq(404) 
   end
 
   it "returns runs for the project" do
