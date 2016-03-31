@@ -32,5 +32,8 @@ RUN ln -s /home/app/webapp /tmp/berkshelf && \
     berks -v
 ADD . /home/app/webapp/
 RUN mkdir -p spec/tmp && chown app spec/tmp
+#temporary fix for this bug https://github.com/bundler/bundler/pull/4369
+#can be removed when bundler > 1.11.2
+RUN sed -i -e 's/def_delegators :@specs, :<<, :length, :add, :remove/def_delegators :@specs, :<<, :length, :add, :remove, :size/' /usr/local/lib/ruby/gems/2.3.0/gems/bundler-1.11.2/lib/bundler/spec_set.rb
 USER app
 CMD ["docker/start.sh"]
