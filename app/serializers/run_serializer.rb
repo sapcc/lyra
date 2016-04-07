@@ -6,7 +6,7 @@ class RunSerializer < ActiveModel::Serializer
   end
 
   def automation_name
-    object.automation.name
+    object.automation.try(:name)
   end
 
   def automation_id
