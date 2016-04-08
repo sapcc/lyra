@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ChefAutomationJob, type: :job do
 
+  before(:all) {Gitmirror.cache_dir = ::File.join(tmp_path, 'gitmirror')}
   before(:each) { clean_tmp_path } #make sure previous git repositories are gone
 
   let(:agent) {
