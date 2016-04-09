@@ -50,6 +50,13 @@ RSpec.describe Automation, type: :model do
 
       end
 
+      describe 'repository_revision' do
+        it "should default to master" do
+          # FactoryGirl can't be used here: http://stackoverflow.com/a/5931646
+          expect( Chef.new.repository_revision ).to eq("master")
+        end
+      end
+
       describe 'tags' do
 
         it 'should validate json' do
