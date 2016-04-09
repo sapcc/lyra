@@ -15,9 +15,10 @@ class ChefAutomationJob < ActiveJob::Base
   #end
 
   rescue_from(StandardError) do |exception|
-    logger.error exception.message + ":\n" + exception.backtrace.join("\n")
-
-    @run.log exception.message + ":\n" + exception.backtrace.join("\n")
+    bt = Rails.backtrace_cleaner.clean(exception.backtrace)
+    msg = "#{exception.message}:\n" + bt.join("\n")
+    logger.error msg 
+    @run.log msg 
     @run.update!(state: 'failed')
   end
 
@@ -48,11 +49,27 @@ class ChefAutomationJob < ActiveJob::Base
     @run.update_attribute(:repository_revision, sha)
 
     #TODO: use advisory locks and cache based on sha hash
-    url = Dir.mktmpdir do |dir|
-      checkout_dir = ::File.join(dir, "repo")
-      tarball = ::File.join(dir, "#{sha}.tgz")
-      repo.checkout(checkout_dir, chef_automation.repository_revision)
+    url = create_artifacts repo, sha
+
+    jobs = schedule_jobs(selected_agents, chef_automation, url)
+    @run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
+    @run.update!(jobs: jobs, state: 'executing')
+
+  end 
+
+  private
+
+  def artifact_key(sha)
+    "#{sha}-chef" 
+  end
+
+  def create_artifacts(repo, sha)
+    Dir.mktmpdir do |dir|
+      checkout_dir = ::File.join dir, "repo"
+      tarball = ::File.join(dir, "#{artifact_key(sha)}.tgz")
+      repo.checkout(checkout_dir, sha)
       if File.exists?(::File.join(checkout_dir, 'Berksfile'))
+        @run.log("Berksfile detected. Running berks package...\n")
         #do a berks package
         Bundler.with_clean_env do
           Dir.chdir checkout_dir do
@@ -60,19 +77,14 @@ class ChefAutomationJob < ActiveJob::Base
           end
         end
       else
+        @run.log("Creating tarball of repository content...\n")
         #TODO: check for correct folder structure
         #tar the checkout dir
         execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
       end
       publish_tarball(tarball)
     end
-
-    jobs = schedule_jobs(selected_agents, chef_automation, url)
-    @run.update!(jobs: jobs, state: 'executing')
-
-  end 
-
-  private
+  end
 
   def arc
     @arc ||= RubyArcClient::Client.new(current_user.service_url(:arc))
@@ -147,7 +159,7 @@ class ChefAutomationJob < ActiveJob::Base
 
   def publish_tarball(path)
     objectname = File.basename(path)
-
+    @run.log("Uploading #{objectname}...\n")
     File.open(path, "r") do |f|
       Swift.client.put_object objectname, f, "monsoon-automation", {"Content-Type" => 'application/gzip'}
       Swift.client.temp_url objectname, "monsoon-automation"
