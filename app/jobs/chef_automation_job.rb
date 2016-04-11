@@ -108,6 +108,7 @@ class ChefAutomationJob < ActiveJob::Base
       jid
     end
     failed = false
+    # TODO: Add timeout
     loop do
       jids.delete_if do |jid|
         job = arc.find_job!(token, jid)
@@ -115,7 +116,7 @@ class ChefAutomationJob < ActiveJob::Base
           @run.log "Job #{jid} failed"
           failed = true
         end
-        %w{completed, failed}.include? job.status
+        %w{completed complete failed}.include? job.status
       end
       break if jids.empty?
       sleep 5
