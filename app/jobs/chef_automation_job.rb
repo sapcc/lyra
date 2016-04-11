@@ -110,7 +110,7 @@ class ChefAutomationJob < ActiveJob::Base
     failed = false
     loop do
       jids.delete_if do |jid|
-        job = arc.find_job!(token, j)
+        job = arc.find_job!(token, jid)
         if job.status == "failed"
           @run.log "Job #{jid} failed"
           failed = true
