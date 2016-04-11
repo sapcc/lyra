@@ -43,7 +43,7 @@ class ChefAutomationJob < ActiveJob::Base
       raise "Agent(s) are unavailable"
     end
 
-    ensure_chef_enabled(selected_agents, chef_automation.chef_version)
+    ensure_chef_enabled(token, selected_agents, chef_automation.chef_version)
      
     #create or update local mirror of repository
     repo = Gitmirror::Repository.new(chef_automation.repository)
@@ -94,10 +94,10 @@ class ChefAutomationJob < ActiveJob::Base
     @arc ||= RubyArcClient::Client.new(current_user.service_url(:arc))
   end
 
-  def ensure_chef_enabled agents, chef_version
+  def ensure_chef_enabled token, agents, chef_version
     jids = agents.find_all {|a| a.facts["agents"]["chef"] == "disabled" }.map do | agent |
       #TODO: handle individual errors 
-      jid = arc.execute_job!(current_user.token, {
+      jid = arc.execute_job!(token, {
         to: agent.agent_id,
         timeout: 600,
         agent: 'chef',
@@ -110,7 +110,7 @@ class ChefAutomationJob < ActiveJob::Base
     failed = false
     loop do
       jids.delete_if do |jid|
-        job = arc.find_job!(current_user.token, j)
+        job = arc.find_job!(token, j)
         if job.status == "failed"
           @run.log "Job #{jid} failed"
           failed = true
