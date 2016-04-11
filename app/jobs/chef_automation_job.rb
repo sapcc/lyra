@@ -2,6 +2,8 @@ require 'gitmirror'
 require 'swift'
 require 'ruby-arc-client'
 require 'active_job/monsoon_openstack_auth'
+require 'active_support/number_helper/number_to_human_size_converter'
+
 class ChefAutomationJob < ActiveJob::Base
 
   include ActiveJob::MonsoonOpenstackAuth
@@ -31,7 +33,9 @@ class ChefAutomationJob < ActiveJob::Base
     @run.log "Selecting nodes with selector #{selector}\n"
     selected_agents = list_agents(selector)
     raise "No nodes selected by filter" if selected_agents.empty?
-    @run.log "Selected nodes:\n" + selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
+    @run.log "Selected nodes:\n" + 
+             selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + 
+             "\n"
 
     offline_agents = selected_agents.find_all { |a|!a.facts["online"] }
     if offline_agents.present?
@@ -106,7 +110,7 @@ class ChefAutomationJob < ActiveJob::Base
     failed = false
     loop do
       jids.delete_if do |jid|
-        job = arc.get_job(current_user.token, j)
+        job = arc.find_job!(current_user.token, j)
         if job.status == "failed"
           @run.log "Job #{jid} failed"
           failed = true
@@ -159,7 +163,8 @@ class ChefAutomationJob < ActiveJob::Base
 
   def publish_tarball(path)
     objectname = File.basename(path)
-    @run.log("Uploading #{objectname}...\n")
+    human_size = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.new(File.size?(path),{}).convert rescue ""
+    @run.log("Uploading #{objectname} (#{human_size})...\n")
     File.open(path, "r") do |f|
       Swift.client.put_object objectname, f, "monsoon-automation", {"Content-Type" => 'application/gzip'}
       Swift.client.temp_url objectname, "monsoon-automation"
