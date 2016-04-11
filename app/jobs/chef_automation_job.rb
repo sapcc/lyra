@@ -39,7 +39,9 @@ class ChefAutomationJob < ActiveJob::Base
 
     offline_agents = selected_agents.find_all { |a|!a.facts["online"] }
     if offline_agents.present?
-      @run.log "The following nodes are not online:\n" + offline_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n")
+      @run.log "The following nodes are not online:\n" + 
+               offline_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") +
+               "\n"
       raise "Agent(s) are unavailable"
     end
 
