@@ -26,7 +26,7 @@
 #
 
 class Automation < ActiveRecord::Base
-
+  include Pagination
   validates_presence_of :type, :name, :project_id
   validates_uniqueness_of :name, scope: :project_id
   validates_length_of :name, minimum: 3, maximum: 256
@@ -40,8 +40,18 @@ class Automation < ActiveRecord::Base
 
   # validate project_id really exists??
 
-  def self.by_project(project)
-    self.where(project_id: project)
+  def self.by_project_all(project, page=nil, per_page=nil)
+    pag = PaginationInfo.new(self.where(project_id: project).count, page, per_page)
+    elements = self.where(project_id: project).page(pag.page).per_page(pag.per_page)
+    {elements: elements, pagination: pag}
+  end
+
+  def self.by_project_find(project_id, automation_id)
+    self.by_project(project_id).find(automation_id)
+  end
+
+  def self.by_project(project_id)
+    self.where(project_id: project_id)
   end
 
   # https://github.com/rails/rails/issues/3508#issuecomment-29858772

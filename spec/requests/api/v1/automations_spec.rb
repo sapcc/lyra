@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'shared'
 
 RSpec.describe "Test Automations API" do
 
@@ -51,6 +52,20 @@ RSpec.describe "Test Automations API" do
 
       # test for the 403 status-code
       expect(response.status).to eq(403)
+    end
+
+    describe "pagination" do
+
+      it_behaves_like 'model with pagination' do
+        subject  {
+          for i in 0..29
+            FactoryGirl.create(:script, project_id: project_id)
+            FactoryGirl.create(:chef, project_id: project_id)
+          end
+          @path = '/api/v1/automations'
+        }
+      end
+
     end
 
   end
