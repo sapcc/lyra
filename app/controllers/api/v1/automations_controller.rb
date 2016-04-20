@@ -5,8 +5,9 @@ class Api::V1::AutomationsController < ApplicationController
 
   # GET api/v1/automations.json
   def index
-    @automations = Automation.by_project(@project)
-    render json: @automations
+    @automations = Automation.by_project_all(@project, params[:page], params[:per_page])
+    @automations[:pagination].headers(response)
+    render json: @automations[:elements]
   end
 
   # GET /automations/1.json

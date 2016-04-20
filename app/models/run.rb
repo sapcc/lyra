@@ -24,12 +24,17 @@
 #
 
 class Run < ActiveRecord::Base
+  include Pagination
 
   attr_accessor :token
 
   belongs_to :automation, inverse_of: :runs 
 
-  scope :by_project, ->(project_id) { where("project_id = ?", project_id).order("created_at DESC") }
+  # scope :by_project, ->(project_id) { where("project_id = ?", project_id).order("created_at DESC") }
+
+  default_scope do
+    order("created_at DESC")
+  end
 
   validates_presence_of :owner, :automation
   validates_presence_of :token, on: :create, if: Proc.new { job_id.blank? }
@@ -37,6 +42,20 @@ class Run < ActiveRecord::Base
 
   before_save :update_project_id
   before_create :create_job, if: Proc.new { job_id.blank? }
+
+  def self.by_project_all(project_id, page=nil, per_page=nil)
+    pag = PaginationInfo.new(self.where("project_id = ?", project_id).count, page, per_page)
+    elements = self.where("project_id = ?", project_id).page(pag.page).per_page(pag.per_page)
+    {elements: elements, pagination: pag}
+  end
+
+  def self.by_project_find(project_id, run_id)
+    self.by_project(project_id).find(run_id)
+  end
+
+  def self.by_project(project_id)
+    self.where("project_id = ?", project_id)
+  end
 
   APPEND_LOG_SQL = <<-SQL.squish
     UPDATE runs SET

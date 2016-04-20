@@ -4,8 +4,9 @@ class Api::V1::RunsController < ApplicationController
   
   # GET api/v1/runs.json
   def index
-    @runs = Run.by_project(@project)
-    render json: @runs
+    @runs = Run.by_project_all(@project, params[:page], params[:per_page])
+    @runs[:pagination].headers(response)
+    render json: @runs[:elements]
   end
 
   # GET api/v1/runs/1.json

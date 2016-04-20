@@ -1,8 +1,8 @@
 require 'rails_helper'
 require "json_matchers/rspec"
+require_relative 'shared'
 
 RSpec.describe "Test Run API" do
-
 
   let(:automation) { FactoryGirl.create(:chef, project_id: project_id) }
 
@@ -45,6 +45,40 @@ RSpec.describe "Test Run API" do
   it "returns 401 on wrong Auth-Code" do
     post '/api/v1/runs', nil, {'X-Auth-Token' => "wrong_token"}
   end
-  
+
+  # describe "pagination" do
+  #
+  #   before(:each) do
+  #     for i in 0..29
+  #       FactoryGirl.create(:run, automation: automation, job_id: "some-job-id-#{i}")
+  #     end
+  #   end
+  #
+  #   it "should return default 10 entries" do
+  #     # request
+  #     get '/api/v1/runs', nil, {'X-Auth-Token' => token}
+  #     json = JSON.parse(response.body)
+  #
+  #     # test for the 200 status-code
+  #     expect(response).to be_success
+  #
+  #     # check to make sure the right amount of messages are returned
+  #     expect(json.length).to eq(10)
+  #   end
+  #
+  # end
+
+  describe "pagination" do
+
+    it_behaves_like 'model with pagination' do
+      subject  {
+        for i in 0..59
+          FactoryGirl.create(:run, automation: automation, job_id: "some-job-id-#{i}")
+        end
+        @path = '/api/v1/runs'
+      }
+    end
+
+  end
 
 end
