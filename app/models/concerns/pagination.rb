@@ -15,7 +15,7 @@ module Pagination
       if per_page > LIMIT
         @per_page = LIMIT
       elsif per_page < 1
-        @per_page = 1
+        @per_page = DEFAULT
       else
         @per_page = per_page
       end

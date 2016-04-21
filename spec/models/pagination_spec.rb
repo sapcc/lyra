@@ -7,16 +7,22 @@ RSpec.describe "PaginationInfo" do
     pag = PaginationInfo.new()
     expect(pag.page).to be == 1
     expect(pag.total_pages).to be == 1
-    expect(pag.per_page).to be == 10
+    expect(pag.per_page).to be == PaginationInfo::DEFAULT
     expect(pag.total_elememts).to be == 0
   end
 
   it "should correct wrong initial values" do
     pag = PaginationInfo.new(100, -2, 200)
     expect(pag.page).to be == 1
-    expect(pag.per_page).to be == 25
+    expect(pag.per_page).to be == PaginationInfo::LIMIT
     expect(pag.total_pages).to be == 4
     expect(pag.total_elememts).to be == 100
+
+    pag = PaginationInfo.new(10, 100, 0)
+    expect(pag.page).to be == 1
+    expect(pag.per_page).to be == PaginationInfo::DEFAULT
+    expect(pag.total_pages).to be == 1
+    expect(pag.total_elememts).to be == 10
   end
 
   it "should set the page" do
