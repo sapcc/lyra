@@ -48,3 +48,4 @@ ADD . /home/app/webapp/
 RUN sed -i -e 's/def_delegators :@specs, :<<, :length, :add, :remove/def_delegators :@specs, :<<, :length, :add, :remove, :size/' /usr/lib/ruby/gems/2.3.0/gems/bundler-1.11.2/lib/bundler/spec_set.rb
 
 ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
+CMD ["docker/start.sh"]
