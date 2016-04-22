@@ -3,3 +3,4 @@ log/*.log
 .env
 tmp/
 spec/tmp
+.bundle/

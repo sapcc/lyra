@@ -36,7 +36,7 @@ image: build
 build: 
 	#$(MTIMES)
 	$(DOCKER) pull $(REPOSITORY):build.latest || true
-	$(DOCKER) build -f docker/Dockerfile -t $(IMAGE) --rm . 
+	$(DOCKER) build -f docker/Dockerfile.alpine -t $(IMAGE) --rm . 
 
 # ----------------------------------------------------------------------------------
 #   precompile 
