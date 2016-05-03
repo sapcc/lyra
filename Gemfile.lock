@@ -272,6 +272,8 @@ GEM
       addressable (>= 2.3.5, < 2.5)
       faraday (~> 0.8, < 0.10)
     semverse (1.2.1)
+    sentry-raven (1.0.0)
+      faraday (>= 0.7.6)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -328,6 +330,7 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   gitmirror!
+  httpclient
   json_matchers
   monsoon-openstack-auth!
   pg (~> 0.15)
@@ -343,6 +346,7 @@ DEPENDENCIES
   rspec-activejob
   rspec-rails
   ruby-arc-client!
+  sentry-raven
   spring
   swift_client
   unf (>= 0.2.0beta2)

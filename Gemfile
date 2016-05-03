@@ -37,6 +37,10 @@ gem 'posix-spawn'
 
 gem 'swift_client'
 
+# Sentry crash reporting 
+gem 'sentry-raven'
+gem 'httpclient' # The only faraday backend that handled no_proxy :|
+
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
