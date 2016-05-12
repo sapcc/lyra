@@ -1,0 +1,178 @@
+pipeline_image: &pipeline_image
+  image_resource:
+    type: docker-image
+    source:
+      repository: docker.***REMOVED***/monsoon-concourse/monsoon-pipeline
+      tag: '1.8.0'
+
+groups:
+  - name: master 
+    jobs:
+      - build
+      - test
+      - automation-staging
+  - name: cli
+    jobs:
+      - test-cli
+      - build-cli
+jobs:
+  - name: build 
+    plan:
+      - aggregate:
+        - get: automation.git
+          trigger: true
+        - get: automation.version
+          params: { bump: true }
+      - task: run
+        privileged: true
+        config: 
+          platform: 'linux'
+          <<: *pipeline_image
+          inputs: 
+            - name: automation.git
+              path: source.git
+            - name: automation.version 
+              path: version
+          outputs: [{ name: output }]
+          run: { path: /tasks/build }
+      - aggregate:
+        - put: automation.image
+          params: { tag: output/tag }
+        - put: automation.version
+          params: { filename: automation.version/current }
+  - name: test
+    plan:
+      - get: automation.image
+        passed: [build]
+        trigger: true
+      - task: run
+        privileged: true
+        config: 
+          platform: 'linux'
+          <<: *pipeline_image
+          inputs:
+            - name: automation.image
+              path: source.image
+          run: {path: /tasks/test}
+
+  - name: automation-staging
+    serial: true
+    plan:
+    - get: automation.image
+      passed: [ test ]
+      trigger: true
+    - task: rolling-update-api
+      config:
+        platform: linux
+        <<: *pipeline_image
+        inputs:
+          - name: automation.image
+            path: source.image
+        params:
+          CA_CERT: {{kube-staging-ca-cert}}
+          CLIENT_CERT: {{kube-staging-client-cert}}
+          CLIENT_KEY: {{kube-staging-client-key}}
+          KUBE_MASTER: https://apiserver.staging.***REMOVED*** 
+          NAMESPACE: lyra 
+          RC_NAME: api
+        run:
+          path: kubectl-rolling-update
+    - task: rolling-update-worker
+      config:
+        platform: linux
+        <<: *pipeline_image
+        inputs:
+          - name: automation.image
+            path: source.image
+        params:
+          CA_CERT: {{kube-staging-ca-cert}}
+          CLIENT_CERT: {{kube-staging-client-cert}}
+          CLIENT_KEY: {{kube-staging-client-key}}
+          KUBE_MASTER: https://apiserver.staging.***REMOVED*** 
+          NAMESPACE: lyra 
+          RC_NAME: worker 
+        run:
+          path: kubectl-rolling-update
+
+  - name: test-cli
+    plan:
+      - get: cli.git 
+        trigger: true
+      - task: test-cli
+        file: cli.git/ci/tests.yml
+
+  - name: build-cli
+    serial: true
+    plan:
+      - get: cli.git 
+        passed: [test-cli]
+        trigger: true
+      - task: build
+        file: cli.git/ci/build-linux.yml
+      - task: prepare-release
+        file: cli.git/ci/build-release.yml
+      - put: cli-release
+        params:
+          name: release/name
+          tag: release/tag
+          body: release/body
+          commitsh: release/commitsh
+          globs: [release/artifacts/*]
+
+
+resources:
+  - name: automation.git
+    type: git
+    source:
+      uri: git://gitHub.***REMOVED*** /monsoon/monsoon-automation.git
+      branch: master
+  - name: automation.version
+    type: monsoon-version
+    source: 
+      key:  automation 
+      initial:   "00010101"
+      username:  {{swift-username}}
+      api_key:   {{swift-api-key}}
+      auth_url:  {{swift-auth_url}}
+      domain:    {{swift-domain}}
+      tenant_id: {{swift-project-id}}
+      container: {{swift-container-version}}
+  - name: automation.image
+    type: monsoon-image
+    source: 
+      host:           {{docker-registry-host}}
+      email:          {{docker-registry-email}}
+      username:       {{docker-registry-username}}
+      password:       {{docker-registry-password}}
+      repository:     docker.***REMOVED***/monsoon/monsoon-automation
+      initial_prefix: build
+      file:           run/image.tar
+      tag:            run/tag
+  - name: cli.git 
+    type: git
+    source:
+      uri: git://gitHub.***REMOVED*** /monsoon/lyra-cli.git
+      branch: master
+  - name: cli-release
+    type: github-release 
+    source:
+      github_api_url: https://gitHub.***REMOVED*** /api/v3/
+      github_uploads_url: https://gitHub.***REMOVED*** /api/uploads/
+      user: monsoon 
+      repository: lyra-cli 
+      access_token: {{github-access-token}}
+
+
+resource_types:
+  - name: monsoon-version
+    type: docker-image
+    source:
+      repository: docker.***REMOVED***/concourse/monsoon-version
+  - name: monsoon-image
+    type: docker-image
+    source:
+      repository: docker.***REMOVED***/concourse/monsoon-image-resource
+  - name: github-release 
+    type: docker-image
+    source:
+      repository: docker.***REMOVED***/concourse/github-release-resource
