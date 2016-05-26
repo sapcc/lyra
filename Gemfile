@@ -37,6 +37,8 @@ gem 'posix-spawn'
 
 gem 'swift_client'
 
+#gem 'with_advisory_lock'
+
 # Sentry crash reporting 
 gem 'sentry-raven'
 gem 'httpclient' # The only faraday backend that handled no_proxy :|

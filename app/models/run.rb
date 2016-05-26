@@ -30,11 +30,13 @@ class Run < ActiveRecord::Base
 
   belongs_to :automation, inverse_of: :runs 
 
-  # scope :by_project, ->(project_id) { where("project_id = ?", project_id).order("created_at DESC") }
-
   default_scope do
     order("created_at DESC")
   end
+
+  VALID_STATES = %w(preparing executing failed completed)
+
+  validates :state, inclusion: {in: VALID_STATES, message: "'%{value}' is an invalid state"}
 
   validates_presence_of :owner, :automation
   validates_presence_of :token, on: :create, if: Proc.new { job_id.blank? }

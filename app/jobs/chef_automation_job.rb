@@ -1,6 +1,5 @@
 require 'gitmirror'
 require 'swift'
-require 'ruby-arc-client'
 require 'active_job/monsoon_openstack_auth'
 require 'active_support/number_helper/number_to_human_size_converter'
 
@@ -8,7 +7,7 @@ class ChefAutomationJob < ActiveJob::Base
 
   include ActiveJob::MonsoonOpenstackAuth
   include POSIX::Spawn
-
+  include ArcClient
 
   #TODO: This is crap, we need a better way to create a run and the correponding job
   #before_enqueue do |job|
@@ -24,7 +23,6 @@ class ChefAutomationJob < ActiveJob::Base
     @run.update!(state: 'failed')
   end
 
-  #TODO: remove owner argument (only needed for persiting the run entry atm  )
   def perform(token, chef_automation, selector)
 
     Rails.logger.info "Running #{self.class.to_s} for automation(id=#{chef_automation.id})" 
@@ -60,6 +58,8 @@ class ChefAutomationJob < ActiveJob::Base
     jobs = schedule_jobs(selected_agents, chef_automation, url)
     @run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
     @run.update!(jobs: jobs, state: 'executing')
+    #Schedule a lightweight job to track the job
+    TrackAutomationJob.perform_later(token, @run.job_id)
 
   end 
 
@@ -92,9 +92,6 @@ class ChefAutomationJob < ActiveJob::Base
     end
   end
 
-  def arc
-    @arc ||= RubyArcClient::Client.new(current_user.service_url(:arc))
-  end
 
   def ensure_chef_enabled token, agents, chef_version
     jids = agents.find_all {|a| a.facts["agents"]["chef"] == "disabled" }.map do | agent |
