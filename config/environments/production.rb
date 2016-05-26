@@ -41,6 +41,7 @@ Rails.application.configure do
 
   # Use a different logger for distributed setups.
   config.logger = RailsStdoutLogging::Rails.heroku_stdout_logger 
+  STDOUT.sync = true # make sure STDOUT is not buffering
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
