@@ -1,19 +1,12 @@
 require 'gitmirror'
 require 'swift'
-require 'active_job/monsoon_openstack_auth'
 require 'active_support/number_helper/number_to_human_size_converter'
 
 class ChefAutomationJob < ActiveJob::Base
 
-  include ActiveJob::MonsoonOpenstackAuth
+  include MonsoonOpenstackAuthWrapper
   include POSIX::Spawn
   include ArcClient
-
-  #TODO: This is crap, we need a better way to create a run and the correponding job
-  #before_enqueue do |job|
-  #  token, owner, automation, selector = job.arguments
-  #  Run.create!(job_id: job.job_id, automation_id: automation.id, owner: owner, selector: selector, project_id: automation.project_id, automation_attributes: automation.attributes)
-  #end
 
   rescue_from(StandardError) do |exception|
     bt = Rails.backtrace_cleaner.clean(exception.backtrace)
@@ -159,6 +152,13 @@ class ChefAutomationJob < ActiveJob::Base
     out = `#{command} 2>&1` 
     raise "Executing [#{command}] failed (#{$?.exitstatus}):\n#{out}" if $?.exitstatus != 0
     out
+  end
+
+  def tarball_published?(sha)
+    Swift.client.head_object(artifact_key(sha), "monsoon-automation")
+    return true
+  rescue SwiftClient::ResponseError
+    return false
   end
 
   def publish_tarball(path)

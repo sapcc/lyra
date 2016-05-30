@@ -1,8 +1,6 @@
-require 'active_job/monsoon_openstack_auth'
-
 class TrackAutomationJob < ActiveJob::Base
 
-  include ActiveJob::MonsoonOpenstackAuth
+  include MonsoonOpenstackAuthWrapper
   include ArcClient
 
   def perform(token, run_jid)

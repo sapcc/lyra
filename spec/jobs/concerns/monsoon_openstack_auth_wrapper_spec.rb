@@ -1,13 +1,12 @@
 require 'rails_helper'
-require 'active_job/monsoon_openstack_auth'
 
 class TestJob < ActiveJob::Base
-  include ActiveJob::MonsoonOpenstackAuth
+  include MonsoonOpenstackAuthWrapper
 
   def perform(*args); end
 end
 
-RSpec.describe ActiveJob::MonsoonOpenstackAuth do
+RSpec.describe MonsoonOpenstackAuthWrapper do
 
   it 'authenticates a token given as first argument' do
     t = TestJob.new(token)
