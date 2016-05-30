@@ -14,9 +14,10 @@ RSpec.describe Run, type: :model do
 
   it "appends logs" do
     run.log "a string"
-    run.log "second string"
+    run.log "a string with eol\n"
+    run.log "third string"
     run.reload
-    expect(run.log).to eq("a stringsecond string")
+    expect(run.log).to eq("a string\na string with eol\nthird string\n")
   end
 
   it 'requires an owner' do

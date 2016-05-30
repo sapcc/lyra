@@ -68,7 +68,8 @@ class Run < ActiveRecord::Base
 
   def log *args
     if args.length > 0
-      Run.connection.execute format(APPEND_LOG_SQL, Run.sanitize(args.first), Run.sanitize(id))
+      log_line = args.first.end_with?("\n") ? args.first : args.first + "\n"
+      Run.connection.execute format(APPEND_LOG_SQL, Run.sanitize(log_line), Run.sanitize(id))
     else
       read_attribute :log
     end
