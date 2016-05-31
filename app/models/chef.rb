@@ -33,4 +33,8 @@ class Chef < Automation
   validates :repository, format: { with: URI.regexp }
   validates :chef_attributes, json: true, allow_blank: true
 
+  def create_job(token, selector)
+    ChefAutomationJob.perform_later(token, self, selector) 
+  end
+
 end

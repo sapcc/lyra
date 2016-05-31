@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Run, type: :model do
 
-
   let(:run) { FactoryGirl.create(:run, job_id: 'a-job_id') }
 
   it "memorizes the project_id" do

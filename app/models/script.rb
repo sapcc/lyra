@@ -31,4 +31,8 @@ class Script < Automation
   validates :repository, format: { with: URI.regexp }
   validates :environment, json: true, allow_blank: true
 
+  def create_job(token, selector)
+    ScriptAutomationJob.perform_later(token, self, selector) 
+  end
+
 end

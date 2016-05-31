@@ -59,4 +59,8 @@ class Automation < ActiveRecord::Base
     super.merge "type" => type
   end
 
+  def create_job(token, selector)
+    raise "Not implemented"
+  end
+
 end

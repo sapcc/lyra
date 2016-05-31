@@ -78,7 +78,7 @@ class Run < ActiveRecord::Base
   private
 
   def create_job
-    job = ChefAutomationJob.perform_later(token, automation, selector)
+    job = automation.create_job(token, selector) 
     self.job_id = job.job_id 
   end
 

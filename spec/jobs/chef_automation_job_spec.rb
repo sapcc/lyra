@@ -40,12 +40,14 @@ cookbooks/cookbook1/configure
 cookbooks/cookbook1/metadata.json
 EOT
       end.and_return("http://url")
-      expect(job).to receive(:schedule_jobs).with([agent], chef_automation, "http://url").and_return(["a-job-jid"])
+      expected_payload = {run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: "http://url", debug:false, attributes: nil}
+      expect(job).to receive(:schedule_jobs).with([agent], "chef", "zero", 3600, expected_payload).and_return(["a-job-jid"])
       ChefAutomationJob.perform_now(job)
       run.reload
       expect(run.state).to eq("executing")
       expect(run.jobs).to eq(["a-job-jid"])
       expect(run.repository_revision).to eq("bb21a99e7b1e60fbc80630440d453583acae7e2c")
+      expect(TrackAutomationJob).to have_been_enqueued.with(token, job.job_id)
     end
   end
 
@@ -62,12 +64,14 @@ EOT
 ./configure
 EOT
       end.and_return("http://url")
-      expect(job).to receive(:schedule_jobs).with([agent], chef_automation, "http://url").and_return(["a-job-jid"])
+      expected_payload = {run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: "http://url", debug:false, attributes: nil}
+      expect(job).to receive(:schedule_jobs).with([agent], "chef", "zero", 3600, expected_payload).and_return(["a-job-jid"])
       ChefAutomationJob.perform_now(job)
       run.reload
       expect(run.jobs).to eq(["a-job-jid"])
       expect(run.state).to eq("executing")
       expect(run.repository_revision).to eq("033e3e01379f8b81596c4367fdc91a8d22f47c85")
+      expect(TrackAutomationJob).to have_been_enqueued.with(token, job.job_id)
     end
   end
 
