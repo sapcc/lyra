@@ -15,6 +15,7 @@ RSpec.describe TrackAutomationJob, type: :job do
     job.perform_now
     run.reload
     expect(run.state).to eq("completed")
+    expect(run.jobs).to eq(["jid1", "jid2"])
   end
 
   it "fails a run when one arc jobs has failed" do

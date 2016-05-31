@@ -3,10 +3,17 @@ class TrackAutomationJob < ActiveJob::Base
   include MonsoonOpenstackAuthWrapper
   include ArcClient
 
+  rescue_from(StandardError) do |exception|
+    bt = Rails.backtrace_cleaner.clean(exception.backtrace)
+    msg = "#{exception.message}:\n" + bt.join("\n")
+    logger.error msg 
+    raise exception
+  end
+
   def perform(token, run_jid)
     run = Run.find_by_job_id(run_jid)
     return unless run #Run not found -> exit 
-    jids = Array(run.jobs)
+    jids = Array(run.jobs.dup)
     failed = []
     completed = []
     loop do
@@ -20,13 +27,12 @@ class TrackAutomationJob < ActiveJob::Base
       sleep 5
     end
     run.update!(state: failed.empty? ? 'completed' : 'failed')
-
   end
 
   private
 
   def arc_job id
-    arc.find_job(id)
+    arc.find_job(current_user.token, id)
   end
   
 end
