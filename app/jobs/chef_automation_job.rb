@@ -24,7 +24,16 @@ class ChefAutomationJob < ActiveJob::Base
     run.update_attribute(:repository_revision, sha)
 
     #TODO: use advisory locks and cache based on sha hash
-    url = create_artifacts repo, sha
+    run.log "Another process is already creating the artifact for #{sha}. Waiting on it." if Run.advisory_lock_exists? artifact_name(sha)
+    url = Run.with_advisory_lock(artifact_name(sha)) do
+      if artifact_published?(sha)
+        run.log "Re-using exiting artifact for revision #{sha}"
+        artifact_url(artifact_name(sha))
+      else
+        run.log "Creating artifact for revision #{sha}"
+        create_artifact repo, sha
+      end 
+    end
 
     chef_payload = {
       run_list: chef_automation.run_list,
@@ -43,10 +52,10 @@ class ChefAutomationJob < ActiveJob::Base
 
   private
 
-  def create_artifacts(repo, sha)
+  def create_artifact(repo, sha)
     Dir.mktmpdir do |dir|
       checkout_dir = ::File.join dir, "repo"
-      tarball = ::File.join(dir, "#{artifact_key(sha)}.tgz")
+      tarball = ::File.join dir, artifact_name(sha) 
       repo.checkout(checkout_dir, sha)
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
         @run.log("Berksfile detected. Running berks package...\n")
@@ -62,7 +71,7 @@ class ChefAutomationJob < ActiveJob::Base
         #tar the checkout dir
         execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
       end
-      publish_tarball(tarball)
+      publish_artifact(tarball, sha)
     end
   end
 

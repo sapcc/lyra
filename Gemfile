@@ -37,7 +37,7 @@ gem 'posix-spawn'
 
 gem 'swift_client'
 
-#gem 'with_advisory_lock'
+gem 'with_advisory_lock'
 
 # Sentry crash reporting 
 gem 'sentry-raven'

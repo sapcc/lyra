@@ -29,7 +29,8 @@ RSpec.describe ChefAutomationJob, type: :job do
       add_commit("Berksfile", "source 'https://supermarket.chef.io'\nmetadata", "add Berksfile", remote: true)
       add_commit("metadata.rb", "name 'cookbook1'\nversion '1.0.0'", "add metadata.rb", remote: true)
       expect(job).to receive(:list_agents).with("bla=fasel").and_return([agent])
-      expect(job).to receive(:publish_tarball) do |tarball|
+      expect(job).to receive(:artifact_published?).and_return false
+      expect(job).to receive(:publish_artifact) do |tarball, sha|
         expect(`tar -ztf #{tarball}`). to eq(<<EOT)
 .
 cookbooks
@@ -58,7 +59,8 @@ EOT
       run = FactoryGirl.create(:run, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id) 
 
       expect(job).to receive(:list_agents).with("bla=fasel").and_return([agent])
-      expect(job).to receive(:publish_tarball) do |tarball|
+      expect(job).to receive(:artifact_published?).and_return false
+      expect(job).to receive(:publish_artifact) do |tarball, sha|
         expect(`tar -ztf #{tarball}`).to eq(<<EOT)
 ./
 ./configure

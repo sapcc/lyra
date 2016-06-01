@@ -16,8 +16,17 @@ class ScriptAutomationJob < ActiveJob::Base
     sha = execute("git --git-dir=#{repo_path} rev-parse #{script_automation.repository_revision}").strip
     run.update_attribute(:repository_revision, sha)
 
-    #TODO: use advisory locks and cache based on sha hash
-    url = create_artifacts(repo, sha)
+
+    run.log "Another process is already creating the artifact for revision #{sha}. Waiting on it." if Run.advisory_lock_exists? artifact_name(sha)
+    url = Run.with_advisory_lock(artifact_name(sha)) do
+      if artifact_published?(sha)
+        run.log "Re-using exiting artifact for revision #{sha}"
+        artifact_url(artifact_name(sha))
+      else
+        run.log "Creating artificat for revision #{sha}"
+        create_artifact repo, sha
+      end 
+    end
 
     execute_payload = {
       path: script_automation.path,
@@ -37,11 +46,11 @@ class ScriptAutomationJob < ActiveJob::Base
 
   private 
 
-  def create_artifacts(repo, sha)
+  def create_artifact(repo, sha)
     Dir.mktmpdir do |dir|
-      tarball = ::File.join(dir, "#{artifact_key(sha)}.tgz")
+      tarball = ::File.join(dir, artifact_name(sha))
       execute("git --git-dir=#{repo.path} archive -o #{tarball} #{sha}")
-      publish_tarball(tarball)
+      publish_artifact(tarball, artifact_name(sha))
     end
   end
 end

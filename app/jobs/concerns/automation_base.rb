@@ -26,24 +26,27 @@ module AutomationBase
     out
   end
 
-  def artifact_key(sha)
-    "#{sha}-#{self.class.to_s.downcase.gsub(/automation|job/, "")}"
+  def artifact_name(sha)
+    "#{sha}-#{self.class.to_s.downcase.gsub(/automation|job/, "")}.tgz"
   end
 
-  def tarball_published?(sha)
-    Swift.client.head_object(artifact_key(sha), "monsoon-automation")
+  def artifact_published?(sha)
+    Swift.client.head_object(artifact_name(sha), "monsoon-automation")
     return true
   rescue SwiftClient::ResponseError
     return false
   end
 
-  def publish_tarball(path)
-    objectname = File.basename(path)
+  def artifact_url(filename)
+    Swift.client.temp_url filename, "monsoon-automation"
+  end
+
+  def publish_artifact(path, name)
     human_size = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.new(File.size?(path),{}).convert rescue ""
     run.log("Uploading #{objectname} (#{human_size})...\n")
     File.open(path, "r") do |f|
-      Swift.client.put_object objectname, f, "monsoon-automation", {"Content-Type" => 'application/gzip'}
-      Swift.client.temp_url objectname, "monsoon-automation"
+      Swift.client.put_object name, f, "monsoon-automation", {"Content-Type" => 'application/gzip'}
+      artifact_url(name) 
     end
   end
   
