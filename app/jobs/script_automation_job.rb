@@ -23,7 +23,7 @@ class ScriptAutomationJob < ActiveJob::Base
         run.log "Re-using exiting artifact for revision #{sha}"
         artifact_url(artifact_name(sha))
       else
-        run.log "Creating artificat for revision #{sha}"
+        run.log "Creating artifact for revision #{sha}"
         create_artifact repo, sha
       end 
     end
