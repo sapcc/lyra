@@ -43,7 +43,7 @@ module AutomationBase
 
   def publish_artifact(path, name)
     human_size = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.new(File.size?(path),{}).convert rescue ""
-    run.log("Uploading #{objectname} (#{human_size})...\n")
+    run.log("Uploading #{name} (#{human_size})...\n")
     File.open(path, "r") do |f|
       Swift.client.put_object name, f, "monsoon-automation", {"Content-Type" => 'application/gzip'}
       artifact_url(name) 
