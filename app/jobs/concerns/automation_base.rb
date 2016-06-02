@@ -30,15 +30,15 @@ module AutomationBase
     "#{sha}-#{self.class.to_s.downcase.gsub(/automation|job/, "")}.tgz"
   end
 
-  def artifact_published?(sha)
-    Swift.client.head_object(artifact_name(sha), "monsoon-automation")
+  def artifact_published?(name)
+    Swift.client.head_object(name, "monsoon-automation")
     return true
   rescue SwiftClient::ResponseError
     return false
   end
 
-  def artifact_url(filename)
-    Swift.client.temp_url filename, "monsoon-automation"
+  def artifact_url(name)
+    Swift.client.temp_url name, "monsoon-automation"
   end
 
   def publish_artifact(path, name)

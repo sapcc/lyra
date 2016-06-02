@@ -35,11 +35,14 @@ class ChefAutomationJob < ActiveJob::Base
       end 
     end
 
+    all_agents = list_agents("", %w{online hostname fqdn domain ipaddress})
+
     chef_payload = {
       run_list: chef_automation.run_list,
       recipe_url: url,
       attributes: chef_automation.chef_attributes,
       debug: false,
+      nodes: all_agents.map {|a| agent_to_node a} 
     }
     jobs = schedule_jobs(agents, 'chef', 'zero', chef_automation.timeout, chef_payload)
     run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
@@ -71,8 +74,27 @@ class ChefAutomationJob < ActiveJob::Base
         #tar the checkout dir
         execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
       end
-      publish_artifact(tarball, sha)
+      publish_artifact(tarball, artifact_name(sha))
     end
+  end
+
+  def agent_to_node(agent)
+    #flatten our key value tags to chef's plain tags
+    tags = Array(agent.tags).map {|k,v|"#{k}=#{v}"}
+    tags << (agent.facts["online"] ? "online" : "offline")
+
+    {
+      name: agent.agent_id,
+      normal: {
+        tags: tags
+      },
+      automatic: {
+        ipaddress: agent.facts["ipaddress"],
+        hostname: agent.facts["hostname"],
+        fqdn: agent.facts["fqdn"]
+      }.reject { |k,v|v.blank? },
+      run_list: []
+    }
   end
 
 

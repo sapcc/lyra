@@ -39,11 +39,11 @@ module ArcClient
     end
   end
 
-  def list_agents(filter)
+  def list_agents(filter, facts = %w{online hostname agents})
     page = 1 
     agents = []
     loop do
-      resp = arc.list_agents!(current_user.token, filter, %w{online hostname agents}, page, 100)
+      resp = arc.list_agents!(current_user.token, filter, facts, page, 100)
       agents.concat(resp.data)
       break if page >= resp.pagination.total_pages
       page += 1

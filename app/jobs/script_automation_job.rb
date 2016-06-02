@@ -17,9 +17,9 @@ class ScriptAutomationJob < ActiveJob::Base
     run.update_attribute(:repository_revision, sha)
 
 
-    run.log "Another process is already creating the artifact for revision #{sha}. Waiting on it." if Run.advisory_lock_exists? artifact_name(sha)
+    run.log "Another process is already building the artifact for #{sha}. Waiting..." if Run.advisory_lock_exists? artifact_name(sha)
     url = Run.with_advisory_lock(artifact_name(sha)) do
-      if artifact_published?(sha)
+      if artifact_published?(artifact_name(sha))
         run.log "Re-using exiting artifact for revision #{sha}"
         artifact_url(artifact_name(sha))
       else
