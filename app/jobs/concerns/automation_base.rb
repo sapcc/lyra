@@ -8,7 +8,7 @@ module AutomationBase
 
     rescue_from(StandardError) do |exception|
       bt = Rails.backtrace_cleaner.clean(exception.backtrace)
-      msg = "#{exception.message}:\n" + bt.join("\n")
+      msg = "<#{exception.class}> #{exception.to_s}:\n" + bt.join("\n")
       logger.error msg 
       run.log msg 
       run.update!(state: 'failed')
