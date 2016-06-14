@@ -5,6 +5,18 @@
     "id": { "type": "string"},
     "state": { "type": "string", "enum": ["preparing", "executing", "failed", "completed"]},
     "automation_id": { "type": "string" },
-    "automation_name": { "type": "string" }
+    "automation_name": { "type": "string" },
+    "owner": { "$ref": "#/definitions/owner" }
+  },
+  "definitions": {
+    "owner": {
+      "type":"object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {"type":"string"},
+        "name": {"type":"string"}
+      }
+    }
+
   }
 }

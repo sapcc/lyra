@@ -133,7 +133,7 @@ CREATE TABLE runs (
     state character varying DEFAULT 'preparing'::character varying NOT NULL,
     log character varying,
     jobs character varying[],
-    owner character varying NOT NULL,
+    owner jsonb NOT NULL,
     project_id character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -261,4 +261,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160120095306');
 INSERT INTO schema_migrations (version) VALUES ('20160309121739');
 
 INSERT INTO schema_migrations (version) VALUES ('20160318135530');
+
+INSERT INTO schema_migrations (version) VALUES ('20160613124044');
 

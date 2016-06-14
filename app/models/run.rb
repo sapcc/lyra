@@ -11,7 +11,7 @@
 #  state                 :string           default("preparing"), not null
 #  log                   :string
 #  jobs                  :string           is an Array
-#  owner                 :string           not null
+#  owner                 :jsonb            not null
 #  project_id            :string           not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -36,6 +36,7 @@ class Run < ActiveRecord::Base
 
   VALID_STATES = %w(preparing executing failed completed)
 
+  before_validation :serialize_owner
   validates :state, inclusion: {in: VALID_STATES, message: "'%{value}' is an invalid state"}
 
   validates_presence_of :owner, :automation
@@ -84,6 +85,17 @@ class Run < ActiveRecord::Base
 
   def update_project_id
     self.project_id = automation.project_id
+  end
+
+  def serialize_owner
+    if owner.respond_to?(:id)
+      self.owner = {
+        id: owner.id,
+        name: owner.name,
+        domain_id: owner.user_domain_id,
+        domain_name: owner.user_domain_name
+      }
+    end
   end
 
 end

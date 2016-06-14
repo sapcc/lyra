@@ -3,6 +3,7 @@ require File.join(Gem.loaded_specs['monsoon-openstack-auth'].full_gem_path,'spec
 module AuthLetDeclarations
   extend RSpec::SharedContext
   let(:token) { AuthenticationStub.test_token["value"] }
+  let(:current_user) { MonsoonOpenstackAuth::Authentication::AuthUser.new(AuthenticationStub.test_token) }
   let(:project_id) { AuthenticationStub.project_id } 
 end
 

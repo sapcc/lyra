@@ -24,6 +24,12 @@ RSpec.describe Run, type: :model do
     expect(run).to be_invalid
   end
 
+  it 'serializer an owner_object' do
+    run = FactoryGirl.create(:run, job_id: 'a-job_id', owner: current_user) 
+
+    expect(run.owner.keys).to match_array(%w{id name domain_id domain_name})
+  end
+
   it 'requires an automation' do
     run.automation = nil
     expect(run).to be_invalid

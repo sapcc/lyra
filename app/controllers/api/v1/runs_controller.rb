@@ -18,7 +18,7 @@ class Api::V1::RunsController < ApplicationController
   # POST api/v1/runs.json
   def create
     automation = Automation.by_project(@project).find(run_params[:automation_id])
-    @run = Run.new(run_params.merge!(automation: automation, token: current_user.token, owner: current_user.id))
+    @run = Run.new(run_params.merge!(automation: automation, token: current_user.token, owner: current_user))
 
     if @run.save
       render json: @run, status: :created
