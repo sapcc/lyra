@@ -27,7 +27,7 @@ class ChefAutomationJob < ActiveJob::Base
     run.log "Another process is already creating the artifact for #{sha}. Waiting on it." if Run.advisory_lock_exists? artifact_name(sha)
     url = Run.with_advisory_lock(artifact_name(sha)) do
       if artifact_published?(artifact_name(sha))
-        run.log "Re-using exiting artifact for revision #{sha}"
+        run.log "Using exiting artifact for revision #{sha}"
         artifact_url(artifact_name(sha))
       else
         run.log "Creating artifact for revision #{sha}"
@@ -42,7 +42,7 @@ class ChefAutomationJob < ActiveJob::Base
       recipe_url: url,
       attributes: chef_automation.chef_attributes,
       debug: false,
-      nodes: all_agents.map {|a| agent_to_node a} 
+      nodes: all_agents.map {|a| agent_to_node a}
     }
     jobs = schedule_jobs(agents, 'chef', 'zero', chef_automation.timeout, chef_payload)
     run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
