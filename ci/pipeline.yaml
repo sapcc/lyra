@@ -109,9 +109,9 @@ jobs:
         passed: [test-cli]
         trigger: true
       - task: build
-        file: cli.git/ci/build-linux.yml
+        file: cli.git/ci/build-cli.yml
       - task: prepare-release
-        file: cli.git/ci/build-release.yml
+        file: cli.git/ci/prepare-release.yml
       - put: cli-release
         params:
           name: release/name
