@@ -982,7 +982,6 @@
     }
 
     function setAttribute(el, name, value) {
-
       if (name.indexOf(':') > -1) {
         // Attribute names can be namespaced. E.g. `image` elements
         // have a `xlink:href` attribute to set the source of the image.
@@ -1771,7 +1770,9 @@
             }
           }
           closestSamples.sort(function(a, b) { return a.refDistance - b.refDistance; });
-          spot = closestSamples[0].sample;
+          if(closestSamples.length > 0) {
+            spot = closestSamples[0].sample;
+          }
         }
 
         return spot;

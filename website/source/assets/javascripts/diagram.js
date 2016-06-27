@@ -281,7 +281,6 @@ var createLink = function(elm1, elm2) {
   var myLink = new erd.Line({
     source: { id: elm1.id },
     target: { id: elm2.id },
-    class: "test",
   });
 
   return myLink.addTo(graph);
