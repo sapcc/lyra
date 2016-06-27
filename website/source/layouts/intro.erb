@@ -1,0 +1,15 @@
+<% wrap_layout :inner do %>
+  <% content_for :sidebar do %>
+    <div class="docs-sidebar hidden-print affix-top" role="complementary">
+      <ul class="nav docs-sidenav">
+
+        <li<%= sidebar_current("what") %>>
+          <%= link_to 'What is Lyra?', '/intro/index.html' %>
+        </li>
+
+      </ul>
+    </div>
+  <% end %>
+
+  <%= yield %>
+<% end %>
