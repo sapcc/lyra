@@ -340,5 +340,5 @@ $(function() {
   arrowSourceHidden(cliToArcApi.id);
 
   // add popovers
-  getJqueryElement(dashboard.id).popover({ title: 'Dashboard', container: '#popover_container'});
+  getJqueryElement(dashboard.id).popover({ title: 'Dashboard', content: $('#dashboard_popover_content').html(), html: true,  container: '#popover_container'});
 });
