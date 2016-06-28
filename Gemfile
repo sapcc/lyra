@@ -30,6 +30,9 @@ source 'https://gems.***REMOVED***' do
   gem 'gitmirror'
 end
 
+# Prometheus instrumentation
+gem 'prometheus-client'
+
 # Avoid g++ dependency https://github.com/knu/ruby-domain_name/issues/3
 # unf is pulled in by the ruby-arc-client
 gem 'unf', '>= 0.2.0beta2'

@@ -177,6 +177,8 @@ GEM
     pg (0.18.4)
     pkg-config (1.1.7)
     posix-spawn (0.3.11)
+    prometheus-client (0.5.0)
+      quantile (~> 0.2.0)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -184,6 +186,7 @@ GEM
     pry-rails (0.3.4)
       pry (>= 0.9.10)
     puma (3.4.0)
+    quantile (0.2.0)
     que (0.11.4)
     que-web (0.4.0)
       erubis
@@ -340,6 +343,7 @@ DEPENDENCIES
   monsoon-openstack-auth!
   pg (~> 0.15)
   posix-spawn
+  prometheus-client
   pry-rails
   puma
   que

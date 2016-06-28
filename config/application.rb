@@ -29,6 +29,20 @@ module MonsoonAutomation
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Add metrics to Prometheus
+    require 'prometheus/client/rack/collector'
+    config.middleware.insert_after ActionDispatch::DebugExceptions, Prometheus::Client::Rack::Collector do |env|
+      {
+        method: env['REQUEST_METHOD'].downcase,
+        host:   env['HTTP_HOST'].to_s,
+        # just take the first component of the path as a label
+        path:   env.fetch('REQUEST_PATH', "")[0, env.fetch('REQUEST_PATH', "").index('/',1) || 20 ],
+      }
+    end
+
+    require 'prometheus/client/rack/exporter'
+    config.middleware.insert_after  Prometheus::Client::Rack::Collector, Prometheus::Client::Rack::Exporter
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
