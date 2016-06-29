@@ -72,24 +72,6 @@ paper.on('cell:unhighlight', function() {
 
 // Create shapes
 
-var employee = new erd.Entity({
-
-  position: { x: 100, y: 200 },
-  attrs: {
-    text: {
-      fill: '#ffffff',
-      text: 'Employee',
-      'letter-spacing': 0,
-      style: { 'text-shadow': '1px 0 1px #333333' }
-    },
-    '.outer, .inner': {
-      fill: '#31d0c6',
-      stroke: 'none',
-      filter: { name: 'dropShadow',  args: { dx: 0.5, dy: 2, blur: 2, color: '#333333' }}
-    }
-  }
-});
-
 var wage = new erd.WeakEntity({
 
   position: { x: 530, y: 200 },
@@ -110,28 +92,6 @@ var wage = new erd.WeakEntity({
       stroke: '#31d0c6',
       points: '160,0 160,60 0,60 0,0',
       filter: { name: 'dropShadow',  args: { dx: 0.5, dy: 2, blur: 2, color: '#333333' }}
-    }
-  }
-});
-
-var paid = new erd.IdentifyingRelationship({
-
-  position: { x: 350, y: 190 },
-  attrs: {
-    text: {
-      fill: '#ffffff',
-      text: 'Gets paid',
-      'letter-spacing': 0,
-      style: { 'text-shadow': '1px 0 1px #333333' }
-    },
-    '.inner': {
-      fill: '#7c68fd',
-      stroke: 'none'
-    },
-    '.outer': {
-      fill: 'none',
-      stroke: '#7c68fd',
-      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 1, color: '#333333' }}
     }
   }
 });
@@ -241,13 +201,31 @@ var amount = new erd.Derived({
   }
 });
 
-var uses = new erd.Relationship({
+var bigServices = new erd.Entity({
+
+  position: { x: 100, y: 200 },
+  attrs: {
+    text: {
+      fill: '#ffffff',
+      text: 'Employee',
+      'letter-spacing': 0,
+      style: { 'text-shadow': '1px 0 1px #333333' }
+    },
+    '.outer, .inner': {
+      fill: '#cc33ff',
+      stroke: 'none',
+      filter: { name: 'dropShadow',  args: { dx: 0.5, dy: 2, blur: 2, color: '#333333' }}
+    }
+  }
+});
+
+var service = new erd.Relationship({
 
   position: { x: 300, y: 390 },
   attrs: {
     text: {
       fill: '#ffffff',
-      text: 'Uses',
+      text: 'Service',
       'letter-spacing': 0,
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
@@ -259,20 +237,85 @@ var uses = new erd.Relationship({
   }
 });
 
+var serviceRetirement = new erd.Relationship({
+
+  position: { x: 300, y: 390 },
+  attrs: {
+    text: {
+      fill: '#ffffff',
+      text: 'Service',
+      'letter-spacing': 0,
+      style: { 'text-shadow': '1px 0 1px #333333' }
+    },
+    '.outer': {
+      fill: '#797d9a',
+      stroke: '#fe854f',
+      'stroke-dasharray': '3,1',
+      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
+    }
+  }
+});
+
+
+var group = new erd.Entity({
+
+  position: { x: 750, y: 90 },
+  size: { width: 200, height: 200 },
+  attrs: {
+    text: {
+      fill: '#ffffff',
+      text: 'Project Example',
+      'letter-spacing': 0,
+      'y-alignment': -120,
+      fill: '#00000',
+    },
+    '.outer, .inner': {
+      fill: '#e6e6e6',
+      stroke: 'none',
+      filter: { name: 'dropShadow',  args: { dx: 0, dy: 1, blur: 1, color: '#333333' }}
+    }
+  }
+});
+
+var broker = new erd.IdentifyingRelationship({
+
+  position: { x: 550, y: 250 },
+  attrs: {
+    text: {
+      fill: '#ffffff',
+      text: 'MQTT \nBroker',
+      'letter-spacing': 0,
+      style: { 'text-shadow': '1px 0 1px #333333' }
+    },
+    '.inner': {
+      fill: '#7c68fd',
+      stroke: 'none'
+    },
+    '.outer': {
+      fill: 'none',
+      stroke: '#7c68fd',
+      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 1, color: '#333333' }}
+    }
+  }
+});
+
 // Create new shapes by cloning
 
-var date = employeeName.clone().position(590, 80).attr('text/text', 'Date');
-
-var car = employee.clone().position(430, 400).attr('text/text', 'Company car');
-
-var plate = number.clone().position(405, 500).attr('text/text', 'Plate');
+//var date = employeeName.clone().position(590, 80).attr('text/text', 'Date');
+//var car = bigServices.clone().position(430, 400).attr('text/text', 'Company car');
+//var plate = number.clone().position(405, 500).attr('text/text', 'Plate');
 
 
 
-var lyra = employee.clone().position(300, 50).attr('text/text', 'Automation Service \n(lyra)');
-var arcApi = employee.clone().position(300, 200).attr('text/text', 'Arc API');
-var dashboard = number.clone().position(50, 50).attr('text/text', 'Dashboard');
-var cli = number.clone().position(50, 200).attr('text/text', 'Cli');
+var lyra = bigServices.clone().position(300, 200).attr('text/text', 'Lyra \n(automation service)');
+var arcApi = bigServices.clone().position(300, 450).attr('text/text', 'Arc API');
+var elektra = number.clone().position(5, 200).attr('text/text', 'Elektra');
+var lyraCli = number.clone().position(5, 450).attr('text/text', 'Lyra cli');
+var pkiService = service.clone().position(350, 5).attr('text/text', 'PKI');
+var swiftService = service.clone().position(550, 5).attr('text/text', 'SWIFT');
+var updateSite = serviceRetirement.clone().position(500, 135).attr('text/text', 'Update \nSite');
+var node1 = number.clone().position(800, 125).attr('text/text', 'Node1');
+var node2 = number.clone().position(800, 200).attr('text/text', 'Node2');
 
 // Helpers
 
@@ -300,12 +343,25 @@ var createLabel = function(txt) {
 
 // Add shapes to the graph
 
-graph.addCells([dashboard, cli, lyra, arcApi]);
+graph.addCells([elektra, lyraCli, lyra, arcApi, broker, pkiService, swiftService, updateSite, group, node1, node2]);
 
-dashToLyra = createLink(dashboard, lyra);
-dashToArcApi = createLink(dashboard, arcApi);
-cliToLyra = createLink(cli, lyra);
-cliToArcApi = createLink(cli, arcApi);
+elektraToLyra = createLink(elektra, lyra);
+elektraToArcApi = createLink(elektra, arcApi);
+elektraToPki = createLink(elektra, pkiService);
+cliToLyra = createLink(lyraCli, lyra);
+cliToArcApi = createLink(lyraCli, arcApi);
+cliToPki = createLink(lyraCli, pkiService);
+lyraToArcApi = createLink(lyra, arcApi);
+arcApiToBroker = createLink(arcApi, broker);
+updateSiteToSwift = createLink(updateSite, swiftService);
+node1ToUpdate = createLink(node1, updateSite);
+node2ToUpdate = createLink(node2, updateSite);
+node1ToSwift = createLink(node1, swiftService);
+node2ToSwift = createLink(node2, swiftService);
+node1ToBroker = createLink(node1, broker);
+node2ToBroker = createLink(node2, broker);
+node1ToPki = createLink(node1, pkiService);
+node2ToPki = createLink(node2, pkiService);
 
 //createLink(employee, paid).set(createLabel('1'));
 //createLink(employee, number);
@@ -334,11 +390,30 @@ function arrowSourceHidden(id) {
 
 $(function() {
   // remover source arrow
-  arrowSourceHidden(dashToLyra.id);
-  arrowSourceHidden(dashToArcApi.id);
+  arrowSourceHidden(elektraToLyra.id);
+  arrowSourceHidden(elektraToArcApi.id);
   arrowSourceHidden(cliToLyra.id);
   arrowSourceHidden(cliToArcApi.id);
+  arrowSourceHidden(lyraToArcApi.id);
+  arrowSourceHidden(elektraToPki.id);
+  arrowSourceHidden(cliToPki.id);
+  arrowSourceHidden(updateSiteToSwift.id);
+  arrowSourceHidden(node1ToSwift.id);
+  arrowSourceHidden(node2ToSwift.id);
+  arrowSourceHidden(node1ToUpdate.id);
+  arrowSourceHidden(node2ToUpdate.id);
+  arrowSourceHidden(node1ToBroker.id);
+  arrowSourceHidden(node2ToBroker.id);
+  arrowSourceHidden(node1ToPki.id);
+  arrowSourceHidden(node2ToPki.id);
 
   // add popovers
-  getJqueryElement(dashboard.id).popover({ title: 'Dashboard', content: $('#dashboard_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(elektra.id).popover({ title: 'Elektra Details', content: $('#elektra_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(lyraCli.id).popover({ title: 'Lyra Cli Details', content: $('#lyra_cli_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(lyra.id).popover({ title: 'Lyra Details', content: $('#lyra_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(arcApi.id).popover({ title: 'Arc API Details', content: $('#arc_api_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(pkiService.id).popover({ title: 'PKI Details', content: $('#pki_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(updateSite.id).popover({ title: 'Update Site Details <br><b class="text-danger">Retirement in progress</b>', content: $('#update_site_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(broker.id).popover({ title: 'Broker Details', content: $('#broker_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(swiftService.id).popover({ title: 'SWIFT Details', content: $('#swift_popover_content').html(), html: true,  container: '#popover_container'});
 });
