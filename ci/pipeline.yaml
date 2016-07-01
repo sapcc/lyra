@@ -108,17 +108,32 @@ jobs:
       - get: cli.git 
         passed: [test-cli]
         trigger: true
-      - task: build
-        file: cli.git/ci/build-cli.yml
+      - get: cli.version
+        params: { bump: true }
+      - aggregate:
+        - task: build-linux
+          file: cli.git/ci/build.yml
+          output_mapping: { binary: binary-linux }
+        - task: build-windows
+          file: cli.git/ci/build.yml
+          output_mapping: { binary: binary-windows }
+          params: { GOOS: windows }
+        - task: build-darwin
+          file: cli.git/ci/build-darwin.yml
+          output_mapping: { binary: binary-darwin }
       - task: prepare-release
         file: cli.git/ci/prepare-release.yml
-      - put: cli-release
-        params:
-          name: release/name
-          tag: release/tag
-          body: release/body
-          commitsh: release/commitsh
-          globs: [release/artifacts/*]
+      - aggregate:
+        - put: cli.version
+          params: { filename: cli.version/current }
+        - put: cli-release
+          params:
+            name: release/name
+            tag: cli.version/current
+            tag_prefix: v
+            body: release/body
+            commitsh: release/commitsh
+            globs: [release/artifacts/*]
 
 
 resources:
@@ -154,6 +169,17 @@ resources:
     source:
       uri: git://gitHub.***REMOVED*** /monsoon/lyra-cli.git
       branch: master
+  - name: cli.version
+    type: monsoon-version
+    source: 
+      key:  lyra-cli 
+      initial:   "00010101"
+      username:  {{swift-username}}
+      api_key:   {{swift-api-key}}
+      auth_url:  {{swift-auth_url}}
+      domain:    {{swift-domain}}
+      tenant_id: {{swift-project-id}}
+      container: {{swift-container-version}}
   - name: cli-release
     type: github-release 
     source:
