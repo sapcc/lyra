@@ -1,0 +1,22 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: { repository: docker.***REMOVED***/monsoon3/kubectl, tag: 'v1.2.4'}
+
+inputs:
+- name: automation.image 
+
+run:
+  path: sh
+  args:
+    - -exc
+    - |
+      repository=$(cat automation.image/repository)
+      tag=$(cat automation.image/tag)
+      kubectl rolling-update $RC --namespace=lyra --image=$repository:$tag
+params:
+  REGION:
+  GITHUB_TOKEN:
+  RC:

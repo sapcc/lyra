@@ -44,8 +44,10 @@ jobs:
   - name: test
     plan:
       - get: automation.image
-        passed: [build]
+        passed: [ build ]
         trigger: true
+      - get: automation.git
+        passed: [ build ]
       - task: run
         privileged: true
         config: 
@@ -62,38 +64,20 @@ jobs:
     - get: automation.image
       passed: [ test ]
       trigger: true
+    - get: automation.git
+      passed: [ test ]
     - task: rolling-update-api
-      config:
-        platform: linux
-        <<: *pipeline_image
-        inputs:
-          - name: automation.image
-            path: source.image
-        params:
-          CA_CERT: {{kube-staging-ca-cert}}
-          CLIENT_CERT: {{kube-staging-client-cert}}
-          CLIENT_KEY: {{kube-staging-client-key}}
-          KUBE_MASTER: https://apiserver.staging.***REMOVED*** 
-          NAMESPACE: lyra 
-          RC_NAME: api
-        run:
-          path: kubectl-rolling-update
+      file: automation.git/ci/rolling-update.yaml
+      params:
+        REGION: staging
+        GITHUB_TOKEN: {{github-access-token}} 
+        RC: api
     - task: rolling-update-worker
-      config:
-        platform: linux
-        <<: *pipeline_image
-        inputs:
-          - name: automation.image
-            path: source.image
-        params:
-          CA_CERT: {{kube-staging-ca-cert}}
-          CLIENT_CERT: {{kube-staging-client-cert}}
-          CLIENT_KEY: {{kube-staging-client-key}}
-          KUBE_MASTER: https://apiserver.staging.***REMOVED*** 
-          NAMESPACE: lyra 
-          RC_NAME: worker 
-        run:
-          path: kubectl-rolling-update
+      file: automation.git/ci/rolling-update.yaml
+      params:
+        REGION: staging
+        GITHUB_TOKEN: {{github-access-token}}
+        RC: worker
 
   - name: test-cli
     plan:
