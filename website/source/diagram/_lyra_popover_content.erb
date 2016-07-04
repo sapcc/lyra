@@ -1,15 +1,30 @@
 <ul>
   <li>
-    <%= link_to 'Lyra - Staging', 'https://automation-staging.***REMOVED***/api/v1/automations' %>
-  </li>
-  <li>
     <%= link_to 'Github', 'https://gitHub.***REMOVED*** /monsoon/monsoon-automation' %>
   </li>
   <li>
     <%= link_to 'Concourse', 'http://concourse.staging.***REMOVED***:8080/pipelines/lyra?groups=master' %>
   </li>
+  <li class="list-header">
+    Staging
+  </li>
   <li>
-    <%= link_to 'Grafana dashboard overview', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview' %>
+    <%= link_to 'Lyra', 'https://lyra.***REMOVED***/healthcheck' %>
+  </li>
+  <li>
+    <%= link_to 'Grafana dashboard', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview' %>
+  </li>
+  <li>
+    <%= link_to 'Documentation', 'https://documentation.***REMOVED***/docs/automation/' %>
+  </li>
+  <li class="list-header">
+    Production
+  </li>
+  <li>
+    <%= link_to 'Lyra', 'https://automation.***REMOVED***/healthcheck' %>
+  </li>
+  <li>
+    <%= link_to 'Grafana dashboard', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview' %>
   </li>
   <li>
     <%= link_to 'Documentation', 'https://documentation.***REMOVED***/docs/automation/' %>

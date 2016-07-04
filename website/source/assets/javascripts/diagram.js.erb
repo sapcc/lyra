@@ -122,80 +122,14 @@ var number = new erd.Key({
       fill: '#ffffff',
       text: 'Number',
       'letter-spacing': 0,
+      'text-decoration': '',
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
     '.outer, .inner': {
-      fill: '#feb662',
+      fill: '#226ca9',
       stroke: 'none'
     },
     '.outer': {
-      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
-    }
-  }
-});
-
-var employeeName = new erd.Normal({
-
-  position: { x: 75, y: 30 },
-  attrs: {
-    text: {
-      fill: '#ffffff',
-      text: 'Name',
-      'letter-spacing': 0,
-      style: { 'text-shadow': '1px 0 1px #333333' }
-    },
-    '.outer': {
-      fill: '#fe8550',
-      stroke: '#fe854f',
-      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
-    }
-  }
-});
-
-var skills = new erd.Multivalued({
-
-  position: { x: 150, y: 90 },
-  attrs: {
-    text: {
-      fill: '#ffffff',
-      text: 'Skills',
-      'letter-spacing': 0,
-      style: { 'text-shadow': '1px 0px 1px #333333' }
-    },
-    '.inner': {
-      fill: '#fe8550',
-      stroke: 'none',
-      rx: 43,
-      ry: 21
-
-    },
-    '.outer': {
-      fill: '#464a65',
-      stroke: '#fe8550',
-      filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
-    }
-  }
-});
-
-var amount = new erd.Derived({
-
-  position: { x: 440, y: 80 },
-  attrs: {
-    text: {
-      fill: '#ffffff',
-      text: 'Amount',
-      'letter-spacing': 0,
-      style: { 'text-shadow': '1px 0 1px #333333' }
-    },
-    '.inner': {
-      fill: '#fca079',
-      stroke: 'none',
-      'display': 'block'
-    },
-    '.outer': {
-      fill: '#464a65',
-      stroke: '#fe854f',
-      'stroke-dasharray': '3,1',
       filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
     }
   }
@@ -212,7 +146,7 @@ var bigServices = new erd.Entity({
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
     '.outer, .inner': {
-      fill: '#cc33ff',
+      fill: '#226ca9',
       stroke: 'none',
       filter: { name: 'dropShadow',  args: { dx: 0.5, dy: 2, blur: 2, color: '#333333' }}
     }
@@ -230,7 +164,7 @@ var service = new erd.Relationship({
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
     '.outer': {
-      fill: '#797d9a',
+      fill: '#226ca9',
       stroke: 'none',
       filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 1, color: '#333333' }}
     }
@@ -248,8 +182,8 @@ var serviceRetirement = new erd.Relationship({
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
     '.outer': {
-      fill: '#797d9a',
-      stroke: '#fe854f',
+      fill: '#226ca9',
+      stroke: '#ff0000',
       'stroke-dasharray': '3,1',
       filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
     }
@@ -288,24 +222,18 @@ var broker = new erd.IdentifyingRelationship({
       style: { 'text-shadow': '1px 0 1px #333333' }
     },
     '.inner': {
-      fill: '#7c68fd',
+      fill: '#226ca9',
       stroke: 'none'
     },
     '.outer': {
       fill: 'none',
-      stroke: '#7c68fd',
+      stroke: '#226ca9',
       filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 1, color: '#333333' }}
     }
   }
 });
 
 // Create new shapes by cloning
-
-//var date = employeeName.clone().position(590, 80).attr('text/text', 'Date');
-//var car = bigServices.clone().position(430, 400).attr('text/text', 'Company car');
-//var plate = number.clone().position(405, 500).attr('text/text', 'Plate');
-
-
 
 var lyra = bigServices.clone().position(300, 200).attr('text/text', 'Lyra \n(automation service)');
 var arcApi = bigServices.clone().position(300, 450).attr('text/text', 'Arc API');

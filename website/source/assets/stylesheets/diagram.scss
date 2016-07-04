@@ -42,15 +42,12 @@
 /* links */
 
 .link .connection {
-  stroke: #4B4F6A;
+  stroke: black;
   stroke-width: 4px;
 }
 
 .link .marker-arrowhead, .link .marker-vertex {
-  fill: #31D0C6;
-}
-.link .marker-arrowhead:hover {
-  fill: #F39C12;
+  fill: black;
 }
 
 .link-tools .tool-remove circle {
@@ -85,5 +82,11 @@
 .popover-content {
   ul {
     padding-left: 10px;
+  }
+  .list-header {
+    display: block;
+    font-weight: bold;
+    padding-bottom: 5px;
+    padding-top: 10px;
   }
 }
