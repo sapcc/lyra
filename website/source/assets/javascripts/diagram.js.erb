@@ -193,15 +193,14 @@ var serviceRetirement = new erd.Relationship({
 
 var group = new erd.Entity({
 
-  position: { x: 750, y: 90 },
+  position: { x: 500, y: 90 },
   size: { width: 200, height: 200 },
   attrs: {
     text: {
-      fill: '#ffffff',
+      fill: '#000000',
       text: 'Project Example',
       'letter-spacing': 0,
       'y-alignment': -120,
-      fill: '#00000',
     },
     '.outer, .inner': {
       fill: '#e6e6e6',
@@ -213,7 +212,7 @@ var group = new erd.Entity({
 
 var broker = new erd.IdentifyingRelationship({
 
-  position: { x: 550, y: 250 },
+  position: { x: 550, y: 400 },
   attrs: {
     text: {
       fill: '#ffffff',
@@ -236,14 +235,16 @@ var broker = new erd.IdentifyingRelationship({
 // Create new shapes by cloning
 
 var lyra = bigServices.clone().position(300, 200).attr('text/text', 'Lyra \n(automation service)');
+
 var arcApi = bigServices.clone().position(300, 450).attr('text/text', 'Arc API');
 var elektra = number.clone().position(5, 200).attr('text/text', 'Elektra');
 var lyraCli = number.clone().position(5, 450).attr('text/text', 'Lyra cli');
-var pkiService = service.clone().position(350, 5).attr('text/text', 'PKI');
-var swiftService = service.clone().position(550, 5).attr('text/text', 'SWIFT');
-var updateSite = serviceRetirement.clone().position(500, 135).attr('text/text', 'Update \nSite');
-var node1 = number.clone().position(800, 125).attr('text/text', 'Node1');
-var node2 = number.clone().position(800, 200).attr('text/text', 'Node2');
+var pkiService = service.clone().position(350, 35).attr('text/text', 'PKI');
+var swiftService = service.clone().position(800, 145).attr('text/text', 'SWIFT');
+var reverseProxy = service.clone().position(800, 5).attr('text/text', 'Reverse \nProxy');
+var updateSite = serviceRetirement.clone().position(800, 280).attr('text/text', 'Update \nSite');
+var node1 = number.clone().position(510, 105).attr('text/text', 'Node1');
+var node2 = number.clone().position(580, 220).attr('text/text', 'Node2');
 
 // Helpers
 
@@ -271,7 +272,7 @@ var createLabel = function(txt) {
 
 // Add shapes to the graph
 
-graph.addCells([elektra, lyraCli, lyra, arcApi, broker, pkiService, swiftService, updateSite, group, node1, node2]);
+graph.addCells([elektra, lyraCli, lyra, arcApi, broker, pkiService, swiftService, reverseProxy, updateSite, group, node1, node2]);
 
 elektraToLyra = createLink(elektra, lyra);
 elektraToArcApi = createLink(elektra, arcApi);
@@ -284,26 +285,13 @@ arcApiToBroker = createLink(arcApi, broker);
 updateSiteToSwift = createLink(updateSite, swiftService);
 node1ToUpdate = createLink(node1, updateSite);
 node2ToUpdate = createLink(node2, updateSite);
-node1ToSwift = createLink(node1, swiftService);
-node2ToSwift = createLink(node2, swiftService);
+node1ToProxy = createLink(node1, reverseProxy);
+node2ToProxy = createLink(node2, reverseProxy);
 node1ToBroker = createLink(node1, broker);
 node2ToBroker = createLink(node2, broker);
 node1ToPki = createLink(node1, pkiService);
 node2ToPki = createLink(node2, pkiService);
-
-//createLink(employee, paid).set(createLabel('1'));
-//createLink(employee, number);
-//createLink(employee, employeeName);
-//createLink(employee, skills);
-//createLink(employee, isa);
-//createLink(isa, salesman);
-//createLink(salesman, uses).set(createLabel('0..1'));
-//createLink(car, uses).set(createLabel('1..1'));
-//createLink(car, plate);
-//createLink(wage, paid).set(createLabel('N'));
-//createLink(wage, amount);
-//createLink(wage, date);
-
+siwftToProxy = createLink(reverseProxy, swiftService);
 
 function getJqueryElement(id) {
   return $("[model-id='" + id + "']");
@@ -314,8 +302,14 @@ function arrowSourceHidden(id) {
   link.find(".marker-arrowhead-group.marker-arrowhead-group-source").attr("class", "marker-arrowhead-group marker-arrowhead-group-source sourceHidden");
 }
 
-// Document is ready
 
+function popover_close_other_popovers_handler(e){
+  e.stopPropagation();
+  e.preventDefault();
+  $('[data-toggle="popover"]').not(this).popover('hide');
+}
+
+// Document is ready
 $(function() {
   // remover source arrow
   arrowSourceHidden(elektraToLyra.id);
@@ -326,22 +320,33 @@ $(function() {
   arrowSourceHidden(elektraToPki.id);
   arrowSourceHidden(cliToPki.id);
   arrowSourceHidden(updateSiteToSwift.id);
-  arrowSourceHidden(node1ToSwift.id);
-  arrowSourceHidden(node2ToSwift.id);
+  arrowSourceHidden(node1ToProxy.id);
+  arrowSourceHidden(node2ToProxy.id);
   arrowSourceHidden(node1ToUpdate.id);
   arrowSourceHidden(node2ToUpdate.id);
-  arrowSourceHidden(node1ToBroker.id);
-  arrowSourceHidden(node2ToBroker.id);
   arrowSourceHidden(node1ToPki.id);
   arrowSourceHidden(node2ToPki.id);
+  arrowSourceHidden(siwftToProxy.id);
+
 
   // add popovers
   getJqueryElement(elektra.id).popover({ title: 'Elektra Details', content: $('#elektra_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(elektra.id).attr('data-toggle', 'popover');
   getJqueryElement(lyraCli.id).popover({ title: 'Lyra Cli Details', content: $('#lyra_cli_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(lyraCli.id).attr('data-toggle', 'popover');
   getJqueryElement(lyra.id).popover({ title: 'Lyra Details', content: $('#lyra_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(lyra.id).attr('data-toggle', 'popover');
   getJqueryElement(arcApi.id).popover({ title: 'Arc API Details', content: $('#arc_api_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(arcApi.id).attr('data-toggle', 'popover');
   getJqueryElement(pkiService.id).popover({ title: 'PKI Details', content: $('#pki_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(pkiService.id).attr('data-toggle', 'popover');
   getJqueryElement(updateSite.id).popover({ title: 'Update Site Details <br><b class="text-danger">Retirement in progress</b>', content: $('#update_site_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(updateSite.id).attr('data-toggle', 'popover');
   getJqueryElement(broker.id).popover({ title: 'Broker Details', content: $('#broker_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(broker.id).attr('data-toggle', 'popover');
   getJqueryElement(swiftService.id).popover({ title: 'SWIFT Details', content: $('#swift_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(swiftService.id).attr('data-toggle', 'popover');
+
+  // add event click
+  $('[data-toggle="popover"]').on('click', popover_close_other_popovers_handler);
 });
