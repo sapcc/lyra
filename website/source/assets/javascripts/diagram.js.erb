@@ -346,6 +346,8 @@ $(function() {
   getJqueryElement(broker.id).attr('data-toggle', 'popover');
   getJqueryElement(swiftService.id).popover({ title: 'SWIFT Details', content: $('#swift_popover_content').html(), html: true,  container: '#popover_container'});
   getJqueryElement(swiftService.id).attr('data-toggle', 'popover');
+  getJqueryElement(reverseProxy.id).popover({ title: 'Reverse Proxy Details', content: $('#reverse_proxy_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(reverseProxy.id).attr('data-toggle', 'popover');
 
   // add event click
   $('[data-toggle="popover"]').on('click', popover_close_other_popovers_handler);
