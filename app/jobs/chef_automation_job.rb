@@ -41,7 +41,7 @@ class ChefAutomationJob < ActiveJob::Base
       run_list: chef_automation.run_list,
       recipe_url: url,
       attributes: chef_automation.chef_attributes,
-      debug: false,
+      log_level: chef_automation.log_level || "info",
       nodes: all_agents.map {|a| agent_to_node a}
     }
     jobs = schedule_jobs(agents, 'chef', 'zero', chef_automation.timeout, chef_payload)
