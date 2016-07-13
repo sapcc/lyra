@@ -34,16 +34,16 @@ RSpec.describe ChefAutomationJob, type: :job do
       expect(job).to receive(:list_agents).with("", instance_of(Array)).and_return([agent])
       expect(job).to receive(:artifact_published?).and_return false
       expect(job).to receive(:publish_artifact) do |tarball, sha|
-        expect(`tar -ztf #{tarball}`). to eq(<<EOT)
+        expect(`tar -ztf #{tarball}`.split.sort.join("\n")+"\n"). to eq(<<EOT)
 ./
 ./cookbooks/
-./data_bags/
-./roles/
-./roles/bla.rb
-./data_bags/bla/
-./data_bags/bla/item.json
 ./cookbooks/cookbook1/
 ./cookbooks/cookbook1/metadata.json
+./data_bags/
+./data_bags/bla/
+./data_bags/bla/item.json
+./roles/
+./roles/bla.rb
 EOT
       end.and_return("http://url")
       expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: "http://url"
@@ -67,7 +67,7 @@ EOT
       expect(job).to receive(:list_agents).with("", instance_of(Array)).and_return([agent])
       expect(job).to receive(:artifact_published?).and_return false
       expect(job).to receive(:publish_artifact) do |tarball, sha|
-        expect(`tar -ztf #{tarball}`).to eq(<<EOT)
+        expect(`tar -ztf #{tarball}`.split.sort.join("\n")+"\n").to eq(<<EOT)
 ./
 ./configure
 EOT
