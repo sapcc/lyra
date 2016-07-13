@@ -44,6 +44,7 @@ module Gitmirror
 
       def add_commit(file, content, message, options={} )
         Dir.chdir(git_scratch) do
+          FileUtils.mkdir_p File.dirname(file)
           File.open(file, 'w') { |f| f.write(content) }
           git %|add #{file}|
           git %|commit -am "#{message}"|

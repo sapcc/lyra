@@ -26,20 +26,24 @@ RSpec.describe ChefAutomationJob, type: :job do
       job = ChefAutomationJob.new(token, chef_automation, "bla=fasel")
       run =  FactoryGirl.create(:run, token: token, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id) 
 
-      add_commit("Berksfile", "source 'https://supermarket.chef.io'\nmetadata", "add Berksfile", remote: true)
-      add_commit("metadata.rb", "name 'cookbook1'\nversion '1.0.0'", "add metadata.rb", remote: true)
+      add_commit("Berksfile", "source 'https://supermarket.chef.io'\ncookbook 'cookbook1', :path=> 'cookbook1/'", "add Berksfile", remote: true)
+      add_commit("cookbook1/metadata.rb", "name 'cookbook1'\nversion '1.0.0'", "add metadata.rb", remote: true)
+      add_commit("roles/bla.rb", "some role", "add role", remote: true)
+      add_commit("data_bags/bla/item.json", "some data bag", "add data bag", remote: true)
       expect(job).to receive(:list_agents).with("bla=fasel").and_return([agent])
       expect(job).to receive(:list_agents).with("", instance_of(Array)).and_return([agent])
       expect(job).to receive(:artifact_published?).and_return false
       expect(job).to receive(:publish_artifact) do |tarball, sha|
         expect(`tar -ztf #{tarball}`). to eq(<<EOT)
-.
-cookbooks
-cookbooks/cookbook1
-cookbooks/cookbook1/Berksfile
-cookbooks/cookbook1/Berksfile.lock
-cookbooks/cookbook1/configure
-cookbooks/cookbook1/metadata.json
+./
+./cookbooks/
+./data_bags/
+./roles/
+./roles/bla.rb
+./data_bags/bla/
+./data_bags/bla/item.json
+./cookbooks/cookbook1/
+./cookbooks/cookbook1/metadata.json
 EOT
       end.and_return("http://url")
       expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: "http://url"
@@ -48,7 +52,7 @@ EOT
       run.reload
       expect(run.state).to eq("executing")
       expect(run.jobs).to eq(["a-job-jid"])
-      expect(run.repository_revision).to eq("bb21a99e7b1e60fbc80630440d453583acae7e2c")
+      expect(run.repository_revision).to eq("7e1dc93bfb54941e4467990e3eddae254b633cc3")
       expect(TrackAutomationJob).to have_been_enqueued.with(token, job.job_id)
     end
   end

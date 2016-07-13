@@ -62,10 +62,18 @@ class ChefAutomationJob < ActiveJob::Base
       repo.checkout(checkout_dir, sha)
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
         @run.log("Berksfile detected. Running berks package...\n")
+        vendor_dir= ::File.join dir, "berks"
         #do a berks package
         Bundler.with_clean_env do
           Dir.chdir checkout_dir do
-            execute "berks package #{tarball}" 
+            execute "berks vendor #{vendor_dir}/cookbooks" 
+            %w{roles chef/roles}.each do |roles_dir|
+              FileUtils.cp_r roles_dir, ::File.join(vendor_dir, "roles") if Dir.exist? roles_dir
+            end
+            %w{data_bags chef/data_bags}.each do |data_bags_dir|
+              FileUtils.cp_r data_bags_dir, ::File.join(vendor_dir, "data_bags") if Dir.exist? data_bags_dir
+            end
+            execute "tar -c -z -C #{vendor_dir} -f #{tarball} ."
           end
         end
       else
