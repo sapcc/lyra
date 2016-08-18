@@ -49,5 +49,10 @@ module AutomationBase
       artifact_url(name) 
     end
   end
-  
+
+  def freeze_attr(automation)
+    serializer = AutomationSnapshotSerializer.new(automation, {})
+    serializer.attributes.delete_if { |k, v| v.blank? }
+  end
+
 end

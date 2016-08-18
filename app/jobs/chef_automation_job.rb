@@ -9,7 +9,10 @@ class ChefAutomationJob < ActiveJob::Base
   include ArcClient
 
   def perform(token, chef_automation, selector)
+    # freeze autoamtion state
+    run.update!(automation_attributes: freeze_attr(chef_automation))
 
+    # select nodes
     run.log "Selecting nodes using filter #{selector}:\n"
     agents = select_agents(selector)
     run.log agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + "\n"

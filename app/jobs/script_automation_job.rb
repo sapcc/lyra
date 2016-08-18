@@ -6,6 +6,10 @@ class ScriptAutomationJob < ActiveJob::Base
   include ArcClient
 
   def perform(token, script_automation, selector)
+    # freeze autoamtion state
+    run.update!(automation_attributes: freeze_attr(script_automation))
+
+    # select nodes
     run.log "Selecting nodes using filter #{selector}:\n"
     agents = select_agents(selector)
     run.log agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + "\n"
