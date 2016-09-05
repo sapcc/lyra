@@ -63,6 +63,7 @@ class Api::V1::AutomationsController < ApplicationController
     # specific params sti
     if params.fetch('type', '').downcase == 'chef'
       permited_params.merge!( params.permit(:log_level) )
+      permited_params.merge!( params.permit(:chef_version) )
       params['chef_attributes'].blank? ? permited_params.merge!( {'chef_attributes' => nil} ) : permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} )
       permited_params.merge!( {'run_list' => params[:run_list]} ) unless params.fetch('run_list', nil).nil?
     elsif params.fetch('type', '').downcase == 'script'
