@@ -31,7 +31,7 @@ module AutomationBase
   end
 
   def artifact_published?(name)
-    Swift.client.head_object(name, "automation-artifacts")
+    Swift.client.head_object(name, Swift.container)
     return true
   rescue SwiftClient::ResponseError
     return false
@@ -45,7 +45,7 @@ module AutomationBase
     human_size = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.new(File.size?(path),{}).convert rescue ""
     run.log("Uploading #{name} (#{human_size})...\n")
     File.open(path, "r") do |f|
-      Swift.client.put_object name, f, "automation-artifacts", {"Content-Type" => 'application/gzip'}
+      Swift.client.put_object name, f, Swift.container, {"Content-Type" => 'application/gzip'}
       artifact_url(name) 
     end
   end
