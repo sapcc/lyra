@@ -7,7 +7,7 @@ image_resource:
     repository: docker.***REMOVED***/monsoon3/kubectl
     tag: 'v1.2.4'
     ca_certs:
-      - name: docker.***REMOVED***
+      - domain: docker.***REMOVED***
         cert: |
           -----BEGIN CERTIFICATE-----
           MIIGTDCCBDSgAwIBAgIQXQPZPTFhXY9Iizlwx48bmTANBgkqhkiG9w0BAQsFADBO
