@@ -235,10 +235,10 @@ var broker = new erd.IdentifyingRelationship({
 // Create new shapes by cloning
 
 var lyra = bigServices.clone().position(300, 200).attr('text/text', 'Lyra \n(automation service)');
-
 var arcApi = bigServices.clone().position(300, 450).attr('text/text', 'Arc API');
 var elektra = number.clone().position(5, 200).attr('text/text', 'Elektra');
-var lyraCli = number.clone().position(5, 450).attr('text/text', 'Lyra cli');
+var elektraCli = number.clone().position(5, 275).attr('text/text', 'Elektra Cli');
+var lyraCli = number.clone().position(75, 375).attr('text/text', 'Lyra Cli');
 var pkiService = service.clone().position(350, 35).attr('text/text', 'PKI');
 var swiftService = service.clone().position(800, 145).attr('text/text', 'SWIFT');
 var reverseProxy = service.clone().position(800, 5).attr('text/text', 'Reverse \nProxy');
@@ -271,11 +271,12 @@ var createLabel = function(txt) {
 
 // Add shapes to the graph
 
-graph.addCells([elektra, lyraCli, lyra, arcApi, broker, pkiService, swiftService, reverseProxy, group, node1, node2]);
+graph.addCells([elektra, elektraCli, lyraCli, lyra, arcApi, broker, pkiService, swiftService, reverseProxy, group, node1, node2]);
 
 elektraToLyra = createLink(elektra, lyra);
 elektraToArcApi = createLink(elektra, arcApi);
 elektraToPki = createLink(elektra, pkiService);
+elektraCliToLyraCli = createLink(elektraCli, lyraCli);
 cliToLyra = createLink(lyraCli, lyra);
 cliToArcApi = createLink(lyraCli, arcApi);
 cliToPki = createLink(lyraCli, pkiService);
@@ -310,6 +311,7 @@ $(function() {
   // remover source arrow
   arrowSourceHidden(elektraToLyra.id);
   arrowSourceHidden(elektraToArcApi.id);
+  arrowSourceHidden(elektraCliToLyraCli.id);
   arrowSourceHidden(cliToLyra.id);
   arrowSourceHidden(cliToArcApi.id);
   arrowSourceHidden(lyraToArcApi.id);
@@ -325,6 +327,8 @@ $(function() {
   // add popovers
   getJqueryElement(elektra.id).popover({ title: 'Elektra Details', content: $('#elektra_popover_content').html(), html: true,  container: '#popover_container'});
   getJqueryElement(elektra.id).attr('data-toggle', 'popover');
+  getJqueryElement(elektraCli.id).popover({ title: 'Elektra Cli Details', content: $('#elektra_cli_popover_content').html(), html: true,  container: '#popover_container'});
+  getJqueryElement(elektraCli.id).attr('data-toggle', 'popover');
   getJqueryElement(lyraCli.id).popover({ title: 'Lyra Cli Details', content: $('#lyra_cli_popover_content').html(), html: true,  container: '#popover_container'});
   getJqueryElement(lyraCli.id).attr('data-toggle', 'popover');
   getJqueryElement(lyra.id).popover({ title: 'Lyra Details', content: $('#lyra_popover_content').html(), html: true,  container: '#popover_container'});

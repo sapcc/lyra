@@ -24,3 +24,6 @@ features/screenshots
 /postgres
 /spec/tmp
 /.env
+/website/vendor/bundle
+/website/bin
+/website/.bundle
