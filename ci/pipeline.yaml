@@ -1,3 +1,13 @@
+post_failure_to_slack: &post_failure_to_slack
+  put: slack-alert
+  params:
+    channel: '#automation'
+    username: 'Concourse'
+    icon_emoji: ':airplane:'
+    silent: 'true'
+    text: |
+      :boom: <$ATC_EXTERNAL_URL/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME job #$BUILD_NAME failed>
+  
 groups:
   - name: master 
     jobs:
@@ -29,6 +39,8 @@ jobs:
           tag: lyra.version/current
       - put: lyra.version
         params: { filename: lyra.version/current }
+    on_failure:
+      <<: *post_failure_to_slack
   - name: test
     public: true
     plan:
@@ -43,6 +55,8 @@ jobs:
       - task: rspec 
         file: lyra.git/ci/tasks/unit-tests.yaml
         image: lyra.image
+    on_failure:
+      <<: *post_failure_to_slack
 
   - name: staging
     serial: true
@@ -55,6 +69,8 @@ jobs:
           passed: [ test ]
         - get: lyra.image
           passed: [ test ]
+          params:
+            skip_download: true
       - task: deploy-api
         file: lyra.git/ci/tasks/deployment.yaml 
         params:
@@ -67,6 +83,8 @@ jobs:
           REGION: staging 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: worker
+    on_failure:
+      <<: *post_failure_to_slack
 
   - name: eu-de-1
     serial: true
@@ -78,19 +96,23 @@ jobs:
         - get: lyra.version 
           passed: [ staging ]
         - get: lyra.image
-          passed: [ test ]
+          passed: [ staging ]
+          params:
+            skip_download: true
       - task: deploy-api
         file: lyra.git/ci/tasks/deployment.yaml 
         params:
-          REGION: staging 
+          REGION: eu-de-1 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: api
       - task: deploy-worker
         file: lyra.git/ci/tasks/deployment.yaml 
         params:
-          REGION: staging 
+          REGION: eu-de-1 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: worker
+    on_failure:
+      <<: *post_failure_to_slack
 
 
   - name: test-cli
@@ -99,6 +121,8 @@ jobs:
         trigger: true
       - task: test-cli
         file: cli.git/ci/tests.yml
+    on_failure:
+      <<: *post_failure_to_slack
 
   - name: build-cli
     serial: true
@@ -132,6 +156,8 @@ jobs:
             body: release/body
             commitsh: release/commitsh
             globs: [release/artifacts/*]
+    on_failure:
+      <<: *post_failure_to_slack
 
 
 resources:
@@ -182,7 +208,10 @@ resources:
       user: monsoon 
       repository: lyra-cli 
       access_token: {{github-access-token}}
-
+  - name: slack-alert
+    type: slack-notification
+    source:
+      url: {{slack-webhook-url}}
 
 resource_types:
   - name: monsoon-version
@@ -194,3 +223,9 @@ resource_types:
     type: docker-image
     source:
       repository: hub.***REMOVED***/concourse/github-release-resource
+
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest   
