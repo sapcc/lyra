@@ -24,8 +24,8 @@ jobs:
           build: lyra.git/
           dockerfile: lyra.git/docker/Dockerfile
           tag_as_latest: true
-#          cache: true
-#          cache_tag: latest
+          cache: true
+          cache_tag: latest
           tag: lyra.version/current
       - put: lyra.version
         params: { filename: lyra.version/current }
@@ -56,13 +56,13 @@ jobs:
         - get: lyra.image
           passed: [ test ]
       - task: deploy-api
-        file: dashboard.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml 
         params:
           REGION: staging 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: api
       - task: deploy-worker
-        file: dashboard.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml 
         params:
           REGION: staging 
           GITHUB_TOKEN: {{github-access-token}}
@@ -80,13 +80,13 @@ jobs:
         - get: lyra.image
           passed: [ test ]
       - task: deploy-api
-        file: dashboard.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml 
         params:
           REGION: staging 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: api
       - task: deploy-worker
-        file: dashboard.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml 
         params:
           REGION: staging 
           GITHUB_TOKEN: {{github-access-token}}

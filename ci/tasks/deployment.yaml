@@ -17,7 +17,7 @@ run:
       repository=$(cat lyra.image/repository)
       tag=$(cat lyra.version/current)
       echo kubectl set image deployment/$DEPLOYMENT --namespace=lyra $DEPLOYMENT=$repository:$tag
-      kubectl set image deployment/$DEPLOYMENT --namespace=lyra DEPLOYMENT=$repository:$tag
+      kubectl set image deployment/$DEPLOYMENT --namespace=lyra $DEPLOYMENT=$repository:$tag
       echo Waiting for deployment to succeed 
       sleep $STEP #give the deployment a little time
       until kubectl get deployment $DEPLOYMENT --namespace=lyra -o json | \
