@@ -1,4 +1,4 @@
-FROM docker.***REMOVED***/alpine:3.3
+FROM hub.***REMOVED***/monsoon/alpine:3.3
 ADD docker/monsoon.rsa.pub /etc/apk/keys/monsoon.rsa.pub
 RUN echo "https://alpine-packages.***REMOVED***" >> /etc/apk/repositories
 RUN { \
