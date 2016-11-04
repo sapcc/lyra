@@ -7,17 +7,15 @@ platform: linux
 # 4. run tests
 # 5. stop postgres
 
-inputs:
-  - name: lyra.git
-
 run:
   path: sh
   args:
     - -exc
     - |
       apk add --no-cache postgresql bash
-      su postgres -c 'lyra.git/ci/scripts/pg_tmp.sh -p 5432 -l 127.0.0.1 -w 300 -d /tmp/pg start'
-      rake -f /home/app/webapp/Rakefile db:create db:migrate
+      cd /home/app/webapp
+      su postgres -c 'ci/scripts/pg_tmp.sh -p 5432 -l 127.0.0.1 -w 300 -d /tmp/pg start'
+      rake db:create db:migrate
       bundle exec rspec
-      su postgres -c 'lyra.git/ci/scripts/pg_tmp.sh -d /tmp/pg stop'
+      su postgres -c 'ci/scripts/pg_tmp.sh -d /tmp/pg stop'
 
