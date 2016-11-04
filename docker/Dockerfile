@@ -32,7 +32,7 @@ RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/dow
 
 WORKDIR /home/app/webapp
 
-RUN gem install bundler -v 1.11.2
+RUN gem install bundler -v 1.13.6
 ADD Gemfile Gemfile.lock ./
 RUN bundle install --without development
 
@@ -42,10 +42,6 @@ RUN ln -s /home/app/webapp /tmp/berkshelf && \
     rm /tmp/berkshelf && \
     berks -v
 ADD . /home/app/webapp/
-
-#temporary fix for this bug https://github.com/bundler/bundler/pull/4369
-#can be removed when bundler > 1.11.2
-RUN sed -i -e 's/def_delegators :@specs, :<<, :length, :add, :remove/def_delegators :@specs, :<<, :length, :add, :remove, :size/' /usr/lib/ruby/gems/2.3.0/gems/bundler-1.11.2/lib/bundler/spec_set.rb
 
 ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
 CMD ["docker/start.sh"]
