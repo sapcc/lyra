@@ -1,58 +1,10 @@
-docker-mo-ca: &docker-mo-ca
-  ca_certs: 
-    - domain: docker.***REMOVED***
-      cert: |
-        -----BEGIN CERTIFICATE-----
-        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
-        -----END CERTIFICATE-----
-
-pipeline_image: &pipeline_image
-  image_resource:
-    type: docker-image
-    source:
-      repository: docker.***REMOVED***/monsoon-concourse/monsoon-pipeline
-      tag: '1.8.0'
-      <<: *docker-mo-ca
-
 groups:
   - name: master 
     jobs:
       - build
       - test
-      - automation-staging
+      - staging
+      - eu-de-1
   - name: cli
     jobs:
       - test-cli
@@ -60,66 +12,86 @@ groups:
 jobs:
   - name: build 
     serial: true
+    public: true
     plan:
       - aggregate:
-        - get: automation.git
+        - get: lyra.git
           trigger: true
-        - get: automation.version
+        - get: lyra.version
           params: { bump: true }
-      - task: run
-        privileged: true
-        config: 
-          platform: 'linux'
-          <<: *pipeline_image
-          inputs: 
-            - name: automation.git
-              path: source.git
-            - name: automation.version 
-              path: version
-          outputs: [{ name: output }]
-          run: { path: /tasks/build }
-      - aggregate:
-        - put: automation.image
-          params: { tag: output/tag }
-        - put: automation.version
-          params: { filename: automation.version/current }
+      - put: lyra.image
+        params:
+          build: lyra.git/
+          dockerfile: lyra.git/docker/Dockerfile
+          tag_as_latest: true
+#          cache: true
+#          cache_tag: latest
+          tag: lyra.version/current
+      - put: lyra.version
+        params: { filename: lyra.version/current }
   - name: test
+    public: true
     plan:
-      - get: automation.image
-        passed: [ build ]
-        trigger: true
-      - get: automation.git
-        passed: [ build ]
-      - task: run
-        privileged: true
-        config: 
-          platform: 'linux'
-          <<: *pipeline_image
-          inputs:
-            - name: automation.image
-              path: source.image
-          run: {path: /tasks/test}
+      - aggregate:
+        - get: lyra.image
+          passed: [ build ]
+        - get: lyra.git
+          passed: [ build ]
+          trigger: true
+        - get: lyra.version
+          passed: [ build ]
+      - task: rspec 
+        file: lyra.git/ci/tasks/unit-tests.yaml
+        image: lyra.image
 
-  - name: automation-staging
+  - name: staging
     serial: true
     plan:
-    - get: automation.image
-      passed: [ test ]
-      trigger: true
-    - get: automation.git
-      passed: [ test ]
-    - task: rolling-update-api
-      file: automation.git/ci/rolling-update.yaml
-      params:
-        REGION: staging
-        GITHUB_TOKEN: {{github-access-token}} 
-        RC: api
-    - task: rolling-update-worker
-      file: automation.git/ci/rolling-update.yaml
-      params:
-        REGION: staging
-        GITHUB_TOKEN: {{github-access-token}}
-        RC: worker
+      - aggregate:
+        - get: lyra.git
+          trigger: true
+          passed: [ test ]
+        - get: lyra.version
+          passed: [ test ]
+        - get: lyra.image
+          passed: [ test ]
+      - task: deploy-api
+        file: dashboard.git/ci/tasks/deployment.yaml 
+        params:
+          REGION: staging 
+          GITHUB_TOKEN: {{github-access-token}}
+          DEPLOYMENT: api
+      - task: deploy-worker
+        file: dashboard.git/ci/tasks/deployment.yaml 
+        params:
+          REGION: staging 
+          GITHUB_TOKEN: {{github-access-token}}
+          DEPLOYMENT: worker
+
+  - name: eu-de-1
+    serial: true
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ staging ]
+          trigger: true
+        - get: lyra.version 
+          passed: [ staging ]
+        - get: lyra.image
+          passed: [ test ]
+      - task: deploy-api
+        file: dashboard.git/ci/tasks/deployment.yaml 
+        params:
+          REGION: staging 
+          GITHUB_TOKEN: {{github-access-token}}
+          DEPLOYMENT: api
+      - task: deploy-worker
+        file: dashboard.git/ci/tasks/deployment.yaml 
+        params:
+          REGION: staging 
+          GITHUB_TOKEN: {{github-access-token}}
+          DEPLOYMENT: worker
+
 
   - name: test-cli
     plan:
@@ -163,12 +135,19 @@ jobs:
 
 
 resources:
-  - name: automation.git
+  - name: lyra.git
     type: git
     source:
       uri: git://gitHub.***REMOVED*** /monsoon/monsoon-automation.git
       branch: master
-  - name: automation.version
+  - name: lyra.image
+    type: docker-image
+    source:
+      host:       {{docker-registry-host}}
+      username:   {{docker-registry-username}}
+      password:   {{docker-registry-password}}
+      repository: hub.***REMOVED***/monsoon/lyra
+  - name: lyra.version
     type: monsoon-version
     source: 
       key:  automation 
@@ -179,17 +158,6 @@ resources:
       domain:    {{swift-domain}}
       tenant_id: {{swift-project-id}}
       container: {{swift-container-version}}
-  - name: automation.image
-    type: monsoon-image
-    source: 
-      host:           {{docker-registry-host}}
-      email:          {{docker-registry-email}}
-      username:       {{docker-registry-username}}
-      password:       {{docker-registry-password}}
-      repository:     docker.***REMOVED***/monsoon/monsoon-automation
-      initial_prefix: build
-      file:           run/image.tar
-      tag:            run/tag
   - name: cli.git 
     type: git
     source:
@@ -220,16 +188,9 @@ resource_types:
   - name: monsoon-version
     type: docker-image
     source:
-      repository: docker.***REMOVED***/concourse/monsoon-version
-      <<: *docker-mo-ca
+      repository: hub.***REMOVED***/concourse/monsoon-version
         
-  - name: monsoon-image
-    type: docker-image
-    source:
-      repository: docker.***REMOVED***/concourse/monsoon-image-resource
-      <<: *docker-mo-ca
   - name: github-release 
     type: docker-image
     source:
-      repository: docker.***REMOVED***/concourse/github-release-resource
-      <<: *docker-mo-ca
+      repository: hub.***REMOVED***/concourse/github-release-resource
