@@ -8,7 +8,7 @@ platform: linux
 # 5. stop postgres
 
 inputs:
-  - name: lyra.cli
+  - name: lyra.git
 
 run:
   path: sh
