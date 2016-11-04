@@ -26,7 +26,7 @@ RUN apk --no-cache add postgresql postgresql-client && \
     apk del postgresql && \
     mv /tmp/pg_dump /usr/bin/pg_dump
 
-RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.0.1_amd64 && \
+RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.2.0_amd64 && \
     chmod +x /usr/bin/dumb-init && \
     dumb-init -V
 
