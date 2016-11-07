@@ -6,7 +6,7 @@ post_failure_to_slack: &post_failure_to_slack
     icon_emoji: ':airplane:'
     silent: 'true'
     text: |
-      :boom: <$ATC_EXTERNAL_URL/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME job #$BUILD_NAME failed>
+      :boom: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME job #$BUILD_NAME failed>
   
 groups:
   - name: master 
@@ -99,6 +99,15 @@ jobs:
           passed: [ staging ]
           params:
             skip_download: true
+      - put: slack-alert
+        params:
+          channel: '#automation'
+          username: 'Concourse'
+          icon_emoji: ':airplane:'
+          silent: 'true'
+          text_file: lyra.version/current
+          text: |
+            :airplane_departure: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Started deploying $TEXT_FILE_CONTENT to $BUILD_JOB_NAME>
       - task: deploy-api
         file: lyra.git/ci/tasks/deployment.yaml 
         params:
@@ -111,6 +120,16 @@ jobs:
           REGION: eu-de-1 
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: worker
+      - put: slack-alert
+        params:
+          channel: '#automation'
+          username: 'Concourse'
+          icon_emoji: ':airplane:'
+          silent: 'true'
+          text_file: lyra.version/current
+          text: |
+            :airplane_arriving: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Finished deploying $TEXT_FILE_CONTENT to $BUILD_JOB_NAME>
+
     on_failure:
       <<: *post_failure_to_slack
 
