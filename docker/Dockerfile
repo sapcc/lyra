@@ -1,30 +1,33 @@
-FROM hub.***REMOVED***/monsoon/alpine:3.3
-ADD docker/monsoon.rsa.pub /etc/apk/keys/monsoon.rsa.pub
-RUN echo "https://alpine-packages.***REMOVED***" >> /etc/apk/repositories
-RUN { \
-		echo 'install: --no-document'; \
-		echo 'update: --no-document'; \
-	  } >> /etc/gemrc
-RUN apk --no-cache add git curl tzdata \
-                   # ruby base
-                   ruby ruby-json ruby-bigdecimal ruby-irb ruby-io-console \
-                   # gems with native extensions
-                   ruby-byebug \
-                   ruby-hitimes \
-                   ruby-nio4r \
-                   ruby-nokogiri \
-                   ruby-pg \
-                   ruby-posix-spawn \
-                   ruby-puma \
-                   ruby-thread_safe
+FROM  ruby:2.3.1-alpine
 
-# install psql and pg_dump
-# pg_dump is part the "postgresql" server package on alpine. 
-# so we install the package, copy the binary and uninstall :)
-RUN apk --no-cache add postgresql postgresql-client && \
-    cp /usr/bin/pg_dump /tmp/pg_dump && \
-    apk del postgresql && \
-    mv /tmp/pg_dump /usr/bin/pg_dump
+# pg_dump is part the "postgresql" server package on alpine.
+RUN apk --no-cache add git curl tzdata postgresql postgresql-client
+
+
+RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
+      && gem install byebug -v 8.2.4 \
+      && gem install hitimes -v 1.2.3 \
+      && gem install nio4r -v 1.2.1 \
+      && gem install nokogiri -v 1.6.8 \
+      && gem install pg -v 0.18.4 \
+      && gem install posix-spawn -v 0.3.11 \
+      && gem install puma -v 3.4.0  \
+      && gem install thread_safe -v 0.3.5 \
+      && runDeps="$( \
+		      scanelf --needed --nobanner --recursive /usr/local \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | sort -u \
+            | xargs -r apk info --installed \
+            | sort -u \
+          )" \
+      && apk add --virtual .rundeps $runDeps \
+      && apk del .builddeps \
+      && gem sources -c \
+      && rm -f /usr/local/bundle/cache/*
+
+RUN curl -fL http://aia.pki.co.sap.com/aia/SAP%20Global%20Root%20CA.crt | tr -d '\r' > /usr/local/share/ca-certificates/SAP_Global_Root_CA.crt \
+      && update-ca-certificates \
+      && ruby -ropen-uri -e 'open("https://gitHub.***REMOVED*** ").read'
 
 RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 && \
     chmod +x /usr/bin/dumb-init && \
@@ -32,7 +35,7 @@ RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/dow
 
 WORKDIR /home/app/webapp
 
-RUN gem install bundler -v 1.13.6
+#RUN gem install bundler -v 1.13.6
 ADD Gemfile Gemfile.lock ./
 RUN bundle install --without development
 

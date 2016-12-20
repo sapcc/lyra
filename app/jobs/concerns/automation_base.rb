@@ -38,7 +38,7 @@ module AutomationBase
   end
 
   def artifact_url(name)
-    Swift.client.temp_url name, "automation-artifacts"
+    Swift.client.temp_url name, Swift.container 
   end
 
   def publish_artifact(path, name)
