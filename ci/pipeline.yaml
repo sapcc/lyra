@@ -37,6 +37,10 @@ jobs:
           cache: true
           cache_tag: latest
           tag: lyra.version/current
+          build_args:
+            http_proxy: http://proxy.***REMOVED***:8080
+            https_proxy: http://proxy.***REMOVED***:8080
+            no_proxy: ***REMOVED***.***REMOVED***,127.0.0.1,localhost
       - put: lyra.version
         params: { filename: lyra.version/current }
     on_failure:
