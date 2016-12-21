@@ -40,9 +40,10 @@ ADD Gemfile Gemfile.lock ./
 RUN bundle install --without development
 
 #appbundle berks
-RUN ln -s /home/app/webapp /tmp/berkshelf && \
-    appbundler /tmp/berkshelf /usr/local/bin && \
-    rm /tmp/berkshelf && \
+RUN ln -s /home/app/webapp /tmp/berkshelf  \
+    && appbundler /tmp/berkshelf /usr/local/bin  \
+    && rm /tmp/berkshelf  \
+    && rm -f /usr/local/bundle/bin/berks \ 
     berks -v
 ADD . /home/app/webapp/
 
