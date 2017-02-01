@@ -234,7 +234,7 @@ var broker = new erd.IdentifyingRelationship({
 
 // Create new shapes by cloning
 
-var lyra = bigServices.clone().position(300, 150).attr('text/text', 'Lyra \n(automation service)');
+var lyra = bigServices.clone().position(300, 125).attr('text/text', 'Lyra \n(automation service)');
 var arcApi = bigServices.clone().position(300, 300).attr('text/text', 'Arc API');
 var elektra = number.clone().position(5, 200).attr('text/text', 'Elektra');
 var elektraCli = number.clone().position(5, 275).attr('text/text', 'Elektra Cli');
@@ -255,6 +255,18 @@ var createLink = function(elm1, elm2) {
 
   return myLink.addTo(graph);
 };
+
+function link(source, target, label, vertices) {
+
+  var cell = new joint.shapes.fsa.Arrow({
+    source: { id: source.id },
+    target: { id: target.id },
+    labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }],
+    vertices: vertices || []
+  });
+  graph.addCell(cell);
+  return cell;
+}
 
 var createLabel = function(txt) {
   return {
@@ -279,13 +291,19 @@ cliToLyra = createLink(lyraCli, lyra);
 cliToArcApi = createLink(lyraCli, arcApi);
 lyraToArcApi = createLink(lyra, arcApi);
 arcApiToBroker = createLink(arcApi, broker);
-node1ToProxy = createLink(node1, reverseProxy);
-node2ToProxy = createLink(node2, reverseProxy);
+//node1ToProxy = createLink(node1, reverseProxy);
+node1ToProxy = link(node1, reverseProxy, "auto updates");
+//node2ToProxy = createLink(node2, reverseProxy);
+node2ToProxy = link(node2, reverseProxy, "auto updates");
+
 node1ToBroker = createLink(node1, broker);
 node2ToBroker = createLink(node2, broker);
-node1ToArcApi = createLink(node1, arcApi);
-node2ToArcApi = createLink(node2, arcApi);
+//node1ToArcApi = createLink(node1, arcApi);
+node1ToArcApi = link(node1, arcApi, "bootstrap");
+//node2ToArcApi = createLink(node2, arcApi);
+node2ToArcApi = link(node2, arcApi, "bootstrap");
 siwftToProxy = createLink(reverseProxy, swiftService);
+//siwftToProxy = link(reverseProxy, swiftService, "test");
 
 function getJqueryElement(id) {
   return $("[model-id='" + id + "']");
@@ -295,7 +313,6 @@ function arrowSourceHidden(id) {
   link = getJqueryElement(id);
   link.find(".marker-arrowhead-group.marker-arrowhead-group-source").attr("class", "marker-arrowhead-group marker-arrowhead-group-source sourceHidden");
 }
-
 
 function popover_close_other_popovers_handler(e){
   e.stopPropagation();
@@ -318,6 +335,12 @@ $(function() {
   arrowSourceHidden(node2ToArcApi.id);
   arrowSourceHidden(siwftToProxy.id);
 
+  // add joint-link class to the arrows and remove selection
+  $("g.fsa.Arrow.link").each(function() {
+    orig_classes = $( this ).attr("class")
+    $( this ).attr("class", orig_classes + " joint-link");
+    $( this ).find(".connection-wrap").remove();
+  });
 
   // add popovers
   getJqueryElement(elektra.id).popover({ title: 'Elektra Details', content: $('#elektra_popover_content').html(), html: true,  container: '#popover_container'});
