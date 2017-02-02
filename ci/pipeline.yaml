@@ -7,9 +7,9 @@ post_failure_to_slack: &post_failure_to_slack
     silent: 'true'
     text: |
       :boom: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME job #$BUILD_NAME failed>
-  
+
 groups:
-  - name: master 
+  - name: master
     jobs:
       - build
       - test
@@ -20,7 +20,7 @@ groups:
       - test-cli
       - build-cli
 jobs:
-  - name: build 
+  - name: build
     serial: true
     public: true
     plan:
@@ -56,7 +56,7 @@ jobs:
           trigger: true
         - get: lyra.version
           passed: [ build ]
-      - task: rspec 
+      - task: rspec
         file: lyra.git/ci/tasks/unit-tests.yaml
         image: lyra.image
     on_failure:
@@ -71,22 +71,17 @@ jobs:
           passed: [ test ]
         - get: lyra.version
           passed: [ test ]
+        - get: charts.git
+        - get: secrets.git
         - get: lyra.image
-          passed: [ test ]
           params:
             skip_download: true
-      - task: deploy-api
-        file: lyra.git/ci/tasks/deployment.yaml 
+          passed: [ test ]
+      - task: deploy
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
         params:
-          REGION: staging 
+          REGION: staging
           GITHUB_TOKEN: {{github-access-token}}
-          DEPLOYMENT: api
-      - task: deploy-worker
-        file: lyra.git/ci/tasks/deployment.yaml 
-        params:
-          REGION: staging 
-          GITHUB_TOKEN: {{github-access-token}}
-          DEPLOYMENT: worker
     on_failure:
       <<: *post_failure_to_slack
 
@@ -97,7 +92,7 @@ jobs:
         - get: lyra.git
           passed: [ staging ]
           trigger: true
-        - get: lyra.version 
+        - get: lyra.version
           passed: [ staging ]
         - get: lyra.image
           passed: [ staging ]
@@ -113,15 +108,15 @@ jobs:
           text: |
             :airplane_departure: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Started deploying $TEXT_FILE_CONTENT to $BUILD_JOB_NAME>
       - task: deploy-api
-        file: lyra.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml
         params:
-          REGION: eu-de-1 
+          REGION: eu-de-1
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: api
       - task: deploy-worker
-        file: lyra.git/ci/tasks/deployment.yaml 
+        file: lyra.git/ci/tasks/deployment.yaml
         params:
-          REGION: eu-de-1 
+          REGION: eu-de-1
           GITHUB_TOKEN: {{github-access-token}}
           DEPLOYMENT: worker
       - put: slack-alert
@@ -140,7 +135,7 @@ jobs:
 
   - name: test-cli
     plan:
-      - get: cli.git 
+      - get: cli.git
         trigger: true
       - task: test-cli
         file: cli.git/ci/tests.yml
@@ -150,7 +145,7 @@ jobs:
   - name: build-cli
     serial: true
     plan:
-      - get: cli.git 
+      - get: cli.git
         passed: [test-cli]
         trigger: true
       - get: cli.version
@@ -189,6 +184,17 @@ resources:
     source:
       uri: git://gitHub.***REMOVED*** /monsoon/monsoon-automation.git
       branch: master
+  - name: charts.git
+    type: git
+    source:
+      uri: https://github.com/sapcc/helm-charts.git
+      branch: master
+  - name: secrets.git
+    type: git
+    source:
+      uri: git@gitHub.***REMOVED*** :cc/secrets.git
+      private_key: {{secrets-ssh-key}}
+      branch: master
   - name: lyra.image
     type: docker-image
     source:
@@ -198,8 +204,8 @@ resources:
       repository: hub.***REMOVED***/monsoon/lyra
   - name: lyra.version
     type: monsoon-version
-    source: 
-      key:  automation 
+    source:
+      key:  automation
       initial:   "00010101"
       username:  {{swift-username}}
       api_key:   {{swift-api-key}}
@@ -207,15 +213,15 @@ resources:
       domain:    {{swift-domain}}
       tenant_id: {{swift-project-id}}
       container: {{swift-container-version}}
-  - name: cli.git 
+  - name: cli.git
     type: git
     source:
       uri: git://gitHub.***REMOVED*** /monsoon/lyra-cli.git
       branch: master
   - name: cli.version
     type: monsoon-version
-    source: 
-      key:  lyra-cli 
+    source:
+      key:  lyra-cli
       initial:   "00010101"
       username:  {{swift-username}}
       api_key:   {{swift-api-key}}
@@ -224,12 +230,12 @@ resources:
       tenant_id: {{swift-project-id}}
       container: {{swift-container-version}}
   - name: cli-release
-    type: github-release 
+    type: github-release
     source:
       github_api_url: https://gitHub.***REMOVED*** /api/v3/
       github_uploads_url: https://gitHub.***REMOVED*** /api/uploads/
-      user: monsoon 
-      repository: lyra-cli 
+      user: monsoon
+      repository: lyra-cli
       access_token: {{github-access-token}}
   - name: slack-alert
     type: slack-notification
@@ -241,8 +247,8 @@ resource_types:
     type: docker-image
     source:
       repository: hub.***REMOVED***/concourse/monsoon-version
-        
-  - name: github-release 
+
+  - name: github-release
     type: docker-image
     source:
       repository: hub.***REMOVED***/concourse/github-release-resource
@@ -251,4 +257,4 @@ resource_types:
     type: docker-image
     source:
       repository: cfcommunity/slack-notification-resource
-      tag: latest   
+      tag: latest

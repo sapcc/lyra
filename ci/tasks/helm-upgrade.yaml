@@ -35,7 +35,7 @@ run:
 
 params:
   STEP: 2
-  TIMEOUT: 120
+  TIMEOUT: 300
   REGION:
   GITHUB_TOKEN:
   HELM_HOST:
