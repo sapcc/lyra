@@ -66,6 +66,11 @@
   display: none;
 }
 
+.joint-link .connection-wrap,
+.joint-link .connection {
+  fill: none;
+}
+
 /* highlighting */
 
 .devs.highlighted-parent .body {
