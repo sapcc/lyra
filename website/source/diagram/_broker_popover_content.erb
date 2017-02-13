@@ -6,7 +6,7 @@
     <%= link_to 'Concourse', 'http://concourse.staging.***REMOVED***:8080/pipelines/arc', target: 'blank'  %>
   </li>
   <li>
-    <%= link_to 'Kube Specs', 'https://gitHub.***REMOVED*** /monsoon/openstack-kube/blob/master/config/openstack/arc', target: 'blank'  %>
+    <%= link_to 'Charts', 'https://github.com/sapcc/helm-charts/tree/master/openstack/arc/charts/mosquitto', target: 'blank'  %>
   </li>
   <li class="list-header">
     Staging
@@ -14,10 +14,25 @@
   <li>
     <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
   </li>
+  <li>
+    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/staging/values/arc.yaml', target: 'blank' %>
+  </li>
   <li class="list-header">
     eu-de-1
   </li>
   <li>
     <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
+  </li>
+  <li>
+    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/eu-de-1/values/arc.yaml', target: 'blank' %>
+  </li>
+  <li class="list-header">
+    ap-au-1
+  </li>
+  <li>
+    <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
+  </li>
+  <li>
+    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/ap-au-1/values/arc.yaml', target: 'blank' %>
   </li>
 </ul>
