@@ -17,7 +17,7 @@ run:
     - |
       set -o pipefail
       lyra_version=$(cat lyra.version/current)
-      helm upgrade $RELEASE charts.git/openstack/lyra  --values secrets.git/$REGION/values/lyra.yaml --set image.tag=$lyra_version --debug
+      helm upgrade $RELEASE charts.git/openstack/lyra  --values secrets.git/$REGION/values/lyra.yaml --set image.tag=$lyra_version
       kubectl rollout status deployment/$RELEASE-api --namespace=$NAMESPACE
       kubectl rollout status deployment/$RELEASE-worker --namespace=$NAMESPACE
       set +x
