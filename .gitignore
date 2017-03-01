@@ -27,3 +27,4 @@ features/screenshots
 /website/vendor/bundle
 /website/bin
 /website/.bundle
+/vendor/bundle
