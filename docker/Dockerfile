@@ -11,7 +11,7 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install nokogiri -v 1.6.8 \
       && gem install pg -v 0.18.4 \
       && gem install posix-spawn -v 0.3.11 \
-      && gem install puma -v 3.4.0  \
+      && gem install puma -v 3.7.1  \
       && gem install thread_safe -v 0.3.5 \
       && runDeps="$( \
 		      scanelf --needed --nobanner --recursive /usr/local \
