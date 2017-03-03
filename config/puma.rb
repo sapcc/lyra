@@ -14,3 +14,6 @@ on_worker_boot do
   # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
   ActiveRecord::Base.establish_connection
 end
+
+require 'puma/app/status'
+activate_control_app 'tcp://127.0.0.1:7353', { no_token: 'true' }
