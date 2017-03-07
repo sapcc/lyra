@@ -1,5 +1,6 @@
 class TrackAutomationJob < ActiveJob::Base
 
+  include PrometheusMetrics
   include MonsoonOpenstackAuthWrapper
   include Arc
 

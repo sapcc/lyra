@@ -1,5 +1,6 @@
 class ScriptAutomationJob < ActiveJob::Base
 
+  include PrometheusMetrics
   include AutomationBase
   include MonsoonOpenstackAuthWrapper
   include POSIX::Spawn

@@ -3,6 +3,7 @@ require 'active_support/number_helper/number_to_human_size_converter'
 
 class ChefAutomationJob < ActiveJob::Base
 
+  include PrometheusMetrics
   include AutomationBase
   include MonsoonOpenstackAuthWrapper
   include POSIX::Spawn
