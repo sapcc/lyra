@@ -1,4 +1,5 @@
 require 'swift'
+require 'arc-client'
 module AutomationBase
   extend ActiveSupport::Concern
 
@@ -9,13 +10,27 @@ module AutomationBase
     rescue_from(StandardError) do |exception|
       bt = Rails.backtrace_cleaner.clean(exception.backtrace)
       msg = "<#{exception.class}> #{exception.to_s}:\n" + bt.join("\n")
-      logger.error msg 
-      run.log msg 
+      logger.error msg
+      run.log msg
+      run.update!(state: 'failed')
+    end
+
+    rescue_from(Arc::AgentsNotFoundException) do |exception|
+      msg = exception.to_s
+      logger.error msg
+      run.log msg
+      run.update!(state: 'failed')
+    end
+
+    rescue_from(ArcClient::ApiError) do |exception|
+      msg = "<#{exception.class}> #{exception.to_s}:\n"
+      logger.error msg
+      run.log msg
       run.update!(state: 'failed')
     end
 
     before_perform do |job|
-      logger.info "Running #{self.class.to_s} for automation(id=#{job.arguments[2].id rescue "unknown"})" 
+      logger.info "Running #{self.class.to_s} for automation(id=#{job.arguments[2].id rescue "unknown"})"
       @run = Run.find_by_job_id!(job.job_id)
     end
   end

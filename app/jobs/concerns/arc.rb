@@ -3,6 +3,12 @@ require 'arc-client'
 module Arc
   extend ActiveSupport::Concern
 
+  class AgentsNotFoundException < StandardError
+    def to_s
+      'No nodes found.'
+    end
+  end
+
   def arc
     @arc ||= ArcClient::Client.new(current_user.service_url(:arc))
   end
@@ -10,7 +16,7 @@ module Arc
 
   def select_agents(selector)
     selected_agents = list_agents(selector)
-    raise "No nodes selected by filter" if selected_agents.empty?
+    raise AgentsNotFoundException if selected_agents.empty?
     #@run.log "Selected nodes:\n" + 
     #         selected_agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + 
     #         "\n"

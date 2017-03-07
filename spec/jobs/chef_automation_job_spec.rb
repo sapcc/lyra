@@ -94,5 +94,29 @@ EOT
     expect(run.state).to eq("failed")
   end
 
+  it "fails with AgentsNotFoundException when no agents found" do
+    chef = FactoryGirl.create(:chef)
+    job = ChefAutomationJob.new(token, chef, "bla=fasel")
+    run = FactoryGirl.create(:run, job_id: job.job_id, automation: chef )
+    expect(job).to receive(:list_agents).with("bla=fasel").and_return([])
+    ChefAutomationJob.perform_now(job)
+    run.reload
+
+    expect(run.log).to include(::Arc::AgentsNotFoundException.new().to_s)
+    expect(run.state).to eq("failed")
+  end
+
+  it "fails with ArcClient::ApiError when selector syntax wrong" do
+    chef = FactoryGirl.create(:chef)
+    job = ChefAutomationJob.new(token, chef, "bla=fasel")
+    run = FactoryGirl.create(:run, job_id: job.job_id, automation: chef )
+    exception = ArcClient::ApiError.new('{"id":"123","status":"SomeBigError","code":666,"title":"Not doing well","detail":"We are going to die","source":{"pointer":"(GET) /api/v1/kuku","parameter":"map[]"}}')
+    expect(job).to receive(:list_agents).with("bla=fasel").and_raise(exception)
+    ChefAutomationJob.perform_now(job)
+    run.reload
+    
+    expect(run.log).to include(exception.to_s)
+    expect(run.state).to eq("failed")
+  end
 
 end
