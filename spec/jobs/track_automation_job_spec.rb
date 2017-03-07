@@ -11,7 +11,7 @@ RSpec.describe TrackAutomationJob, type: :job do
     run = FactoryGirl.create(:run, job_id:"a-job-id", jobs: ["jid1", "jid2"]) 
 
     job = TrackAutomationJob.new(token, run.job_id)
-    expect(job).to receive(:arc_job).and_return(RubyArcClient::Job.new(status: "complete")).exactly(2).times
+    expect(job).to receive(:arc_job).and_return(ArcClient::Job.new(status: "complete")).exactly(2).times
     job.perform_now
     run.reload
     expect(run.state).to eq("completed")
@@ -23,7 +23,7 @@ RSpec.describe TrackAutomationJob, type: :job do
     run = FactoryGirl.create(:run, job_id:"a-job-id", jobs: ["jid1", "jid2"]) 
 
     job = TrackAutomationJob.new(token, run.job_id)
-    expect(job).to receive(:arc_job).and_return(RubyArcClient::Job.new(status: "failed"), RubyArcClient::Job.new(status: "complete"),)
+    expect(job).to receive(:arc_job).and_return(ArcClient::Job.new(status: "failed"), ArcClient::Job.new(status: "complete"),)
     job.perform_now
     run.reload
     expect(run.state).to eq("failed")

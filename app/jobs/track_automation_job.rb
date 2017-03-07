@@ -1,7 +1,7 @@
 class TrackAutomationJob < ActiveJob::Base
 
   include MonsoonOpenstackAuthWrapper
-  include ArcClient
+  include Arc
 
   rescue_from(StandardError) do |exception|
     bt = Rails.backtrace_cleaner.clean(exception.backtrace)

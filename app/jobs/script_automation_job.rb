@@ -3,7 +3,7 @@ class ScriptAutomationJob < ActiveJob::Base
   include AutomationBase
   include MonsoonOpenstackAuthWrapper
   include POSIX::Spawn
-  include ArcClient
+  include Arc
 
   def perform(token, script_automation, selector)
     # freeze autoamtion state

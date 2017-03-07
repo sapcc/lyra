@@ -6,7 +6,7 @@ RSpec.describe ChefAutomationJob, type: :job do
   before(:each) { clean_tmp_path } #make sure previous git repositories are gone
 
   let(:agent) {
-    RubyArcClient::Agent.new(
+    ArcClient::Agent.new(
       "agent_id"=> "agent1",
       "facts" => { 
         "hostname" => "agent1_hostname", 

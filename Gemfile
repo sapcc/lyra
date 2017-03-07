@@ -25,8 +25,10 @@ gem 'active_model_serializers', '>= 0.10.0.rc4'
 gem 'que'
 gem 'que-web' # at some point this should be remove and started standalone
 
+# arc client
+gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
+
 source 'https://gems.***REMOVED***' do
-  gem 'ruby-arc-client'
   gem 'gitmirror'
 end
 
@@ -42,7 +44,7 @@ gem 'swift_client'
 
 gem 'with_advisory_lock'
 
-# Sentry crash reporting 
+# Sentry crash reporting
 gem 'sentry-raven'
 gem 'httpclient' # The only faraday backend that handled no_proxy :|
 
@@ -78,4 +80,3 @@ group :berkshelf do
   gem 'appbundler', require: false
   gem 'berkshelf', require: false
 end
-

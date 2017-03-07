@@ -1,9 +1,10 @@
-require 'ruby-arc-client'
-module ArcClient
+require 'arc-client'
+
+module Arc
   extend ActiveSupport::Concern
 
   def arc
-    @arc ||= RubyArcClient::Client.new(current_user.service_url(:arc))
+    @arc ||= ArcClient::Client.new(current_user.service_url(:arc))
   end
 
 
