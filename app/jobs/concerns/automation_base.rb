@@ -10,23 +10,17 @@ module AutomationBase
     rescue_from(StandardError) do |exception|
       bt = Rails.backtrace_cleaner.clean(exception.backtrace)
       msg = "<#{exception.class}> #{exception.to_s}:\n" + bt.join("\n")
-      logger.error msg
-      run.log msg
-      run.update!(state: 'failed')
+      log_error(msg)
     end
 
     rescue_from(Arc::AgentsNotFoundException) do |exception|
       msg = exception.to_s
-      logger.error msg
-      run.log msg
-      run.update!(state: 'failed')
+      log_error(msg)
     end
 
     rescue_from(ArcClient::ApiError) do |exception|
-      msg = "<#{exception.class}> #{exception.to_s}:\n"
-      logger.error msg
-      run.log msg
-      run.update!(state: 'failed')
+      msg = "<#{exception.class}> #{exception.to_s}"
+      log_error(msg)
     end
 
     before_perform do |job|
@@ -68,6 +62,14 @@ module AutomationBase
   def freeze_attr(automation)
     serializer = AutomationSnapshotSerializer.new(automation, {})
     serializer.attributes.delete_if { |k, v| v.blank? }
+  end
+
+  private
+
+  def log_error(msg)
+    logger.error msg
+    run.log msg
+    run.update!(state: 'failed')
   end
 
 end

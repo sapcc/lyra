@@ -102,7 +102,7 @@ EOT
     ChefAutomationJob.perform_now(job)
     run.reload
 
-    expect(run.log).to include(::Arc::AgentsNotFoundException.new().to_s)
+    expect(run.log).to end_with(::Arc::AgentsNotFoundException.new().to_s + "\n")
     expect(run.state).to eq("failed")
   end
 
@@ -114,8 +114,8 @@ EOT
     expect(job).to receive(:list_agents).with("bla=fasel").and_raise(exception)
     ChefAutomationJob.perform_now(job)
     run.reload
-    
-    expect(run.log).to include(exception.to_s)
+
+    expect(run.log).to end_with(exception.to_s + "\n")
     expect(run.state).to eq("failed")
   end
 
