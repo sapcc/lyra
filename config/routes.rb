@@ -14,4 +14,6 @@ Rails.application.routes.draw do
   require "que/web"
   mount Que::Web => "/que"
 
+  root to: "root#show"
+
 end
