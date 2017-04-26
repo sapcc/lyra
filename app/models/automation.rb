@@ -31,6 +31,7 @@ class Automation < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :project_id
   validates_length_of :name, minimum: 3, maximum: 256
   validates :tags, json: true, allow_blank: true
+  validates :timeout, :inclusion => {:in => 1..86400}
 
   has_many :runs, dependent: :nullify, inverse_of: :automation
 

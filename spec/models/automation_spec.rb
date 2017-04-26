@@ -34,6 +34,22 @@ RSpec.describe Automation, type: :model do
 
       end
 
+      describe 'automation' do
+
+        it "should just allow timeout in range fron 1..86400 seconds" do
+          timeout_small = 0
+          timeout_big = 90000
+          timeout_good = 3700
+          expect( FactoryGirl.build(:script,  timeout: timeout_small) ).not_to be_valid
+          expect( FactoryGirl.build(:chef,  timeout: timeout_small) ).not_to be_valid
+          expect( FactoryGirl.build(:script,  timeout: timeout_big) ).not_to be_valid
+          expect( FactoryGirl.build(:chef,  timeout: timeout_big) ).not_to be_valid
+          expect( FactoryGirl.build(:script,  timeout: timeout_good) ).to be_valid
+          expect( FactoryGirl.build(:chef,  timeout: timeout_good) ).to be_valid
+        end
+
+      end
+
       describe 'type' do
 
         it "should be present" do
@@ -63,7 +79,7 @@ RSpec.describe Automation, type: :model do
           expect( FactoryGirl.build(:script, tags: 'no_valid_json'.to_json) ).not_to be_valid
           expect( FactoryGirl.build(:script, tags: '{"this_is_json":"well_formated"}'.to_json ) ).to be_valid
 
-          #Test 
+          #Test
           automation = FactoryGirl.create(:chef)
           expect(Automation.find(automation.id)).to be_valid
         end
