@@ -65,18 +65,25 @@ class ChefAutomationJob < ActiveJob::Base
       tarball = ::File.join dir, artifact_name(sha) 
       repo.checkout(checkout_dir, sha)
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
-        @run.log("Berksfile detected. Running berks package...\n")
+        @run.log("Berksfile detected. Running berks vendor...\n")
         vendor_dir= ::File.join dir, "berks"
         #do a berks package
         Bundler.with_clean_env do
           Dir.chdir checkout_dir do
             execute "berks vendor #{vendor_dir}/cookbooks" 
             %w{roles chef/roles}.each do |roles_dir|
-              FileUtils.cp_r roles_dir, ::File.join(vendor_dir, "roles") if Dir.exist? roles_dir
+              if Dir.exist? roles_dir
+                @run.log("Copying #{roles_dir}\n")
+                FileUtils.cp_r roles_dir, ::File.join(vendor_dir, "roles") 
+              end
             end
             %w{data_bags chef/data_bags}.each do |data_bags_dir|
-              FileUtils.cp_r data_bags_dir, ::File.join(vendor_dir, "data_bags") if Dir.exist? data_bags_dir
+              if Dir.exist? data_bags_dir
+                @run.log("Copying #{data_bags_dir}\n")
+                FileUtils.cp_r data_bags_dir, ::File.join(vendor_dir, "data_bags")
+              end
             end
+            @run.log("Creating tarball...\n")
             execute "tar -c -z -C #{vendor_dir} -f #{tarball} ."
           end
         end
