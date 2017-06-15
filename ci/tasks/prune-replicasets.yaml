@@ -17,6 +17,7 @@ run:
         set -x
         kubectl delete rs --namespace=$NAMESPACE $RS_TO_DELETE
       fi
+      set +x
       RS_TO_DELETE=$(kubectl get rs --namespace=$NAMESPACE --sort-by='.metadata.creationTimestamp' --output-version="extensions/v1beta1" -l app=lyra-worker -ojsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.replicas}{"\n"}{end}' | grep '0$' | cut -f1 | head -n -$KEEP)
       if [ -n "${RS_TO_DELETE}" ]; then
         set -x
