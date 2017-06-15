@@ -2,11 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.6.2
+-- Dumped by pg_dump version 9.6.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -54,7 +55,8 @@ CREATE TABLE automations (
     environment jsonb,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    chef_version character varying
+    chef_version character varying,
+    debug boolean DEFAULT false
 );
 
 
@@ -169,28 +171,28 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: automations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY automations ALTER COLUMN id SET DEFAULT nextval('automations_id_seq'::regclass);
 
 
 --
--- Name: job_id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: que_jobs job_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY que_jobs ALTER COLUMN job_id SET DEFAULT nextval('que_jobs_job_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: runs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY runs ALTER COLUMN id SET DEFAULT nextval('runs_id_seq'::regclass);
 
 
 --
--- Name: automations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: automations automations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY automations
@@ -198,7 +200,7 @@ ALTER TABLE ONLY automations
 
 
 --
--- Name: que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: que_jobs que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY que_jobs
@@ -206,7 +208,7 @@ ALTER TABLE ONLY que_jobs
 
 
 --
--- Name: runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: runs runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY runs
@@ -263,4 +265,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160309121739');
 INSERT INTO schema_migrations (version) VALUES ('20160318135530');
 
 INSERT INTO schema_migrations (version) VALUES ('20160613124044');
+
+INSERT INTO schema_migrations (version) VALUES ('20170615083034');
 
