@@ -96,7 +96,6 @@ GEM
     buff-shell_out (0.2.0)
       buff-ruby_engine (~> 0.1.0)
     builder (3.2.2)
-    byebug (8.2.4)
     capybara (2.6.2)
       addressable
       mime-types (>= 1.16)
@@ -331,7 +330,6 @@ DEPENDENCIES
   appbundler
   arc-client!
   berkshelf
-  byebug
   capybara
   database_cleaner
   dotenv-rails

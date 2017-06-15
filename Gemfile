@@ -55,8 +55,6 @@ group :development, :test do
   gem 'quiet_safari'
   # load .env
   gem 'dotenv-rails'
-  # Call 'byebug' anywhere in the code to stop execution and get a console
-  gem 'byebug'
   gem 'spring'
 
   # debugging
