@@ -48,11 +48,6 @@ gem 'with_advisory_lock'
 gem 'sentry-raven'
 gem 'httpclient' # The only faraday backend that handled no_proxy :|
 
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-end
-
 group :development, :test do
   # annotate models with database schema
   gem 'annotate'
