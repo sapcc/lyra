@@ -23,6 +23,7 @@ FactoryGirl.define do
     run_list ["recipe[cookbook]", "role[a-role]"]
     tags '{"pool":"red"}'.to_json
     chef_version "12.3.0"
+    debug true
   end
 
 end

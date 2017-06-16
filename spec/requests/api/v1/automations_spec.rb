@@ -194,21 +194,38 @@ RSpec.describe "Test Automations API" do
     end
 
     it 'return an authorization error 401' do
-      # name already exists
-      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => 'not_valid_token'}
+      post "/api/v1/automations/", {type: "Chef", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}, {'X-Auth-Token' => 'not_valid_token'}
 
       expect(response.status).to eq(401)
     end
 
-    it "return status forbiden if taken has no project" do
+    it "return status forbiden if token has no project" do
       # stub project id
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double("current_user", :project_id => nil))
-
-      # name already exists
-      post "/api/v1/automations/", {automation: {type: "Script", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}}, {'X-Auth-Token' => token}
+      post "/api/v1/automations/", {type: "Chef", name: 'prod_auto', repository: 'https://miau', tags:'{}'.to_json}, {'X-Auth-Token' => token}
 
       # test for the 403 status-code
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds" do
+      automation = FactoryGirl.create(:chef, chef_attributes: {test: 'test'}.to_json)
+      automation_attr = automation.attributes
+      automation_attr.delete('id')
+      post "/api/v1/automations/", automation_attr, {'X-Auth-Token' => token}
+      expect(response.status).to eq(201)
+      json = JSON.parse(response.body)
+
+      expect(json['type']).to be == automation.class.name
+      expect(json['name']).to be == automation.name
+      expect(json['repository']).to be == automation.repository
+      expect(json['repository_revision']).to be == automation.repository_revision
+      expect(json['timeout']).to be == automation.timeout
+      expect(json['tags']).to be == automation.tags
+      expect(json['run_list']).to be == automation.run_list
+      expect(json['chef_attributes']).to be == automation.chef_attributes
+      expect(json['debug'].to_s).to be == automation.debug.to_s
+      expect(json['chef_version']).to be == automation.chef_version
     end
 
   end
