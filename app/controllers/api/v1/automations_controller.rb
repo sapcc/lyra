@@ -62,6 +62,7 @@ class Api::V1::AutomationsController < ApplicationController
     params['tags'].blank? ? permited_params.merge!( {'tags' => nil} ) : permited_params.merge!( {'tags' => params[:tags].to_json} )
     # specific params sti
     if params.fetch('type', '').downcase == 'chef'
+      permited_params.merge!( params.permit(:debug) )
       permited_params.merge!( params.permit(:log_level) )
       permited_params.merge!( params.permit(:chef_version) )
       params['chef_attributes'].blank? ? permited_params.merge!( {'chef_attributes' => nil} ) : permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} )
