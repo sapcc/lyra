@@ -19,7 +19,7 @@ class ChefAutomationJob < ActiveJob::Base
     run.log agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + "\n"
 
     ensure_chef_enabled(token, agents, chef_automation.chef_version)
-     
+
     #create or update local mirror of repository
     repo = Gitmirror::Repository.new(chef_automation.repository)
     repo_path = repo.mirror()
@@ -36,7 +36,7 @@ class ChefAutomationJob < ActiveJob::Base
       else
         run.log "Creating artifact for revision #{sha}"
         create_artifact repo, sha
-      end 
+      end
     end
 
     all_agents = list_agents("", %w{online hostname fqdn domain ipaddress})
@@ -45,24 +45,24 @@ class ChefAutomationJob < ActiveJob::Base
       run_list: chef_automation.run_list,
       recipe_url: url,
       attributes: chef_automation.chef_attributes,
-      debug: chef_automation.log_level == "debug",
+      debug: chef_automation.debug,
       nodes: all_agents.map {|a| agent_to_node a}
     }
     jobs = schedule_jobs(agents, 'chef', 'zero', chef_automation.timeout, chef_payload)
     run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
 
     run.update!(jobs: jobs, state: 'executing')
-    #Schedule a lightweight job to track the run 
+    #Schedule a lightweight job to track the run
     TrackAutomationJob.perform_later(token, run.job_id)
 
-  end 
+  end
 
   private
 
   def create_artifact(repo, sha)
     Dir.mktmpdir do |dir|
       checkout_dir = ::File.join dir, "repo"
-      tarball = ::File.join dir, artifact_name(sha) 
+      tarball = ::File.join dir, artifact_name(sha)
       repo.checkout(checkout_dir, sha)
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
         @run.log("Berksfile detected. Running berks vendor...\n")
@@ -74,7 +74,7 @@ class ChefAutomationJob < ActiveJob::Base
             roles_dir = File.join checkout_dir, r
             if Dir.exist? roles_dir
               @run.log("Copying #{roles_dir}\n")
-              FileUtils.cp_r roles_dir, ::File.join(vendor_dir, "roles") 
+              FileUtils.cp_r roles_dir, ::File.join(vendor_dir, "roles")
             end
           end
           %w{data_bags chef/data_bags}.each do |d|
@@ -119,7 +119,7 @@ class ChefAutomationJob < ActiveJob::Base
 
   def ensure_chef_enabled token, agents, chef_version
     jids = agents.find_all {|a| a.facts["agents"]["chef"] == "disabled" }.map do | agent |
-      #TODO: handle individual errors 
+      #TODO: handle individual errors
       jid = arc.execute_job!(token, {
         to: agent.agent_id,
         timeout: 600,
