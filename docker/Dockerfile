@@ -5,8 +5,8 @@ RUN apk --no-cache add git curl tzdata postgresql postgresql-client
 
 
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
-      && gem install hitimes -v 1.2.3 \
-      && gem install nio4r -v 1.2.1 \
+      && gem install hitimes -v 1.2.5 \
+      && gem install nio4r -v 2.1.0 \
       && gem install nokogiri -v 1.6.8 \
       && gem install pg -v 0.18.4 \
       && gem install posix-spawn -v 0.3.11 \

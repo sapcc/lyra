@@ -1,5 +1,6 @@
 require 'gitmirror'
 require 'active_support/number_helper/number_to_human_size_converter'
+require 'berkshelf/version'
 
 class ChefAutomationJob < ActiveJob::Base
 
@@ -65,7 +66,7 @@ class ChefAutomationJob < ActiveJob::Base
       tarball = ::File.join dir, artifact_name(sha)
       repo.checkout(checkout_dir, sha)
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
-        @run.log("Berksfile detected. Running berks vendor...\n")
+        @run.log("Berksfile detected. Running berks vendor. Using Berkshelf version #{Berkshelf::VERSION}\n")
         vendor_dir= ::File.join dir, "berks"
         #do a berks package
         Bundler.with_clean_env do

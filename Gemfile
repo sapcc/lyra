@@ -71,5 +71,5 @@ end
 
 group :berkshelf do
   gem 'appbundler', require: false
-  gem 'berkshelf', require: false
+  gem 'berkshelf', '~> 6.1.0', require: false
 end
