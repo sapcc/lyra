@@ -37,10 +37,12 @@ groups:
       - test
       - staging
       - eu-de-1
+      - eu-ru-1
       - ap-au-1
       - eu-nl-1
       - ap-cn-1
       - ap-jp-1
+      - la-br-1
       - na-ca-1
       - na-us-1
       - na-us-3
@@ -140,6 +142,34 @@ jobs:
           file: lyra.git/ci/tasks/prune-replicasets.yaml
           params:
             REGION: eu-de-1
+            GITHUB_TOKEN: {{github-access-token}}
+    on_failure:
+      <<: *post_failure_to_slack
+
+  - name: eu-ru-1
+    serial: true
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ staging ]
+          trigger: true
+        - get: lyra.version
+          passed: [ staging ]
+        - get: charts.git
+          passed: [ staging ]
+        - get: secrets.git
+      - <<: *post_deployment_start_to_slack
+      - task: deploy
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
+        params:
+          REGION: eu-ru-1
+          GITHUB_TOKEN: {{github-access-token}}
+      - aggregate:
+        - <<: *post_deployment_end_to_slack
+        - task: prune replicasets
+          file: lyra.git/ci/tasks/prune-replicasets.yaml
+          params:
+            REGION: eu-ru-1
             GITHUB_TOKEN: {{github-access-token}}
     on_failure:
       <<: *post_failure_to_slack
@@ -251,6 +281,33 @@ jobs:
           file: lyra.git/ci/tasks/prune-replicasets.yaml
           params:
             REGION: ap-jp-1
+            GITHUB_TOKEN: {{github-access-token}}
+    on_failure:
+      <<: *post_failure_to_slack
+  - name: la-br-1
+    serial: true
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ staging ]
+          trigger: true
+        - get: lyra.version
+          passed: [ staging ]
+        - get: charts.git
+          passed: [ staging ]
+        - get: secrets.git
+      - <<: *post_deployment_start_to_slack
+      - task: deploy
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
+        params:
+          REGION: la-br-1
+          GITHUB_TOKEN: {{github-access-token}}
+      - aggregate:
+        - <<: *post_deployment_end_to_slack
+        - task: prune replicasets
+          file: lyra.git/ci/tasks/prune-replicasets.yaml
+          params:
+            REGION: la-br-1
             GITHUB_TOKEN: {{github-access-token}}
     on_failure:
       <<: *post_failure_to_slack
