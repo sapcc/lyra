@@ -36,4 +36,16 @@ EOT
     expect(run.repository_revision).to eq("033e3e01379f8b81596c4367fdc91a8d22f47c85")
     expect(TrackAutomationJob).to have_been_enqueued.with(token, job.job_id)
   end
+
+  it "creates a job with all parameters" do
+    script_automation = FactoryGirl.create(:script, repository: "file://"+remote_git_repo("test"), environment: {"VAR" => "VAL"}, arguments: ["arg1", "arg2"])
+    job = ScriptAutomationJob.new(token, script_automation, "bla=fasel")
+    run =  FactoryGirl.create(:run, token: token, project_id: script_automation.project_id, automation: script_automation, job_id: job.job_id)
+    expect(job).to receive(:list_agents).with("bla=fasel").and_return([agent])
+    expect(job).to receive(:artifact_published?).and_return true
+    expect(job).to receive(:artifact_url).and_return("http://url")
+    expected_payload = {path: "/some_script", url: "http://url", environment: {"VAR" => "VAL"}, arguments: ["arg1", "arg2"]}
+    expect(job).to receive(:schedule_jobs).with([agent], "execute", "tarball", 3600, expected_payload).and_return(["a-job-jid"])
+    ScriptAutomationJob.perform_now(job)
+  end
 end

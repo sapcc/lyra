@@ -38,7 +38,7 @@ class ScriptAutomationJob < ActiveJob::Base
       arguments: script_automation.arguments,
       environment: script_automation.environment,
       url: url
-    }.reject!{|k,v| v.blank?}
+    }.delete_if {|k,v| v.blank?}
 
     jobs = schedule_jobs(agents, 'execute', 'tarball', script_automation.timeout, execute_payload)
     run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
