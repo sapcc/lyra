@@ -1,5 +1,12 @@
 GIT
-  remote: git://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git
+  remote: https://github.com/sapcc/arc-client.git
+  revision: 5d9b922d3c19d02f0cd87c7cc93f80802a960b50
+  specs:
+    arc-client (0.7.1)
+      rest-client (~> 2.0.0.rc3)
+
+GIT
+  remote: https://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git
   revision: d1f3b69c2c822df91e5255c0c76629c23a03c7f9
   branch: master
   specs:
@@ -8,13 +15,6 @@ GIT
       hashie
       rails
       uglifier (>= 1.3.0)
-
-GIT
-  remote: https://github.com/sapcc/arc-client.git
-  revision: 5d9b922d3c19d02f0cd87c7cc93f80802a960b50
-  specs:
-    arc-client (0.7.1)
-      rest-client (~> 2.0.0.rc3)
 
 GEM
   remote: https://rubygems.org/
