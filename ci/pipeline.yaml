@@ -36,6 +36,7 @@ groups:
       - build
       - test
       - staging
+      - promote
       - eu-de-1
       - eu-ru-1
       - ap-au-1
@@ -118,17 +119,27 @@ jobs:
     on_failure:
       <<: *post_failure_to_slack
 
+  - name: promote
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ staging ]
+        - get: lyra.version
+          passed: [ staging ]
+        - get: charts.git
+          passed: [ staging ]
+
   - name: eu-de-1
     serial: true
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -151,12 +162,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -179,12 +190,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -207,12 +218,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -235,12 +246,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -262,12 +273,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -289,12 +300,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -316,12 +327,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -343,12 +354,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
@@ -370,12 +381,12 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ promote ]
           trigger: true
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ promote ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ promote ]
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
