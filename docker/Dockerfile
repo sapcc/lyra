@@ -46,5 +46,7 @@ RUN ln -s /home/app/webapp /tmp/berkshelf  \
     berks -v
 ADD . /home/app/webapp/
 
+RUN rake rswag:specs:swaggerize
+
 ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
 CMD ["docker/start.sh"]

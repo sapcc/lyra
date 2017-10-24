@@ -10,6 +10,9 @@ ifneq ($(NO_CACHE),)
 BUILD_ARGS += --no-cache
 endif
 
+docs:
+	bin/rake rswag:specs:swaggerize
+
 build:
 	docker build $(BUILD_ARGS) -f docker/Dockerfile -t $(IMAGE) .
 

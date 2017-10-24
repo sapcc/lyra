@@ -28,3 +28,4 @@ features/screenshots
 /website/bin
 /website/.bundle
 /vendor/bundle
+/public/swagger.json

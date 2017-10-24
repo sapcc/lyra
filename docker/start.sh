@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e 
+set -e
 
 export PGHOST=${POSTGRES_SERVICE_HOST:-postgres}
 export PGUSER=${MONSOON_DB_USER:-postgres}
@@ -21,4 +21,5 @@ else
 fi
 unset PGHOST PGUSER PGPASSWORD PGDATABASE
 
-exec puma -C config/puma.rb 
+export RAILS_SERVE_STATIC_FILES=true
+exec puma -C config/puma.rb

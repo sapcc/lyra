@@ -67,6 +67,9 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'capybara'
+
+  #generate swagger.json from specs
+  gem 'rswag-specs'
 end
 
 group :berkshelf do

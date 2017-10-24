@@ -2,7 +2,7 @@
 #preload_app!
 
 threads_count = Integer(ENV['MAX_THREADS'] || 10)
-threads 2, threads_count
+threads threads_count, threads_count
 
 
 #rackup      DefaultRackup

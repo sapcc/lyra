@@ -1,0 +1,137 @@
+swagger: '2.0'
+info:
+  description: |
+    ### Reference Documentation for the Lyra Automation API.
+
+    Lyra is the higher level part of the Converged Cloud Automation offering.
+    Its main focus is around executing configuration management tools on enabled VMs.
+    At the moment only *Chef* and plain *Script* automations are supported.
+
+    Lyra builds on top of the lower level Arc automation system to execute commands on VMs.
+
+    The Lyra API provides a simple interface to define automations and then execute (run) them
+    repeadeatly on VMs.
+  title: Lyra Automation API
+  contact:
+    url: https://convergedcloud.slack.com/messages/C2YDG291Q
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: v1,<%= `git rev-parse --short HEAD`.strip %>
+externalDocs:
+  description: Additional information
+  url: https://documentation.***REMOVED***/docs/automation/details.html
+securityDefinitions:
+  keystone:
+    description: |
+      Lyra behaves like a regular OpenStack service. You need to pass an Identity token with each request for authentication.
+      Only Keystone V3 authentication is supported at the moment and a project scoped token is required to interact
+      with the Lyra API.
+    type: :apiKey
+    name: X-Auth-Token
+    in: :header
+security:
+  - keystone: []
+consumes:
+  - application/json
+produces:
+  - application/json
+definitions:
+  error_object:
+    type: object
+    properties:
+      error: { type: string, description: "Error message" }
+    required:
+      - error
+  errors_object:
+    type: object
+    properties:
+      errors:
+        type: object
+      additionalProperties:
+        type: array
+        description: "For each input field there may be one or more errors."
+        items: { type: string }
+    required:
+      - errors
+  Automation:
+    type: object
+    discriminator: type
+    properties:
+      id: { type: integer, readOnly: true, description: "ID of the automation" }
+      name: { type: string, description: "Name of the automation" }
+      repository: { type: string, description: "Git repository containing the automation scripts" }
+      repository_revison: {type: string, default: 'master', description: "Branch, tag, commit hash"}
+      project_id: { type: string, readOnly: true, description: "Openstack project this autmation belongs to" }
+      timeout: { type: integer, default: 3600, description: "Timeout in seconds. Consider a run failed when it does not complete within the given interval"}
+      created_at: { type: string, format: datetime, readOnly: true }
+      updated_at: { type: string, format: datetime, readOnly: true }
+      type: { type: string, enum: ["Chef", "Script"], description: "The automation type. Cannot be changed after the automation has been created." }
+    required:
+      - name
+      - type
+      - repository
+  Chef:
+    allOf:
+      - $ref : "#/definitions/Automation"
+      - type: object
+        properties:
+          run_list:
+            type: array
+            items: { type: string }
+            description: Chef Run-list for this automation
+          chef_attributes:
+            type: object
+            description: Additional chef attributes passed to the chef run.
+          debug:
+            type: boolean
+            default: false
+            description: Debug mode. Enabling this causes the temporary working dir on the VMs to not be deleted after the execution ends.
+        required:
+          - run_list
+  Script:
+    allOf:
+      - $ref: "#/definitions/Automation"
+      - type: object
+        properties:
+          path:
+            type: string
+            description: Script to execute. Relative from the root of the repository
+          environment:
+            type: object
+            description: Environments variables
+            additionalProperties:
+              type: string
+              items: { type: string }
+          arguments:
+            type: array
+            items: { type: string }
+            description: Positional arguments.
+        required:
+          - path
+  Run:
+    type: object
+    properties:
+      id: { type: string, readOnly: true }
+      automation_id: { type: string, description: "The ID of the Automation to tun. Has to be defined in the same project" }
+      automation_name: { type: string, readOnly: true, description: "The name of the executed automation" }
+      selector: { type: string, description: "Arc selector. Specifies which VMs the run should target. See https://gitHub.***REMOVED*** /pages/monsoon/arc/docs/api/api.html#filter_agents for more details." }
+      repository_revision: { type: string, description: "Commit SHA of the autmation repository that was used in this run.", readOnly: true, 'x-nullable': true }
+      automation_attributes: { type: object, description: "Snapshot of relevant attributes that were used in this run.", readOnly: true, 'x-nullable': true }
+      state: {type: string, readOnly: true, enum: <%= Run::VALID_STATES %>, description: "Current state of the run.", 'x-nullable': true }
+      log: {type: string, readOnly: true, 'x-nullable': true, description: "Log output from lyra. This does not contain output from command executions on individual VMs. Check the referenced arc jobs for that."}
+      jobs: {type: array, items: { type: string }, readOnly: true, 'x-nullable': true, description: "Arc job ids that were scheduled."}
+      owner:
+        type: object
+        readOnly: true
+        description: "Information about the principal that triggered this run"
+        properties:
+          id: { type: string, description: "User ID" }
+          name: { type: string, description: "Username" }
+          domain_id: { type: string, description: "Domain ID of the user" }
+          domain_name: { type: string, description: "Domainname of the user" }
+      project_id: { type: string, readOnly: true, description: "Openstack project of this run/automation" }
+      created_at: { type: string, format: date-time, readOnly: true }
+      updated_at: { type: string, format: date-time, readOnly: true }
+    required:
+      - automation_id
