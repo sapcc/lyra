@@ -88,7 +88,6 @@ RSpec.describe "Test Automations API" do
         expect(json['type']).to be == script_automation.class.name
         expect(json['project_id']).to be == project_id
         expect(json['repository']).to be == script_automation.repository
-        expect(json['tags'].to_json).to be == script_automation.tags
       end
 
     end
@@ -180,6 +179,14 @@ RSpec.describe "Test Automations API" do
         #   expect(response.status).to eq(422)
         #   expect(json['errors']['tags']).not_to be_empty
         # end
+        it 'ignores invalid environment' do
+          post "/api/v1/automations/", {type: "Script", name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'https://miau', environment: { hase: ["igel"] }}.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
+          json = JSON.parse(response.body)
+
+          expect(response.status).to eq(201)
+          expect(json['environment']).to be_empty
+
+        end
 
       end
 
@@ -221,7 +228,6 @@ RSpec.describe "Test Automations API" do
       expect(json['repository']).to be == automation.repository
       expect(json['repository_revision']).to be == automation.repository_revision
       expect(json['timeout']).to be == automation.timeout
-      expect(json['tags']).to be == automation.tags
       expect(json['run_list']).to be == automation.run_list
       expect(json['chef_attributes']).to be == automation.chef_attributes
       expect(json['debug'].to_s).to be == automation.debug.to_s
@@ -232,7 +238,43 @@ RSpec.describe "Test Automations API" do
 
   describe 'update an automation' do
 
-    it "return status forbiden if taken has no project"
+    let(:chef) { FactoryGirl.create(:chef, project_id: project_id, chef_attributes: {"test" => 'test'}) }
+    let(:script) { FactoryGirl.create(:script, project_id: project_id, path: "/bla", arguments: ["1"]) }
+
+    it 'deletes chef_attributes' do
+
+      put "/api/v1/automations/#{chef.id}", { chef_attributes: {}}.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      chef.reload
+      expect(chef.chef_attributes).to be_empty
+    end
+
+    it 'keeps chef_attributes' do
+
+      put "/api/v1/automations/#{chef.id}", { "name": "nase" }, {'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      script.reload
+      expect(chef.chef_attributes).to be ==  {"test" => 'test'}
+    end
+
+    it 'deletes arguments' do
+      put "/api/v1/automations/#{script.id}", {"hase":"nase", "arguments": []}.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      script.reload
+      expect(script.arguments).to be_empty
+    end
+
+    it 'keeps arguments' do
+      put "/api/v1/automations/#{script.id}", { "name": "nase" }, {'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      script.reload
+      expect(script.arguments).to be == ["1"]
+    end
+
 
   end
 

@@ -29,7 +29,7 @@ class Api::V1::AutomationsController < ApplicationController
 
   # PATCH/PUT api/v1/automations/1.json
   def update
-    if @automation.update(automation_params)
+    if @automation.update(automation_params(@automation.type))
       render json: @automation, status: :ok
     else
       Rails.logger.error @automation.errors.inspect
@@ -49,31 +49,39 @@ class Api::V1::AutomationsController < ApplicationController
     @automation = Automation.by_project(@project).find(params[:id])
   end
 
-  def automation_params
-    # TODO: This needs fixing for sti, take a look at this:
-    # https://gist.github.com/danielpuglisi/3c679531672a76cb9a91#file-users_controller-rb
-    # TODO: Issue: strong parameters allow hashes with unknown keys to be permitted?
-    # https://github.com/rails/rails/issues/9454
+  def automation_params( type = nil )
 
-    # JSON attributes tags, chef_attributes and environment should be converted to JSON to be able to make a validation in the model.
-
-    # global params
-    permited_params = params.permit(:type, :name, :repository, :repository_revision, :timeout)
-    params['tags'].blank? ? permited_params.merge!( {'tags' => nil} ) : permited_params.merge!( {'tags' => params[:tags].to_json} )
-    # specific params sti
-    if params.fetch('type', '').downcase == 'chef'
-      permited_params.merge!( params.permit(:debug) )
-      permited_params.merge!( params.permit(:log_level) )
-      permited_params.merge!( params.permit(:chef_version) )
-      params['chef_attributes'].blank? ? permited_params.merge!( {'chef_attributes' => nil} ) : permited_params.merge!( {'chef_attributes' => params[:chef_attributes].to_json} )
-      permited_params.merge!( {'run_list' => params[:run_list]} ) unless params.fetch('run_list', nil).nil?
-    elsif params.fetch('type', '').downcase == 'script'
-      permited_params.merge!( params.permit(:path) )
-      params['environment'].blank? ? permited_params.merge!( {'environment' => nil} ) : permited_params.merge!( {'environment' => params[:environment].to_json} )
-      permited_params.merge!( {arguments: params[:arguments]} ) unless params.fetch('arguments', nil).nil?
+    permitted = [:name, :repository, :repository_revision, :timeout]
+    if type == nil
+      permitted.push(:type)
+      type = params[:type]
     end
 
-    return permited_params
+    case type
+    when 'Chef'
+      permitted.push(:debug, :chef_version, {run_list: [] }, chef_attributes: permit_recursive_params(params[:chef_attributes]))
+    when 'Script'
+      permitted.push(:path, arguments: [], environment: (params[:environment].try(:keys) || {}))
+    end
+
+    return params.permit(*permitted)
+  end
+
+  def permit_recursive_params(params)
+    return params if params.blank?
+    (params.try(:to_unsafe_h) || params).map do |key, value|
+      if value.is_a?(Array)
+        if value.first.respond_to?(:map)
+          { key => [ permit_recursive_params(value.first) ] }
+        else
+          { key => [] }
+        end
+      elsif value.is_a?(Hash)
+        { key => permit_recursive_params(value) }
+      else
+        key
+      end
+    end
   end
 
 end

@@ -56,5 +56,7 @@ module MonsoonAutomation
 
     raise "The next line can be deleted in Rails 5" if Rails::VERSION::MAJOR > 4
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
+
+    config.action_dispatch.perform_deep_munge = false
   end
 end
