@@ -239,7 +239,7 @@ RSpec.describe "Test Automations API" do
   describe 'update an automation' do
 
     let(:chef) { FactoryGirl.create(:chef, project_id: project_id, chef_attributes: {"test" => 'test'}) }
-    let(:script) { FactoryGirl.create(:script, project_id: project_id, path: "/bla", arguments: ["1"]) }
+    let(:script) { FactoryGirl.create(:script, project_id: project_id, path: "/bla", arguments: ["1"], environment: {"TEST"=> "BLA"}) }
 
     it 'deletes chef_attributes' do
 
@@ -252,7 +252,7 @@ RSpec.describe "Test Automations API" do
 
     it 'keeps chef_attributes' do
 
-      put "/api/v1/automations/#{chef.id}", { "name": "nase" }, {'X-Auth-Token' => token}
+      put "/api/v1/automations/#{chef.id}", { "name": "nase" }.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
       expect(response.status).to eq(200)
 
       script.reload
@@ -268,12 +268,30 @@ RSpec.describe "Test Automations API" do
     end
 
     it 'keeps arguments' do
-      put "/api/v1/automations/#{script.id}", { "name": "nase" }, {'X-Auth-Token' => token}
+      put "/api/v1/automations/#{script.id}", { "name": "nase" }.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
       expect(response.status).to eq(200)
 
       script.reload
       expect(script.arguments).to be == ["1"]
     end
+
+    it 'deletes environment' do
+      put "/api/v1/automations/#{script.id}", {"environment": {}}.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      script.reload
+      expect(script.environment).to be_empty
+    end
+
+    it 'keeps environment' do
+      put "/api/v1/automations/#{script.id}", { }.to_json, {"CONTENT_TYPE" => "application/json", 'X-Auth-Token' => token}
+      expect(response.status).to eq(200)
+
+      script.reload
+      expect(script.environment).to be == {"TEST"=>"BLA"} 
+    end
+
+
 
 
   end

@@ -61,7 +61,8 @@ class Api::V1::AutomationsController < ApplicationController
     when 'Chef'
       permitted.push(:debug, :chef_version, {run_list: [] }, chef_attributes: permit_recursive_params(params[:chef_attributes]))
     when 'Script'
-      permitted.push(:path, arguments: [], environment: (params[:environment].try(:keys) || {}))
+      env = params[:environment].try(:keys)
+      permitted.push(:path, arguments: [], environment: (env.blank? ? {} : env))
     end
 
     return params.permit(*permitted)
