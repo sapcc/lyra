@@ -9,7 +9,7 @@ info:
 
     Lyra builds on top of the lower level Arc automation system to execute commands on VMs.
 
-    The Lyra API provides a simple interface to define automations and then execute (run) them
+    The Lyra API provides a simple interface to define automations and then run them
     repeadeatly on VMs.
   title: Lyra Automation API
   contact:
@@ -61,8 +61,8 @@ definitions:
       id: { type: integer, readOnly: true, description: "ID of the automation" }
       name: { type: string, description: "Name of the automation" }
       repository: { type: string, description: "Git repository containing the automation scripts" }
-      repository_revison: {type: string, default: 'master', description: "Branch, tag, commit hash"}
-      project_id: { type: string, readOnly: true, description: "Openstack project this autmation belongs to" }
+      repository_revison: {type: string, default: 'master', description: "Branch, tag, commit hash the automation should track"}
+      project_id: { type: string, readOnly: true, description: "Openstack project ID of the automation" }
       timeout: { type: integer, default: 3600, description: "Timeout in seconds. Consider a run failed when it does not complete within the given interval"}
       created_at: { type: string, format: datetime, readOnly: true }
       updated_at: { type: string, format: datetime, readOnly: true }

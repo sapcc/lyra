@@ -14,8 +14,8 @@ RSpec.describe 'Automations API' do
       let(:per_page) { 10 }
 
       #tags "Automations"
-      parameter name: :page, in: :query, type: :integer, default: 1
-      parameter name: :per_page, in: :query, type: :integer, maximum: 25, default: 10
+      parameter name: :page, in: :query, type: :integer, default: 1, description: "Request specific page number"
+      parameter name: :per_page, in: :query, type: :integer, maximum: 25, default: 10, description: "Maximum number of items on each page"
 
       response '200', 'list automations' do
         header 'Pagination-Page', type: :integer, description: 'Current page number'
