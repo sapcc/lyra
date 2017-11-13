@@ -172,7 +172,7 @@ jobs:
         - get: secrets.git
       - <<: *post_deployment_start_to_slack
       - task: deploy
-        file: lyra.git/ci/tasks/helm-upgrade.yaml
+        file: lyra.git/ci/tasks/helm-upgrade-1.7.yaml
         params:
           REGION: qa-de-1
           GITHUB_TOKEN: {{github-access-token}}
