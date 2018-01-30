@@ -110,12 +110,7 @@ jobs:
         - get: charts.git
         - get: secrets.git
       - task: deploy
-        file: lyra.git/ci/tasks/helm-upgrade.yaml
-        params:
-          REGION: staging
-          GITHUB_TOKEN: {{github-access-token}}
-      - task: prune replicasets
-        file: lyra.git/ci/tasks/prune-replicasets.yaml
+        file: lyra.git/ci/tasks/helm-upgrade-1.7.yaml
         params:
           REGION: staging
           GITHUB_TOKEN: {{github-access-token}}
@@ -180,11 +175,6 @@ jobs:
           GITHUB_TOKEN: {{github-access-token}}
       - aggregate:
         - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: qa-de-1
-            GITHUB_TOKEN: {{github-access-token}}
     on_failure:
       <<: *post_failure_to_slack
 
