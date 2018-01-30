@@ -43,6 +43,8 @@ groups:
       - eu-nl-1
       - ap-cn-1
       - ap-jp-1
+      - ap-ae-1
+      - ap-sa-1
       - la-br-1
       - na-ca-1
       - na-us-1
@@ -321,6 +323,60 @@ jobs:
           file: lyra.git/ci/tasks/prune-replicasets.yaml
           params:
             REGION: ap-jp-1
+            GITHUB_TOKEN: {{github-access-token}}
+    on_failure:
+      <<: *post_failure_to_slack
+  - name: ap-ae-1
+    serial: true
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ promote ]
+          trigger: true
+        - get: lyra.version
+          passed: [ promote ]
+        - get: charts.git
+          passed: [ promote ]
+        - get: secrets.git
+      - <<: *post_deployment_start_to_slack
+      - task: deploy
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
+        params:
+          REGION: ap-ae-1
+          GITHUB_TOKEN: {{github-access-token}}
+      - aggregate:
+        - <<: *post_deployment_end_to_slack
+        - task: prune replicasets
+          file: lyra.git/ci/tasks/prune-replicasets.yaml
+          params:
+            REGION: ap-ae-1
+            GITHUB_TOKEN: {{github-access-token}}
+    on_failure:
+      <<: *post_failure_to_slack
+  - name: ap-sa-1
+    serial: true
+    plan:
+      - aggregate:
+        - get: lyra.git
+          passed: [ promote ]
+          trigger: true
+        - get: lyra.version
+          passed: [ promote ]
+        - get: charts.git
+          passed: [ promote ]
+        - get: secrets.git
+      - <<: *post_deployment_start_to_slack
+      - task: deploy
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
+        params:
+          REGION: ap-sa-1
+          GITHUB_TOKEN: {{github-access-token}}
+      - aggregate:
+        - <<: *post_deployment_end_to_slack
+        - task: prune replicasets
+          file: lyra.git/ci/tasks/prune-replicasets.yaml
+          params:
+            REGION: ap-sa-1
             GITHUB_TOKEN: {{github-access-token}}
     on_failure:
       <<: *post_failure_to_slack
