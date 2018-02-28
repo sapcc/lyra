@@ -1,38 +1,31 @@
 <ul>
   <li>
-    <%= link_to 'Github', 'https://gitHub.***REMOVED*** /monsoon/arc/tree/master/update-server', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Concourse', 'http://concourse.staging.***REMOVED***:8080/pipelines/arc', target: 'blank'  %>
+    <%= link_to 'Concourse', 'https://ci.***REMOVED***/teams/main/pipelines/arc', target: 'blank'  %>
   </li>
   <li>
     <%= link_to 'Charts', 'https://github.com/sapcc/helm-charts/tree/master/openstack/arc/charts/mosquitto', target: 'blank'  %>
   </li>
-  <li class="list-header">
-    Staging
-  </li>
-  <li>
-    <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
-  </li>
-  <li>
-    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/staging/values/arc.yaml', target: 'blank' %>
-  </li>
-  <li class="list-header">
-    eu-de-1
-  </li>
-  <li>
-    <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
-  </li>
-  <li>
-    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/eu-de-1/values/arc.yaml', target: 'blank' %>
-  </li>
-  <li class="list-header">
-    ap-au-1
-  </li>
-  <li>
-    <b>Broker URL:</b> tls://arc-broker.***REMOVED***:8883
-  </li>
-  <li>
-    <%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/ap-au-1/values/arc.yaml', target: 'blank' %>
-  </li>
 </ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li><%= link_to 'Broker URL', 'tls://arc-broker.+++.***REMOVED***:8883', target: 'blank' %></li>
+    <li><%= link_to 'Chart values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/arc.yaml', target: 'blank' %></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <%= partial '/diagram/regions' %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

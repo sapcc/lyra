@@ -17,58 +17,30 @@
   <li>
     <%= link_to 'Grafana dashboards content', 'https://gitHub.***REMOVED*** /monsoon/monasca-content/tree/master/monsoon3/lyra/dashboards', target: 'blank' %>
   </li>
-  <li class="list-header">
-    Staging
-  </li>
-  <li>
-    <%= link_to 'Lyra', 'https://lyra.***REMOVED***/healthcheck', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Jobs Queue', 'https://lyra.***REMOVED***/que', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Grafana dashboard', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Sentry', 'https://sentry.***REMOVED***/monsoon/lyra/', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Chart Values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/staging/values/lyra.yaml', target: 'blank' %>
-  </li>
-  <li class="list-header">
-    eu-de-1
-  </li>
-  <li>
-    Lyra = [ <%= link_to 'link1', 'https://lyra.***REMOVED***/healthcheck', target: 'blank'  %>, <%= link_to 'link2', 'https://automation.***REMOVED***/healthcheck', target: 'blank'  %> ]
-  </li>
-  <li>
-    <%= link_to 'Jobs Queue', 'https://lyra.***REMOVED***/que', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Grafana dashboard', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Sentry', 'https://sentry.***REMOVED***/monsoon/lyra', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Chart Values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/eu-de-1/values/lyra.yaml', target: 'blank' %>
-  </li>
-  <li class="list-header">
-    ap-au-1
-  </li>
-  <li>
-    Lyra = [ <%= link_to 'link1', 'https://lyra.***REMOVED***/healthcheck', target: 'blank'  %>, <%= link_to 'link2', 'https://automation.***REMOVED***/healthcheck', target: 'blank'  %> ]
-  </li>
-  <li>
-    <%= link_to 'Jobs Queue', 'https://lyra.***REMOVED***/que', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Grafana dashboard', 'https://grafana.***REMOVED***/dashboard/db/lyra-overview', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Sentry', 'https://sentry.***REMOVED***/monsoon/lyra', target: 'blank'  %>
-  </li>
-  <li>
-    <%= link_to 'Chart Values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/ap-au-1/values/lyra.yaml', target: 'blank' %>
-  </li>
 </ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li>Lyra = [ <%= link_to 'link1', 'https://lyra.+++.***REMOVED***/healthcheck', target: 'blank'  %>, <%= link_to 'link2', 'https://automation.+++.***REMOVED***/healthcheck', target: 'blank'  %> ]</li>
+    <li><%= link_to 'Jobs Queue', 'https://lyra.+++.***REMOVED***/que', target: 'blank'  %></li>
+    <li><%= link_to 'Grafana dashboard', 'https://grafana.+++.***REMOVED***/dashboard/db/lyra-overview', target: 'blank'  %></li>
+    <li><%= link_to 'Sentry', 'https://sentry.+++.***REMOVED***/monsoon/lyra', target: 'blank'  %></li>
+    <li><%= link_to 'Chart Values', 'https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/lyra.yaml', target: 'blank' %></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <%= partial '/diagram/regions' %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

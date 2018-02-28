@@ -282,11 +282,11 @@ var createLabel = function(txt) {
 
 // Add shapes to the graph
 
-graph.addCells([elektra, elektraCli, lyraCli, lyra, arcApi, broker, swiftService, reverseProxy, group, node1, node2]);
+graph.addCells([elektra, lyraCli, lyra, arcApi, broker, swiftService, reverseProxy, group, node1, node2]);
 
 elektraToLyra = createLink(elektra, lyra);
 elektraToArcApi = createLink(elektra, arcApi);
-elektraCliToLyraCli = createLink(elektraCli, lyraCli);
+// elektraCliToLyraCli = createLink(elektraCli, lyraCli);
 cliToLyra = createLink(lyraCli, lyra);
 cliToArcApi = createLink(lyraCli, arcApi);
 lyraToArcApi = createLink(lyra, arcApi);
@@ -317,6 +317,7 @@ function arrowSourceHidden(id) {
 function popover_close_other_popovers_handler(e){
   e.stopPropagation();
   e.preventDefault();
+  // close other popovers
   $('[data-toggle="popover"]').not(this).popover('hide');
 }
 
@@ -325,7 +326,7 @@ $(function() {
   // remover source arrow
   arrowSourceHidden(elektraToLyra.id);
   arrowSourceHidden(elektraToArcApi.id);
-  arrowSourceHidden(elektraCliToLyraCli.id);
+  // arrowSourceHidden(elektraCliToLyraCli.id);
   arrowSourceHidden(cliToLyra.id);
   arrowSourceHidden(cliToArcApi.id);
   arrowSourceHidden(lyraToArcApi.id);
@@ -345,8 +346,8 @@ $(function() {
   // add popovers
   getJqueryElement(elektra.id).popover({ title: 'Elektra Details', content: $('#elektra_popover_content').html(), html: true,  container: '#popover_container'});
   getJqueryElement(elektra.id).attr('data-toggle', 'popover');
-  getJqueryElement(elektraCli.id).popover({ title: 'Elektra Cli Details', content: $('#elektra_cli_popover_content').html(), html: true,  container: '#popover_container'});
-  getJqueryElement(elektraCli.id).attr('data-toggle', 'popover');
+  // getJqueryElement(elektraCli.id).popover({ title: 'Elektra Cli Details', content: $('#elektra_cli_popover_content').html(), html: true,  container: '#popover_container'});
+  // getJqueryElement(elektraCli.id).attr('data-toggle', 'popover');
   getJqueryElement(lyraCli.id).popover({ title: 'Lyra Cli Details', content: $('#lyra_cli_popover_content').html(), html: true,  container: '#popover_container'});
   getJqueryElement(lyraCli.id).attr('data-toggle', 'popover');
   getJqueryElement(lyra.id).popover({ title: 'Lyra Details', content: $('#lyra_popover_content').html(), html: true,  container: '#popover_container'});
@@ -362,4 +363,7 @@ $(function() {
 
   // add event click
   $('[data-toggle="popover"]').on('click', popover_close_other_popovers_handler);
+  $('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    $('.jsPopoverDetail').initPopoverDetail()
+  })
 });
