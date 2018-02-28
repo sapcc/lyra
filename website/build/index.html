@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+<title>
+  Monsoon Automation
+</title>
+
+<meta name="description" content="Service discovery and configuration made easy. Distributed, highly available, and datacenter-aware."/>
+
+<link href="/pages/monsoon/monsoon-automation/assets/stylesheets/application-239a9b70.css" rel="stylesheet"/>
+
+<meta name="HandheldFriendly" content="True"/>
+<meta name="MobileOptimized" content="320"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+<link rel="shortcut icon" href="/pages/monsoon/monsoon-automation/assets/images/favicon-84ea31fe.png">
+
+
+
+  </head>
+
+  <body class="page-home layout-">
+
+    <div id="header" class="navbar-static-top navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+
+      <a class="navbar-brand text rls-sb" href="/pages/monsoon/monsoon-automation/">Lyra</a>
+    </div>
+
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="buttons nav navbar-nav navbar-right rls-sb">
+        <li class="first download outline-btn"><a href="https://gitHub.***REMOVED*** /monsoon/monsoon-automation/releases">Download</a></li>
+        <li class="github outline-btn"><a href="https://gitHub.***REMOVED*** /monsoon/monsoon-automation">GitHub</a></li>
+      </ul>
+
+      <ul class="main-links nav navbar-nav navbar-right rls-sb">
+        
+        <li class="li-under"><a href="/pages/monsoon/monsoon-automation/community.html">Community</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+
+    <div class="container">
+
+<h1 class="page-header">Automation Service Lyra for Devs</h1>
+
+<div id="paper"></div>
+
+<div id="popover_container">
+  <div class="hide">
+    <div id="elektra_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/elektra">Github</a>
+  </li>
+  <li>
+    <a target="blank" href="https://ci.***REMOVED***/teams/main/pipelines/elektra">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/helm-charts/tree/master/openstack/elektra">Charts</a>
+  </li>
+  <li>
+    <a target="blank" href="https://documentation.***REMOVED***">General documentation</a>
+  </li>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/elektra/blob/master/apache2-license.txt">License</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monasca-content/tree/master/monsoon3/elektra/dashboards">Grafana dashboards content</a>
+  </li>
+</ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li><a target="blank" href="https://dashboard.+++.***REMOVED***/monsoon3">Elektra</a></li>
+    <li><a target="blank" href="https://grafana.+++.***REMOVED***/dashboard/db/elektra-overview">Grafana dashboard</a></li>
+    <li><a target="blank" href="https://sentry.+++.***REMOVED***/monsoon/elektra">Sentry</a></li>
+    <li><a target="blank" href="https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/elektra.yaml">Chart Values</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <li><a href="#" id="staging">staging</a></li>
+<li><a href="#" id="ap-ae-1">ap-ae-1</a></li>
+<li><a href="#" id="ap-au-1">ap-au-1</a></li>
+<li><a href="#" id="ap-cn-1">ap-cn-1</a></li>
+<li><a href="#" id="ap-jp-1">ap-jp-1</a></li>
+<li><a href="#" id="ap-jp-2">ap-jp-2</a></li>
+<li><a href="#" id="ap-sa-1">ap-sa-1</a></li>
+<li><a href="#" id="eu-de-1">eu-de-1</a></li>
+<li><a href="#" id="eu-nl-1">eu-nl-1</a></li>
+<li><a href="#" id="eu-ru-1">eu-ru-1</a></li>
+<li><a href="#" id="la-br-1">la-br-1</a></li>
+<li><a href="#" id="na-ca-1">na-ca-1</a></li>
+<li><a href="#" id="na-us-1">na-us-1</a></li>
+<li><a href="#" id="na-us-3">na-us-3</a></li>
+<li><a href="#" id="qa-de-1">qa-de-1</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    <div id="elektra_cli_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon-docker/openstackcli-wtty/blob/master/requirements.txt">Github</a>
+  </li>
+  <li>
+    <a target="blank" href="http://concourse.staging.***REMOVED***:8080/pipelines/webcli">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monsoon-kube/tree/master/config/webcli">Kube Specs</a>
+  </li>
+</ul>
+    </div>
+    <div id="lyra_cli_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/lyra-cli">Github</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/lyra-cli/releases">Releases</a>
+  </li>
+  <li>
+    <a target="blank" href="https://ci.***REMOVED***/teams/main/pipelines/lyra?groups=cli">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/lyra-cli/blob/master/LICENSE">License</a>
+  </li>
+  <li>
+    <a target="blank" href="https://documentation.***REMOVED***/docs/automation/cli/">Documentation</a>
+  </li>
+</ul>
+    </div>
+    <div id="lyra_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monsoon-automation">Github</a>
+  </li>
+  <li>
+    <a target="blank" href="https://ci.***REMOVED***/teams/main/pipelines/lyra">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/helm-charts/tree/master/openstack/lyra/templates">Charts</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monsoon-automation/blob/master/LICENCE">License</a>
+  </li>
+  <li>
+    <a target="blank" href="https://documentation.***REMOVED***/docs/automation/">Documentation</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monasca-content/tree/master/monsoon3/lyra/dashboards">Grafana dashboards content</a>
+  </li>
+</ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li>Lyra = [ <a target="blank" href="https://lyra.+++.***REMOVED***/healthcheck">link1</a>, <a target="blank" href="https://automation.+++.***REMOVED***/healthcheck">link2</a> ]</li>
+    <li><a target="blank" href="https://lyra.+++.***REMOVED***/que">Jobs Queue</a></li>
+    <li><a target="blank" href="https://grafana.+++.***REMOVED***/dashboard/db/lyra-overview">Grafana dashboard</a></li>
+    <li><a target="blank" href="https://sentry.+++.***REMOVED***/monsoon/lyra">Sentry</a></li>
+    <li><a target="blank" href="https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/lyra.yaml">Chart Values</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <li><a href="#" id="staging">staging</a></li>
+<li><a href="#" id="ap-ae-1">ap-ae-1</a></li>
+<li><a href="#" id="ap-au-1">ap-au-1</a></li>
+<li><a href="#" id="ap-cn-1">ap-cn-1</a></li>
+<li><a href="#" id="ap-jp-1">ap-jp-1</a></li>
+<li><a href="#" id="ap-jp-2">ap-jp-2</a></li>
+<li><a href="#" id="ap-sa-1">ap-sa-1</a></li>
+<li><a href="#" id="eu-de-1">eu-de-1</a></li>
+<li><a href="#" id="eu-nl-1">eu-nl-1</a></li>
+<li><a href="#" id="eu-ru-1">eu-ru-1</a></li>
+<li><a href="#" id="la-br-1">la-br-1</a></li>
+<li><a href="#" id="na-ca-1">na-ca-1</a></li>
+<li><a href="#" id="na-us-1">na-us-1</a></li>
+<li><a href="#" id="na-us-3">na-us-3</a></li>
+<li><a href="#" id="qa-de-1">qa-de-1</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    <div id="arc_api_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/arc">Github</a>
+  </li>
+  <li>
+    <a target="blank" href="https://ci.***REMOVED***/teams/main/pipelines/arc">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /pages/monsoon/arc/">Documentation</a>
+  </li>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/helm-charts/blob/master/openstack/arc/templates/api-service.yaml">Charts</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/arc/blob/master/LICENSE">License</a>
+  </li>
+  <li>
+    <a target="blank" href="https://gitHub.***REMOVED*** /monsoon/monasca-content/tree/master/monsoon3/arc/dashboards">Grafana dashboards content</a>
+  </li>
+</ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li><a target="blank" href="https://arc.+++.***REMOVED***">Arc API</a></li>
+    <li><a target="blank" href="https://grafana.+++.***REMOVED***/dashboard/db/arc-api-overview">Grafana dashboard</a></li>
+    <li><a target="blank" href="https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/arc.yaml">Chart values</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <li><a href="#" id="staging">staging</a></li>
+<li><a href="#" id="ap-ae-1">ap-ae-1</a></li>
+<li><a href="#" id="ap-au-1">ap-au-1</a></li>
+<li><a href="#" id="ap-cn-1">ap-cn-1</a></li>
+<li><a href="#" id="ap-jp-1">ap-jp-1</a></li>
+<li><a href="#" id="ap-jp-2">ap-jp-2</a></li>
+<li><a href="#" id="ap-sa-1">ap-sa-1</a></li>
+<li><a href="#" id="eu-de-1">eu-de-1</a></li>
+<li><a href="#" id="eu-nl-1">eu-nl-1</a></li>
+<li><a href="#" id="eu-ru-1">eu-ru-1</a></li>
+<li><a href="#" id="la-br-1">la-br-1</a></li>
+<li><a href="#" id="na-ca-1">na-ca-1</a></li>
+<li><a href="#" id="na-us-1">na-us-1</a></li>
+<li><a href="#" id="na-us-3">na-us-3</a></li>
+<li><a href="#" id="qa-de-1">qa-de-1</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    <div id="broker_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://ci.***REMOVED***/teams/main/pipelines/arc">Concourse</a>
+  </li>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/helm-charts/tree/master/openstack/arc/charts/mosquitto">Charts</a>
+  </li>
+</ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li><a target="blank" href="tls://arc-broker.+++.***REMOVED***:8883">Broker URL</a></li>
+    <li><a target="blank" href="https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/arc.yaml">Chart values</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <li><a href="#" id="staging">staging</a></li>
+<li><a href="#" id="ap-ae-1">ap-ae-1</a></li>
+<li><a href="#" id="ap-au-1">ap-au-1</a></li>
+<li><a href="#" id="ap-cn-1">ap-cn-1</a></li>
+<li><a href="#" id="ap-jp-1">ap-jp-1</a></li>
+<li><a href="#" id="ap-jp-2">ap-jp-2</a></li>
+<li><a href="#" id="ap-sa-1">ap-sa-1</a></li>
+<li><a href="#" id="eu-de-1">eu-de-1</a></li>
+<li><a href="#" id="eu-nl-1">eu-nl-1</a></li>
+<li><a href="#" id="eu-ru-1">eu-ru-1</a></li>
+<li><a href="#" id="la-br-1">la-br-1</a></li>
+<li><a href="#" id="na-ca-1">na-ca-1</a></li>
+<li><a href="#" id="na-us-1">na-us-1</a></li>
+<li><a href="#" id="na-us-3">na-us-3</a></li>
+<li><a href="#" id="qa-de-1">qa-de-1</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    <div id="swift_popover_content">
+      <ul>
+  <li>
+    <b>Swift URL:</b> https://objectstore.***REMOVED***:443/v1/AUTH_p-7496766f1/{container}
+  </li>
+  <li class="list-header">
+    Containers;
+  </li>
+  <li>
+    <b>arc-releases-beta</b> - New versions are directly published to beta.
+  </li>
+  <li>
+    <b>arc-releases-stable</b> - After some tests the new version is promoted to stable and accessible to all nodes.
+  </li>
+  <li>
+    <b>arc-releases-alpha</b> - (not yet activated)
+  </li>
+</ul>
+    </div>
+    <div id="reverse_proxy_popover_content">
+      <ul>
+  <li>
+    <a target="blank" href="https://github.com/sapcc/helm-charts/tree/master/openstack/arc/templates">Charts</a>
+  </li>
+</ul>
+<div class="jsPopoverDetail">
+  <ul class="jsPopoverDetailLinks hide">
+    <li class="list-header"></li>
+    <li><a target="blank" href="https://beta.arc.+++.***REMOVED***">Arc Releases Beta</a></li>
+    <li><a target="blank" href="https://stable.arc.+++.***REMOVED***">Arc Releases Stable</a></li>
+    <li><a target="blank" href="https://alpha.arc.+++.***REMOVED***">Arc Releases Alpha</a></li>    
+    <li><a target="blank" href="https://gitHub.***REMOVED*** /cc/secrets/blob/master/+++/values/arc.yaml">Chart values</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <b>Details: </b>
+    </div>
+    <div class="col-md-8">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="regionDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Region
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenu">
+          <li><a href="#" id="staging">staging</a></li>
+<li><a href="#" id="ap-ae-1">ap-ae-1</a></li>
+<li><a href="#" id="ap-au-1">ap-au-1</a></li>
+<li><a href="#" id="ap-cn-1">ap-cn-1</a></li>
+<li><a href="#" id="ap-jp-1">ap-jp-1</a></li>
+<li><a href="#" id="ap-jp-2">ap-jp-2</a></li>
+<li><a href="#" id="ap-sa-1">ap-sa-1</a></li>
+<li><a href="#" id="eu-de-1">eu-de-1</a></li>
+<li><a href="#" id="eu-nl-1">eu-nl-1</a></li>
+<li><a href="#" id="eu-ru-1">eu-ru-1</a></li>
+<li><a href="#" id="la-br-1">la-br-1</a></li>
+<li><a href="#" id="na-ca-1">na-ca-1</a></li>
+<li><a href="#" id="na-us-1">na-us-1</a></li>
+<li><a href="#" id="na-us-3">na-us-3</a></li>
+<li><a href="#" id="qa-de-1">qa-de-1</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+</div> 
+
+
+
+
+    <div id="footer">
+	<div class="container">
+		<span class="pull-right copyright">Copyright &copy; 2018</span>
+	</div>
+</div>
+
+
+    <script src="/pages/monsoon/monsoon-automation/assets/javascripts/application-fa481e7b.js"></script>
+    
+  
+  
+  <script src="/pages/monsoon/monsoon-automation/assets/javascripts/jointjs-02c44a63.js"></script>
+  <script src="/pages/monsoon/monsoon-automation/assets/javascripts/diagram-b681f3ee.js"></script>
+
+
+
+    
+    <!--[if lt IE 9]><script src="/pages/monsoon/monsoon-automation/assets/javascripts/ie-compat-22cec21e.js"></script><![endif]-->
+
+  </body>
+</html>
