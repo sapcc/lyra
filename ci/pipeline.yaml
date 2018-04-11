@@ -111,7 +111,7 @@ jobs:
         - get: charts.git
         - get: secrets.git
       - task: deploy
-        file: lyra.git/ci/tasks/helm-upgrade-1.7.yaml
+        file: lyra.git/ci/tasks/helm-upgrade.yaml
         params:
           REGION: staging
           GITHUB_TOKEN: {{github-access-token}}
@@ -146,13 +146,7 @@ jobs:
         params:
           REGION: eu-de-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: eu-de-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
 
@@ -197,13 +191,7 @@ jobs:
         params:
           REGION: eu-ru-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: eu-ru-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
 
@@ -225,13 +213,7 @@ jobs:
         params:
           REGION: ap-au-1 
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-au-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
 
@@ -253,13 +235,7 @@ jobs:
         params:
           REGION: eu-nl-1 
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: eu-nl-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
 
@@ -281,13 +257,7 @@ jobs:
         params:
           REGION: ap-cn-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-cn-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: ap-jp-1
@@ -308,13 +278,7 @@ jobs:
         params:
           REGION: ap-jp-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-jp-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: ap-jp-2
@@ -335,13 +299,7 @@ jobs:
         params:
           REGION: ap-jp-2
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-jp-2
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: ap-ae-1
@@ -362,13 +320,7 @@ jobs:
         params:
           REGION: ap-ae-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-ae-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: ap-sa-1
@@ -389,13 +341,7 @@ jobs:
         params:
           REGION: ap-sa-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: ap-sa-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: la-br-1
@@ -416,13 +362,7 @@ jobs:
         params:
           REGION: la-br-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: la-br-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: na-ca-1
@@ -443,13 +383,7 @@ jobs:
         params:
           REGION: na-ca-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: na-ca-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: na-us-1
@@ -470,13 +404,7 @@ jobs:
         params:
           REGION: na-us-1
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: na-us-1
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: na-us-3
@@ -497,13 +425,7 @@ jobs:
         params:
           REGION: na-us-3
           GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
-        - task: prune replicasets
-          file: lyra.git/ci/tasks/prune-replicasets.yaml
-          params:
-            REGION: na-us-3
-            GITHUB_TOKEN: {{github-access-token}}
+      - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
   - name: test-cli

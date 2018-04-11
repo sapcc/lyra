@@ -3,7 +3,7 @@ platform: linux
 
 image_resource:
   type: docker-image
-  source: { repository: hub.***REMOVED***/monsoon/kubectl, tag: 'v1.4.6'}
+  source: { repository: hub.***REMOVED***/monsoon/kubectl, tag: 'v1.7.7'}
 
 inputs:
 - name: lyra.version
@@ -20,18 +20,6 @@ run:
       helm upgrade $RELEASE charts.git/openstack/lyra  --values secrets.git/$REGION/values/lyra.yaml --set image.tag=$lyra_version
       kubectl rollout status deployment/$RELEASE-api --namespace=$NAMESPACE
       kubectl rollout status deployment/$RELEASE-worker --namespace=$NAMESPACE
-      set +x
-      for deployment in api worker; do
-        echo "Waiting for $deployment deployment to succeed"
-        until kubectl get deployment $RELEASE-$deployment  --namespace=$NAMESPACE -o json | \
-                jq -e '.status | .unavailableReplicas == null and .replicas == .updatedReplicas' >/dev/null; do
-          if [ $TIMEOUT -le 0 ]; then echo -e "\nTimeout waiting for $deployment deployment"; exit 1; fi 
-          TIMEOUT=$((TIMEOUT-STEP))
-          sleep $STEP
-          printf .
-        done
-        echo -e "\n$deployment deployment completed"
-      done
 
 params:
   STEP: 2
