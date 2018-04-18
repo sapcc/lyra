@@ -6,25 +6,16 @@ RSpec.describe ChefAutomationJob, type: :job do
   before(:each) { clean_tmp_path } #make sure previous git repositories are gone
 
   let(:agent) {
-    ArcClient::Agent.new(
-      "agent_id"=> "agent1",
-      "facts" => { 
-        "hostname" => "agent1_hostname", 
-        "online" => true,
-        "agents" => {
-          "chef": "enabled"
-        } 
-      }
-    )
+    mock_agent(1).first
   }
 
   pending "simplify the factory setup"
 
   describe "with Berkfile" do
     it "creates a tarball of the repo content" do
-      chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test")) 
+      chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test"))
       job = ChefAutomationJob.new(token, chef_automation, "bla=fasel")
-      run =  FactoryGirl.create(:run, token: token, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id) 
+      run =  FactoryGirl.create(:run, token: token, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
 
       add_commit("Berksfile", "source 'https://supermarket.chef.io'\ncookbook 'cookbook1', :path=> 'cookbook1/'", "add Berksfile", remote: true)
       add_commit("cookbook1/metadata.rb", "name 'cookbook1'\nversion '1.0.0'", "add metadata.rb", remote: true)
@@ -55,13 +46,40 @@ EOT
       expect(run.repository_revision).to eq("7e1dc93bfb54941e4467990e3eddae254b633cc3")
       expect(TrackAutomationJob).to have_been_enqueued.with(token, job.job_id)
     end
+
+  it "perfom with chunks" do
+    agents = mock_agent(7)
+    chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test"))
+    job = ChefAutomationJob.new(token, chef_automation, "bla=fasel")
+    job.perform_sleep_time = 0.1
+    run =  FactoryGirl.create(:run, token: token, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
+
+    expect(job).to receive(:list_agents).with("bla=fasel").and_return(agents)
+    expect(job).to receive(:list_agents).with("", instance_of(Array)).and_return(agents)
+    expect(job).to receive(:artifact_published?).and_return false
+    expect(job).to receive(:create_artifact).and_return("http://url")
+    expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: "http://url"
+
+    jobs = []
+    agents.each_slice(3) do |chunk|
+      res = chunk.map {|item| item.agent_id}
+      jobs += res
+      expect(job).to receive(:schedule_jobs).with(chunk, "chef", "zero", 3600, expected_payload).and_return(res)
+    end
+
+    ChefAutomationJob.perform_now(job)
+    run.reload
+    expect(run.state).to eq("executing")
+    expect(run.jobs).to eq(jobs)
+  end
+
   end
 
   describe "without Berksfile" do
     it "creates a tarball of the repo content" do
-      chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test")) 
+      chef_automation = FactoryGirl.create(:chef, repository: "file://"+remote_git_repo("test"))
       job = ChefAutomationJob.new(token, chef_automation, "bla=fasel")
-      run = FactoryGirl.create(:run, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id) 
+      run = FactoryGirl.create(:run, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
 
       expect(job).to receive(:list_agents).with("bla=fasel").and_return([agent])
       expect(job).to receive(:list_agents).with("", instance_of(Array)).and_return([agent])
@@ -119,4 +137,21 @@ EOT
     expect(run.state).to eq("failed")
   end
 
+end
+
+def mock_agent(number)
+  agents = []
+  number.times do |i|
+    agents << ArcClient::Agent.new(
+      "agent_id"=> "agent_#{i}",
+      "facts" => {
+        "hostname" => "agent_#{i}_hostname",
+        "online" => true,
+        "agents" => {
+          "chef": "enabled"
+        }
+      }
+    )
+  end
+  agents
 end
