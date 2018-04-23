@@ -13,6 +13,7 @@ RSpec.describe 'rake run:cleanup', type: :task do
       date = Date.today - (30 + i)
       FactoryGirl.create(:run, token: token, project_id: chef_automation.project_id, automation: chef_automation, job_id: "job_id_#{i}", created_at: date, updated_at: date)
     end
+    expect(Run.all.length).to eq(10)
     task.invoke
     expect(Run.all.length).to eq(5)
 
