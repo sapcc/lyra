@@ -35,7 +35,7 @@ groups:
     jobs:
       - build
       - test
-      - staging
+      - qa
       - promote
       - eu-de-1
       - eu-de-2
@@ -51,7 +51,6 @@ groups:
       - na-ca-1
       - na-us-1
       - na-us-3
-      - qa-de-1
   - name: cli
     jobs:
       - test-cli
@@ -100,7 +99,7 @@ jobs:
     on_failure:
       <<: *post_failure_to_slack
 
-  - name: staging
+  - name: qa
     serial: true
     plan:
       - aggregate:
@@ -114,7 +113,7 @@ jobs:
       - task: deploy
         file: lyra.git/ci/tasks/helm-upgrade.yaml
         params:
-          REGION: staging
+          REGION: qa-de-1
           GITHUB_TOKEN: {{github-access-token}}
     on_failure:
       <<: *post_failure_to_slack
@@ -123,11 +122,11 @@ jobs:
     plan:
       - aggregate:
         - get: lyra.git
-          passed: [ staging ]
+          passed: [ qa ]
         - get: lyra.version
-          passed: [ staging ]
+          passed: [ qa ]
         - get: charts.git
-          passed: [ staging ]
+          passed: [ qa ]
 
   - name: eu-de-1
     serial: true
@@ -170,29 +169,6 @@ jobs:
           REGION: eu-de-2
           GITHUB_TOKEN: {{github-access-token}}
       - <<: *post_deployment_end_to_slack
-    on_failure:
-      <<: *post_failure_to_slack
-
-  - name: qa-de-1
-    serial: true
-    plan:
-      - aggregate:
-        - get: lyra.git
-          passed: [ promote ]
-          trigger: true
-        - get: lyra.version
-          passed: [ promote ]
-        - get: charts.git
-          passed: [ promote ]
-        - get: secrets.git
-      - <<: *post_deployment_start_to_slack
-      - task: deploy
-        file: lyra.git/ci/tasks/helm-upgrade.yaml
-        params:
-          REGION: qa-de-1
-          GITHUB_TOKEN: {{github-access-token}}
-      - aggregate:
-        - <<: *post_deployment_end_to_slack
     on_failure:
       <<: *post_failure_to_slack
 
