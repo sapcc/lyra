@@ -1,4 +1,4 @@
-FROM  ruby:2.3.4-alpine
+FROM  ruby:2.3.7-alpine
 
 # pg_dump is part the "postgresql" server package on alpine.
 RUN apk --no-cache add git curl tar tzdata postgresql postgresql-client
