@@ -156,5 +156,6 @@ class ChefAutomationJob < ActiveJob::Base
       break if jids.empty?
       sleep 5
     end
+    raise "Failed to enable chef on all nodes" if failed
   end
 end
