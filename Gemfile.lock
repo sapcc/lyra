@@ -148,7 +148,7 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (0.7.0)
-    json (1.8.3)
+    json (1.8.3.1)
     json-schema (2.2.5)
     json_matchers (0.5.0)
       activesupport (>= 3.0.0)

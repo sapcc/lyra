@@ -83,7 +83,7 @@ class ChefAutomationJob < ActiveJob::Base
         vendor_dir = ::File.join dir, 'berks'
         # do a berks package
         Bundler.with_clean_env do
-          execute "berks vendor #{vendor_dir}/cookbooks --berksfile #{checkout_dir}/Berksfile"
+          execute "#{ENV.fetch('BERKS_BIN', 'berks')} vendor #{vendor_dir}/cookbooks --berksfile #{checkout_dir}/Berksfile"
           %w[roles chef/roles].each do |r|
             roles_dir = File.join checkout_dir, r
             if Dir.exist? roles_dir
