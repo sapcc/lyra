@@ -99,13 +99,13 @@ class ChefAutomationJob < ActiveJob::Base
             end
           end
           @run.log("Creating tarball...\n")
-          execute "tar -c -z --format=pax -C #{vendor_dir} -f #{tarball} ."
+          execute "tar -c -z -C #{vendor_dir} -f #{tarball} ."
         end
       else
         @run.log("Creating tarball of repository content...\n")
         # TODO: check for correct folder structure
         # tar the checkout dir
-        execute "tar -c -z --format=pax -C #{checkout_dir} -f #{tarball} ."
+        execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
       end
       publish_artifact(tarball, artifact_name(sha))
     end
