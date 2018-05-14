@@ -433,9 +433,9 @@ jobs:
         trigger: true
       - aggregate:
         - task: metalint
-          file: cli.git/ci/metalint.yaml
+          file: cli.git/ci/metalint.yml
         - task: unit
-          file: cli.git/ci/unit.yaml
+          file: cli.git/ci/unit.yml
     on_failure:
       <<: *post_failure_to_slack
 
