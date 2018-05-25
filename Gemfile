@@ -48,6 +48,9 @@ gem 'with_advisory_lock'
 gem 'sentry-raven'
 gem 'httpclient' # The only faraday backend that handled no_proxy :|
 
+gem 'ffi-libarchive'
+
+
 group :development, :test do
   # annotate models with database schema
   gem 'annotate'

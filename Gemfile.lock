@@ -135,6 +135,9 @@ GEM
       railties (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
+    ffi (1.9.23)
+    ffi-libarchive (0.2.0)
+      ffi (~> 1.0)
     fuzzyurl (0.9.0)
     gitmirror (0.1.1)
     globalid (0.3.6)
@@ -162,13 +165,13 @@ GEM
     mini_portile2 (2.1.0)
     minitar (0.6.1)
     minitest (5.8.4)
-    mixlib-archive (0.4.1)
+    mixlib-archive (0.4.6)
       mixlib-log
     mixlib-authentication (1.4.1)
       mixlib-log
     mixlib-cli (1.7.0)
     mixlib-config (2.2.4)
-    mixlib-log (1.7.1)
+    mixlib-log (2.0.4)
     mixlib-shellout (2.2.7)
     molinillo (0.5.7)
     multi_xml (0.5.5)
@@ -342,6 +345,7 @@ DEPENDENCIES
   database_cleaner
   dotenv-rails
   factory_girl_rails
+  ffi-libarchive
   gitmirror!
   httpclient
   json_matchers
@@ -368,4 +372,4 @@ DEPENDENCIES
   with_advisory_lock
 
 BUNDLED WITH
-   1.14.6
+   1.16.1

@@ -1,7 +1,7 @@
 FROM  ruby:2.3.7-alpine
 
 # pg_dump is part the "postgresql" server package on alpine.
-RUN apk --no-cache add git curl tzdata postgresql postgresql-client
+RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev
 
 
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
@@ -12,6 +12,7 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install posix-spawn -v 0.3.11 \
       && gem install puma -v 3.7.1  \
       && gem install thread_safe -v 0.3.5 \
+      && gem install ffi -v 1.9.23 \
       && runDeps="$( \
 		      scanelf --needed --nobanner --recursive /usr/local \
             | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
