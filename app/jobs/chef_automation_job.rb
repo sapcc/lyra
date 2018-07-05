@@ -131,6 +131,11 @@ class ChefAutomationJob < ActiveJob::Base
   end
 
   def ensure_chef_enabled(token, agents, chef_version)
+    # check if onmitruck proxy is set and add to the payload
+    omnitruck_url = ENV.fetch('OMNITRUCK_URL', nil)
+    payload = { chef_version: chef_version }
+    payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s unless omnitruck_url
+
     jids = agents.find_all { |a| a.facts['agents']['chef'] == 'disabled' }.map do |agent|
       # TODO: handle individual errors
       jid = arc.execute_job!(token,
@@ -138,7 +143,7 @@ class ChefAutomationJob < ActiveJob::Base
                              timeout: 600,
                              agent: 'chef',
                              action: 'enable',
-                             payload: { chef_version: chef_version }.to_json)
+                             payload: payload.to_json)
       @run.log "Enabling chef on node #{agent.agent_id}/#{agent.facts['hostname']} (job: #{jid})"
       jid
     end
@@ -156,6 +161,6 @@ class ChefAutomationJob < ActiveJob::Base
       break if jids.empty?
       sleep 5
     end
-    raise "Failed to enable chef on all nodes" if failed
+    raise 'Failed to enable chef on all nodes' if failed
   end
 end
