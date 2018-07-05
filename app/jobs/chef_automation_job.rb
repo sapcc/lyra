@@ -134,7 +134,7 @@ class ChefAutomationJob < ActiveJob::Base
     # check if onmitruck proxy is set and add to the payload
     omnitruck_url = ENV.fetch('OMNITRUCK_URL', nil)
     payload = { chef_version: chef_version }
-    payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s unless omnitruck_url.nil?
+    payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s if omnitruck_url
 
     jids = agents.find_all { |a| a.facts['agents']['chef'] == 'disabled' }.map do |agent|
       # TODO: handle individual errors
