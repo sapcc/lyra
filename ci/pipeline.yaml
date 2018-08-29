@@ -78,6 +78,12 @@ jobs:
             http_proxy: http://proxy.***REMOVED***:8080
             https_proxy: http://proxy.***REMOVED***:8080
             no_proxy: ***REMOVED***.***REMOVED***,127.0.0.1,localhost
+      - task: scan-image
+        file: lyra.git/ci/tasks/vscan.yaml
+        input_mapping:
+          image.version: lyra.version
+        params:
+          IMAGE_NAME: hub.***REMOVED***/monsoon/lyra            
       - put: lyra.version
         params: { filename: lyra.version/current }
     on_failure:
