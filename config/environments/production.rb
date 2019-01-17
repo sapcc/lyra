@@ -23,8 +23,7 @@ Rails.application.configure do
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
-  config.static_cache_control = "public, max-age=1800"
-
+  config.static_cache_control = 'public, max-age=1800'
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -35,13 +34,13 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 
   # Use a different logger for distributed setups.
-  config.logger = RailsStdoutLogging::Rails.heroku_stdout_logger 
+  config.logger = RailsStdoutLogging::Rails.heroku_stdout_logger
   STDOUT.sync = true # make sure STDOUT is not buffering
 
   # Use a different cache store in production.
