@@ -6,11 +6,11 @@ GIT
       rest-client (~> 2.0.0.rc3)
 
 GIT
-  remote: https://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git
-  revision: d1f3b69c2c822df91e5255c0c76629c23a03c7f9
+  remote: https://github.com/sapcc/monsoon-openstack-auth.git
+  revision: ecbe73cc4e0389c0e59cedd88859bb33ab92ea7b
   branch: master
   specs:
-    monsoon-openstack-auth (0.8.6)
+    monsoon-openstack-auth (2.0.2)
       excon
       hashie
       rails
@@ -126,8 +126,8 @@ GEM
       dotenv (= 2.1.0)
       railties (>= 4.0, < 5.1)
     erubis (2.7.0)
-    excon (0.48.0)
-    execjs (2.6.0)
+    excon (0.62.0)
+    execjs (2.7.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.6.0)
@@ -318,9 +318,8 @@ GEM
       hitimes
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.2)
-      execjs (>= 0.3.0)
-      json (>= 1.8.0)
+    uglifier (4.1.19)
+      execjs (>= 0.3.0, < 3)
     unf (0.2.0.beta2)
     varia_model (0.6.0)
       buff-extensions (~> 2.0)
@@ -372,4 +371,4 @@ DEPENDENCIES
   with_advisory_lock
 
 BUNDLED WITH
-   1.16.1
+   1.16.6

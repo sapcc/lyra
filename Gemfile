@@ -16,7 +16,7 @@ gem 'will_paginate', '~> 3.0.6'
 
 # Openstack
 gem 'monsoon-openstack-auth',
-    git: 'https://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git',
+    git: 'https://github.com/sapcc/monsoon-openstack-auth.git',
     branch: 'master'
 
 gem 'active_model_serializers', '>= 0.10.0.rc4'
