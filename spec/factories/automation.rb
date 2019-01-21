@@ -8,7 +8,6 @@ FactoryGirl.define do
     repository_revision 'master'
     timeout 3600
     path '/some_script'
-    arguments %w[arg1 arg2]
   end
 
   # Chef
