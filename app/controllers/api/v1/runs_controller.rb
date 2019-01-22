@@ -1,9 +1,7 @@
 class Api::V1::RunsController < ApplicationController
   api_authentication_required rescope: false # do not rescope after authentication
-  authorization_required
-
   before_action :require_project
-
+  
   # GET api/v1/runs.json
   def index
     @runs = Run.by_project_all(@project, params[:page], params[:per_page])
@@ -26,7 +24,7 @@ class Api::V1::RunsController < ApplicationController
       render json: @run, status: :created
     else
       Rails.logger.error @run.errors.inspect
-      render json: { errors: @run.errors }, status: :unprocessable_entity
+      render json: {errors: @run.errors}, status: :unprocessable_entity
     end
   end
 
@@ -35,4 +33,5 @@ class Api::V1::RunsController < ApplicationController
   def run_params
     params.permit(:automation_id, :selector)
   end
+ 
 end

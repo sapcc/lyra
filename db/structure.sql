@@ -2,15 +2,14 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.5
--- Dumped by pg_dump version 10.5
+-- Dumped from database version 9.6.2
+-- Dumped by pg_dump version 9.6.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -29,6 +28,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+SET search_path = public, pg_catalog;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -37,7 +38,7 @@ SET default_with_oids = false;
 -- Name: automations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.automations (
+CREATE TABLE automations (
     id integer NOT NULL,
     type character varying NOT NULL,
     name character varying NOT NULL,
@@ -63,8 +64,7 @@ CREATE TABLE public.automations (
 -- Name: automations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.automations_id_seq
-    AS integer
+CREATE SEQUENCE automations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -76,14 +76,14 @@ CREATE SEQUENCE public.automations_id_seq
 -- Name: automations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.automations_id_seq OWNED BY public.automations.id;
+ALTER SEQUENCE automations_id_seq OWNED BY automations.id;
 
 
 --
 -- Name: que_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.que_jobs (
+CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
     run_at timestamp with time zone DEFAULT now() NOT NULL,
     job_id bigint NOT NULL,
@@ -99,14 +99,14 @@ CREATE TABLE public.que_jobs (
 -- Name: TABLE que_jobs; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.que_jobs IS '3';
+COMMENT ON TABLE que_jobs IS '3';
 
 
 --
 -- Name: que_jobs_job_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.que_jobs_job_id_seq
+CREATE SEQUENCE que_jobs_job_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -118,14 +118,14 @@ CREATE SEQUENCE public.que_jobs_job_id_seq
 -- Name: que_jobs_job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
+ALTER SEQUENCE que_jobs_job_id_seq OWNED BY que_jobs.job_id;
 
 
 --
 -- Name: runs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.runs (
+CREATE TABLE runs (
     id integer NOT NULL,
     job_id character varying NOT NULL,
     automation_id integer,
@@ -146,8 +146,7 @@ CREATE TABLE public.runs (
 -- Name: runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.runs_id_seq
-    AS integer
+CREATE SEQUENCE runs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -159,14 +158,14 @@ CREATE SEQUENCE public.runs_id_seq
 -- Name: runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.runs_id_seq OWNED BY public.runs.id;
+ALTER SEQUENCE runs_id_seq OWNED BY runs.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.schema_migrations (
+CREATE TABLE schema_migrations (
     version character varying NOT NULL
 );
 
@@ -175,28 +174,28 @@ CREATE TABLE public.schema_migrations (
 -- Name: automations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.automations ALTER COLUMN id SET DEFAULT nextval('public.automations_id_seq'::regclass);
+ALTER TABLE ONLY automations ALTER COLUMN id SET DEFAULT nextval('automations_id_seq'::regclass);
 
 
 --
 -- Name: que_jobs job_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public.que_jobs_job_id_seq'::regclass);
+ALTER TABLE ONLY que_jobs ALTER COLUMN job_id SET DEFAULT nextval('que_jobs_job_id_seq'::regclass);
 
 
 --
 -- Name: runs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.runs ALTER COLUMN id SET DEFAULT nextval('public.runs_id_seq'::regclass);
+ALTER TABLE ONLY runs ALTER COLUMN id SET DEFAULT nextval('runs_id_seq'::regclass);
 
 
 --
 -- Name: automations automations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.automations
+ALTER TABLE ONLY automations
     ADD CONSTRAINT automations_pkey PRIMARY KEY (id);
 
 
@@ -204,7 +203,7 @@ ALTER TABLE ONLY public.automations
 -- Name: que_jobs que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.que_jobs
+ALTER TABLE ONLY que_jobs
     ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
 
 
@@ -212,7 +211,7 @@ ALTER TABLE ONLY public.que_jobs
 -- Name: runs runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.runs
+ALTER TABLE ONLY runs
     ADD CONSTRAINT runs_pkey PRIMARY KEY (id);
 
 
@@ -220,35 +219,35 @@ ALTER TABLE ONLY public.runs
 -- Name: index_automations_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_automations_on_project_id ON public.automations USING btree (project_id);
+CREATE INDEX index_automations_on_project_id ON automations USING btree (project_id);
 
 
 --
 -- Name: index_runs_on_automation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_runs_on_automation_id ON public.runs USING btree (automation_id);
+CREATE INDEX index_runs_on_automation_id ON runs USING btree (automation_id);
 
 
 --
 -- Name: index_runs_on_job_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_runs_on_job_id ON public.runs USING btree (job_id);
+CREATE UNIQUE INDEX index_runs_on_job_id ON runs USING btree (job_id);
 
 
 --
 -- Name: index_runs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_runs_on_project_id ON public.runs USING btree (project_id);
+CREATE INDEX index_runs_on_project_id ON runs USING btree (project_id);
 
 
 --
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
+CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
 
 
 --
