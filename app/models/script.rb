@@ -27,13 +27,11 @@
 #
 
 class Script < Automation
-
   validates_presence_of :repository, :path
-  validates :repository, format: { with: URI.regexp }
-  validates :environment, json: true, allow_blank: true
+  validates :repository, format: { with: URI::DEFAULT_PARSER.make_regexp }
+  validates :environment, json: true
 
   def create_job(token, selector)
-    ScriptAutomationJob.perform_later(token, self, selector) 
+    ScriptAutomationJob.perform_later(token, self, selector)
   end
-
 end

@@ -1,7 +1,7 @@
 class Api::V1::AutomationsController < ApplicationController
   api_authentication_required rescope: false # do not rescope after authentication
   before_action :require_project
-  before_action :set_automation, only: [:show, :edit, :update, :destroy]
+  before_action :set_automation, only: %i[show edit update destroy]
 
   # GET api/v1/automations.json
   def index
@@ -17,23 +17,23 @@ class Api::V1::AutomationsController < ApplicationController
 
   # POST api/v1/automations.json
   def create
-    @automation = Automation.new(automation_params.merge!(project_id: @project))
+    @automation = Automation.new(automation_sliced_params.merge!(project_id: @project))
 
     if @automation.save
       render json: @automation, status: :created
     else
       Rails.logger.error @automation.errors.inspect
-      render json: {errors: @automation.errors}, status: :unprocessable_entity
+      render json: { errors: @automation.errors }, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT api/v1/automations/1.json
   def update
-    if @automation.update(automation_params(@automation.type))
+    if @automation.update(automation_sliced_params(@automation.type))
       render json: @automation, status: :ok
     else
       Rails.logger.error @automation.errors.inspect
-      render json: {errors: @automation.errors}, status: :unprocessable_entity
+      render json: { errors: @automation.errors }, status: :unprocessable_entity
     end
   end
 
@@ -49,31 +49,48 @@ class Api::V1::AutomationsController < ApplicationController
     @automation = Automation.by_project(@project).find(params[:id])
   end
 
-  def automation_params( type = nil )
-
-    permitted = [:name, :repository, :repository_revision, :timeout]
-    if type == nil
+  def automation_sliced_params(type = nil)
+    permitted = %i[name repository repository_revision timeout]
+    if type.nil?
       permitted.push(:type)
       type = params[:type]
     end
 
     case type
     when 'Chef'
-      permitted.push(:debug, :chef_version, {run_list: [] }, chef_attributes: permit_recursive_params(params[:chef_attributes]))
+      permitted.push(:debug, :chef_version, :run_list, :chef_attributes)
+    when 'Script'
+      permitted.push(:path, :arguments, :environment)
+    end
+
+    HashWithIndifferentAccess.new(params.to_unsafe_h).slice(*permitted)
+  end
+
+  def automation_params(type = nil)
+    permitted = %i[name repository repository_revision timeout]
+    if type.nil?
+      permitted.push(:type)
+      type = params[:type]
+    end
+
+    case type
+    when 'Chef'
+      permitted.push(:debug, :chef_version, { run_list: [] }, chef_attributes: permit_recursive_params(params[:chef_attributes]))
     when 'Script'
       env = params[:environment].try(:keys)
       permitted.push(:path, arguments: [], environment: (env.blank? ? {} : env))
     end
 
-    return params.permit(*permitted)
+    params.permit(*permitted)
   end
 
   def permit_recursive_params(params)
     return params if params.blank?
+
     (params.try(:to_unsafe_h) || params).map do |key, value|
       if value.is_a?(Array)
         if value.first.respond_to?(:map)
-          { key => [ permit_recursive_params(value.first) ] }
+          { key => [permit_recursive_params(value.first)] }
         else
           { key => [] }
         end
@@ -84,5 +101,4 @@ class Api::V1::AutomationsController < ApplicationController
       end
     end
   end
-
 end
