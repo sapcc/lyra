@@ -33,8 +33,8 @@ class Chef < Automation
   validates_presence_of :repository, :repository_revision, :run_list
   validates :repository, format: { with: URI::DEFAULT_PARSER.make_regexp }
 
-  # validates :chef_attributes, json: true, allow_blank: true
-  validates :chef_attributes, json: true
+  validates :chef_attributes, json: true, allow_blank: true
+  # validates :chef_attributes, json: true
 
   def create_job(token, selector)
     ChefAutomationJob.perform_later(token, self, selector)

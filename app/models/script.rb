@@ -29,6 +29,7 @@
 class Script < Automation
   validates_presence_of :repository, :path
   validates :repository, format: { with: URI::DEFAULT_PARSER.make_regexp }
+  validates :environment, json: true, allow_blank: true
   validates :environment, json: true
 
   def create_job(token, selector)

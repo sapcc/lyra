@@ -13,8 +13,11 @@ class JsonValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
     attribute_before_cast = record.send(attribute.to_s + '_before_type_cast')
+
+    # allow_blank
     return if value.blank? && attribute_before_cast.blank?
 
+    # JSON typecast nils value thats why the follwing check
     if value.blank? && !attribute_before_cast.blank?
       return record.errors.add(attribute, options[:message], exception_message: 'Not JSON type')
     end
