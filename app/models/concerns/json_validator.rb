@@ -14,7 +14,8 @@ class JsonValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     attribute_before_cast = record.send(attribute.to_s + '_before_type_cast')
 
-    # allow_blank
+    Rails.logger.error "value: #{value} #{value.blank?}, attribute_before_cast: #{attribute_before_cast} #{attribute_before_cast.blank?}"
+
     return if value.blank? && attribute_before_cast.blank?
 
     # JSON typecast nils value thats why the follwing check
