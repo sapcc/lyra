@@ -16,7 +16,7 @@ gem 'will_paginate', '~> 3.0.6'
 
 # Openstack
 gem 'monsoon-openstack-auth',
-    git: 'https://gitHub.***REMOVED*** /monsoon/monsoon-openstack-auth.git',
+    git: 'https://github.com/sapcc/monsoon-openstack-auth.git',
     branch: 'master'
 
 gem 'active_model_serializers', '>= 0.10.0.rc4'
@@ -50,7 +50,6 @@ gem 'httpclient' # The only faraday backend that handled no_proxy :|
 
 gem 'ffi-libarchive'
 
-
 group :development, :test do
   # annotate models with database schema
   gem 'annotate'
@@ -71,7 +70,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'capybara'
 
-  #generate swagger.json from specs
+  # generate swagger.json from specs
   gem 'rswag-specs'
 end
 

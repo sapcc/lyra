@@ -1,0 +1,11 @@
+{
+  "role_required": "role:automation_admin or role:automation_viewer",
+  "MonsoonAutomation:automation_index": "rule:role_required",
+  "MonsoonAutomation:automation_show": "rule:role_required",
+  "MonsoonAutomation:automation_create": "role:automation_admin",
+  "MonsoonAutomation:automation_update": "role:automation_admin",
+  "MonsoonAutomation:automation_destroy": "role:automation_admin",
+  "MonsoonAutomation:run_index": "rule:role_required",
+  "MonsoonAutomation:run_show": "rule:role_required",
+  "MonsoonAutomation:run_create": "role:automation_admin"
+}

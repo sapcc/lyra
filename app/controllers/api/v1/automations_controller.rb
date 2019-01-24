@@ -1,5 +1,7 @@
 class Api::V1::AutomationsController < ApplicationController
   api_authentication_required rescope: false # do not rescope after authentication
+  authorization_required
+
   before_action :require_project
   before_action :set_automation, only: %i[show edit update destroy]
 

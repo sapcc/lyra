@@ -1,15 +1,17 @@
 require 'swagger_helper'
 
 RSpec.describe 'Automations API' do
-  let(:"X-Auth-Token") { token }
+  before do
+    token['roles'].delete_if { |h| h['id'] == 'automation_role' }
+    token['roles'] << { 'id' => 'automation_role', 'name' => 'automation_admin' }
+  end
+  let(:"X-Auth-Token") { token_value }
   let(:automation) { FactoryGirl.create(:chef, project_id: project_id) }
 
-
   path '/api/v1/runs' do
-
     get 'List runs' do
       before do
-        FactoryGirl.create(:run, automation: automation, job_id: "some-job-id", repository_revision: "nase")
+        FactoryGirl.create(:run, automation: automation, job_id: 'some-job-id', repository_revision: 'nase')
       end
       let(:page) { 1 }
       let(:per_page) { 10 }
@@ -26,22 +28,22 @@ RSpec.describe 'Automations API' do
         run_test!
       end
       response '401', 'authorization required' do
-        let(:"X-Auth-Token") { "invalid" }
+        let(:"X-Auth-Token") { 'invalid' }
         schema '$ref' => '#/definitions/error_object'
         run_test!
       end
     end
 
     post 'Create run' do
-      description "Execute an automation on one or more instances."
+      description 'Execute an automation on one or more instances.'
       parameter name: :body, in: :body, schema: { '$ref' => '#/definitions/Run' }
       let(:body) { { automation_id: automation.id, selector: "bla = 'fasel'" } }
-      response '201', "run created" do
+      response '201', 'run created' do
         schema '$ref' => '#/definitions/Run'
         run_test!
       end
       response '401', 'authorization required' do
-        let(:"X-Auth-Token") { "invalid" }
+        let(:"X-Auth-Token") { 'invalid' }
         schema '$ref' => '#/definitions/error_object'
         run_test!
       end
@@ -54,15 +56,15 @@ RSpec.describe 'Automations API' do
   end
 
   path '/api/v1/runs/{id}' do
-    let(:id) { FactoryGirl.create(:run, automation: automation, job_id: "some-job-id").id }
-    parameter name: :id, :in => :path, :type => :string, description: "run id"
+    let(:id) { FactoryGirl.create(:run, automation: automation, job_id: 'some-job-id').id }
+    parameter name: :id, in: :path, type: :string, description: 'run id'
     get 'Show run' do
-      response '200', "show run" do
+      response '200', 'show run' do
         schema '$ref' => '#/definitions/Run'
         run_test!
       end
       response '401', 'authorization required' do
-        let(:"X-Auth-Token") { "invalid" }
+        let(:"X-Auth-Token") { 'invalid' }
         schema '$ref' => '#/definitions/error_object'
         run_test!
       end

@@ -14,19 +14,21 @@ MonsoonOpenstackAuth.configure do |auth|
   auth.access_key_auth_allowed = false
 
   # optional, default= last url before redirected to form
-  #auth.login_redirect_url = -> referrer_url, current_user { after_login_url(referrer_url, current_user)}
+  # auth.login_redirect_url = -> referrer_url, current_user { after_login_url(referrer_url, current_user)}
 
   # authorization policy file
-  # auth.authorization.policy_file_path = policy_paths
+  auth.authorization.policy_file_path = 'config/policy.json'
   # context: Default is name of main app, e.g. dashboard.
   # If you overwrite context, rules in policy file should begin with that context.
   # auth.authorization.context = "identity"
 
-
-  #auth.authorization.trace_enabled = true
+  # auth.authorization.trace_enabled = true
   # auth.authorization.reload_policy = true
   # auth.authorization.trace_enabled = true
-  #
+
+  auth.authorization.reload_policy = ENV['DEBUG_POLICY_ENGINE']
+  auth.authorization.trace_enabled = ENV['DEBUG_POLICY_ENGINE']
+
   # auth.authorization.controller_action_map = {
   #   :index   => 'read',
   #   :show    => 'read',
@@ -43,6 +45,5 @@ MonsoonOpenstackAuth.configure do |auth|
   security_violation_handler = :authorization_forbidden
 
   # optional, default=false
-  auth.debug=true
+  auth.debug = true
 end
-
