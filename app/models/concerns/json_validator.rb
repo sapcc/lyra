@@ -12,23 +12,19 @@ class JsonValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    attribute_before_cast = record.send(attribute.to_s + '_before_type_cast')
+    value_before_cast = record.send(attribute.to_s + '_before_type_cast')
 
-    Rails.logger.error "value: #{value} #{value.inspect} #{value.blank?}, attribute_before_cast: #{attribute_before_cast} #{attribute_before_cast.inspect} #{attribute_before_cast.blank?}"
+    return if value.blank? && value_before_cast.blank?
 
-    return if value.blank? && attribute_before_cast.blank?
+    check_value = if value_before_cast.is_a?(Hash) || value_before_cast.is_a?(Array)
+                    value_before_cast.to_json
+                  elsif value_before_cast.is_a?(String)
+                    value_before_cast.strip
+                  else
+                    value_before_cast
+                  end
 
-    # JSON typecast nils value thats why the follwing check
-    if value.blank? && !attribute_before_cast.blank?
-      return record.errors.add(attribute, options[:message], exception_message: 'Not JSON type')
-    end
-
-    if value.is_a?(Hash) || value.is_a?(Array)
-      value = value.to_json
-    elsif value.is_a?(String)
-      value = value.strip
-    end
-    ::JSON.parse(value)
+    ::JSON.parse(check_value)
   rescue StandardError => exception
     record.errors.add(attribute, options[:message], exception_message: exception.message)
   end
