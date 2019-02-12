@@ -23,7 +23,7 @@ gem 'active_model_serializers', '>= 0.10.0.rc4'
 
 # Asynchronous jobs via postgres
 gem 'que'
-gem 'que-web' # at some point this should be remove and started standalone
+#gem 'que-web' # at some point this should be remove and started standalone
 
 # arc client
 gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
