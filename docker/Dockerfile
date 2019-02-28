@@ -26,8 +26,10 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && rm -f /usr/local/bundle/cache/*
 
 RUN curl -fL http://aia.pki.co.sap.com/aia/SAP%20Global%20Root%20CA.crt | tr -d '\r' > /usr/local/share/ca-certificates/SAP_Global_Root_CA.crt \
+      && curl -fL http://aia.pki.co.sap.com/aia/SAPNetCA_G2.crt | tr -d '\r' > /usr/local/share/ca-certificates/SAPNetCA_G2.crt \
       && update-ca-certificates \
-      && ruby -ropen-uri -e 'open("https://gitHub.***REMOVED*** ").read'
+      && ruby -ropen-uri -e 'open("https://gitHub.***REMOVED*** ").read' \
+      && ruby -r open-uri -e 'open("https://docker.***REMOVED***:10443").read'
 
 RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 && \
     chmod +x /usr/bin/dumb-init && \
