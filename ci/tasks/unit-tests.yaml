@@ -19,8 +19,7 @@ run:
       export LISTENTO=127.0.0.1
       su postgres -c 'lyra.git/ci/scripts/pg_tmp.sh -p 5432 -w 300 -d /tmp/pg start'
       cd /home/app/webapp
-      rake db:create db:migrate RAILS_ENV=test
+      bundle exec rake db:create db:migrate RAILS_ENV=test
       bundle exec rspec
       cd -
       su postgres -c 'lyra.git/ci/scripts/pg_tmp.sh -d /tmp/pg stop'
-
