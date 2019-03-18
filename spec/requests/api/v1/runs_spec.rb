@@ -13,7 +13,7 @@ RSpec.describe 'Test Run API' do
     end
 
     it 'return an authorization error 401 on wrong Auth-Code' do
-      get '/api/v1/runs', nil, 'X-Auth-Token' => 'no valid token'
+      get '/api/v1/runs', headers: { 'X-Auth-Token' => 'no valid token' }
       expect(response.status).to eq(401)
     end
 
@@ -26,7 +26,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'returns runs for the project' do
-        get '/api/v1/runs', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/runs', headers: { 'X-Auth-Token' => token_value }
 
         expect(response).to match_response_schema('runs')
         expect(::JSON.parse(response.body).length).to eq(2)
@@ -34,7 +34,7 @@ RSpec.describe 'Test Run API' do
 
       it 'return an empty array if no runs found' do
         token['project']['id'] = '123456789'
-        get '/api/v1/runs', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/runs', headers: { 'X-Auth-Token' => token_value }
 
         expect(response).to match_response_schema('runs')
         expect(::JSON.parse(response.body).length).to eq(0)
@@ -61,7 +61,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'returns runs for the project' do
-        get '/api/v1/runs', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/runs', headers: { 'X-Auth-Token' => token_value }
 
         expect(response).to match_response_schema('runs')
         expect(::JSON.parse(response.body).length).to eq(2)
@@ -76,7 +76,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'not allowed' do
-        get '/api/v1/runs', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/runs', headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(403)
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe 'Test Run API' do
 
     it 'return an authorization error 401 on wrong Auth-Code' do
       run = FactoryGirl.create(:run, automation: automation, job_id: 'some-job-id')
-      get "/api/v1/runs/#{run.id}", nil, 'X-Auth-Token' => 'no valid token'
+      get "/api/v1/runs/#{run.id}", headers: { 'X-Auth-Token' => 'no_valid_token' }
       expect(response.status).to eq(401)
     end
 
@@ -100,14 +100,14 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'returns an automation by id' do
-        get "/api/v1/runs/#{@run.id}", nil, 'X-Auth-Token' => token_value
+        get "/api/v1/runs/#{@run.id}", headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(200)
         expect(response).to match_response_schema('run')
       end
 
       it 'prevents accessing runs from other projects' do
         run = FactoryGirl.create(:run, job_id: 'a-job-in-another-project')
-        get "/api/v1/runs/#{run.id}", nil, 'X-Auth-Token' => token_value
+        get "/api/v1/runs/#{run.id}", headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(404)
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'returns an automation by id' do
-        get "/api/v1/runs/#{@run.id}", nil, 'X-Auth-Token' => token_value
+        get "/api/v1/runs/#{@run.id}", headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(200)
         expect(response).to match_response_schema('run')
       end
@@ -136,7 +136,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'not allowed' do
-        get "/api/v1/runs/#{@run.id}", nil, 'X-Auth-Token' => token_value
+        get "/api/v1/runs/#{@run.id}", headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(403)
       end
     end
@@ -146,7 +146,7 @@ RSpec.describe 'Test Run API' do
     let(:automation) { FactoryGirl.create(:chef, project_id: project_id) }
 
     it 'return an authorization error 401 on wrong Auth-Code' do
-      post '/api/v1/runs', { automation_id: automation.id }, {}
+      post '/api/v1/runs', params: { automation_id: automation.id }
       expect(response.status).to eq(401)
     end
 
@@ -158,13 +158,13 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'creates an automation run' do
-        post '/api/v1/runs', { automation_id: automation.id }, 'X-Auth-Token' => token_value
+        post '/api/v1/runs', params: { automation_id: automation.id }, headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(201)
         expect(response).to match_response_schema('run')
       end
 
       it 'ensures runs are only created for automations in the same project' do
-        post '/api/v1/runs', { automation_id: FactoryGirl.create(:chef).id }, 'X-Auth-Token' => token_value
+        post '/api/v1/runs', params: { automation_id: FactoryGirl.create(:chef).id }, headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(404)
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'not allowed' do
-        post '/api/v1/runs', { automation_id: automation.id }, 'X-Auth-Token' => token_value
+        post '/api/v1/runs', params: { automation_id: automation.id }, headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(403)
       end
     end
@@ -190,7 +190,7 @@ RSpec.describe 'Test Run API' do
       end
 
       it 'not allowed' do
-        post '/api/v1/runs', { automation_id: automation.id }, 'X-Auth-Token' => token_value
+        post '/api/v1/runs', params: { automation_id: automation.id }, headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(403)
       end
     end

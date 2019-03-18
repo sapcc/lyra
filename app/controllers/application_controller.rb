@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   include MonsoonOpenstackAuth::Authentication
   include MonsoonOpenstackAuth::Authorization
   # Prevent CSRF attacks by raising an exception.

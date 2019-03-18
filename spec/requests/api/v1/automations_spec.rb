@@ -18,7 +18,7 @@ RSpec.describe 'Test Automations API' do
       end
 
       it 'return all automation' do
-        get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
         expect(response).to be_success
         json = JSON.parse(response.body)
 
@@ -29,7 +29,7 @@ RSpec.describe 'Test Automations API' do
 
       it 'return an empty array if no automations found' do
         token['project']['id'] = '123456789'
-        get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
@@ -45,7 +45,7 @@ RSpec.describe 'Test Automations API' do
       end
 
       it 'return all automation' do
-        get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json.length).to eq(2)
@@ -55,7 +55,7 @@ RSpec.describe 'Test Automations API' do
 
       it 'return an empty array if no automations found' do
         token['project']['id'] = '123456789'
-        get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
         expect(response).to be_success
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
@@ -71,7 +71,7 @@ RSpec.describe 'Test Automations API' do
       end
 
       it 'not allowed' do
-        get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
         expect(response).to_not be_success
         expect(response.status).to eq(403)
       end
@@ -85,7 +85,7 @@ RSpec.describe 'Test Automations API' do
     it 'return status forbiden if token has no project' do
       # stub project id
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double('current_user').as_null_object)
-      get '/api/v1/automations', nil, 'X-Auth-Token' => token_value
+      get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
       expect(response.status).to eq(403)
     end
 
@@ -125,7 +125,7 @@ RSpec.describe 'Test Automations API' do
 
       context 'Script' do
         it 'return the automation' do
-          get "/api/v1/automations/#{@script_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@script_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response).to be_success
@@ -139,7 +139,7 @@ RSpec.describe 'Test Automations API' do
 
       context 'Chef' do
         it 'return an automation' do
-          get "/api/v1/automations/#{@chef_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@chef_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response).to be_success
@@ -152,7 +152,7 @@ RSpec.describe 'Test Automations API' do
       end
 
       it 'returns a 404 if automation not found' do
-        get '/api/v1/automations/non_existing_automation', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations/non_existing_automation', headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(404)
       end
     end
@@ -167,7 +167,7 @@ RSpec.describe 'Test Automations API' do
 
       context 'Script' do
         it 'return the automation' do
-          get "/api/v1/automations/#{@script_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@script_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response).to be_success
@@ -181,7 +181,7 @@ RSpec.describe 'Test Automations API' do
 
       context 'Chef' do
         it 'return an automation' do
-          get "/api/v1/automations/#{@chef_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@chef_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response).to be_success
@@ -194,7 +194,7 @@ RSpec.describe 'Test Automations API' do
       end
 
       it 'returns a 404 if automation not found' do
-        get '/api/v1/automations/non_existing_automation', nil, 'X-Auth-Token' => token_value
+        get '/api/v1/automations/non_existing_automation', headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(404)
       end
     end
@@ -209,14 +209,14 @@ RSpec.describe 'Test Automations API' do
 
       context 'Script' do
         it 'not allowed' do
-          get "/api/v1/automations/#{@script_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@script_automation.id}", headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
 
       context 'Chef' do
         it 'return an automation' do
-          get "/api/v1/automations/#{@chef_automation.id}", nil, 'X-Auth-Token' => token_value
+          get "/api/v1/automations/#{@chef_automation.id}", headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -230,7 +230,7 @@ RSpec.describe 'Test Automations API' do
     it 'return status forbiden if taken has no project' do
       # stub project id
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double('current_user').as_null_object)
-      get '/api/v1/automations/some_automation', nil, 'X-Auth-Token' => token_value
+      get '/api/v1/automations/some_automation', headers: { 'X-Auth-Token' => token_value }
       expect(response.status).to eq(403)
     end
   end
@@ -248,7 +248,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'creates an automation' do
-          post '/api/v1/automations/', @automation.attributes, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: @automation.attributes, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(201)
           json = JSON.parse(response.body)
           expect(json['type']).to be == @automation.class.name
@@ -263,7 +263,7 @@ RSpec.describe 'Test Automations API' do
 
         it 'creates an automation in the right project' do
           # name already exists
-          post '/api/v1/automations', { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(201)
@@ -272,14 +272,14 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'return an authorization error 401 if token not valid' do
-          post '/api/v1/automations/', { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, 'X-Auth-Token' => 'not_valid_token'
+          post '/api/v1/automations/', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => 'token_no_valid' }
           expect(response.status).to eq(401)
         end
 
         it 'return status forbiden if token has no project' do
           # stub project id
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double('current_user').as_null_object)
-          post '/api/v1/automations/', { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -293,7 +293,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          post '/api/v1/automations', { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
           expect(response).to_not be_success
           expect(response.status).to eq(403)
         end
@@ -308,7 +308,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          post '/api/v1/automations', { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
           expect(response).to_not be_success
           expect(response.status).to eq(403)
         end
@@ -327,14 +327,14 @@ RSpec.describe 'Test Automations API' do
           FactoryGirl.create(:script, name: name, project_id: project_id)
 
           # name already exists
-          post '/api/v1/automations/', { type: 'Script', name: name, project_id: project_id, path: 'script_path', repository: 'https://miau', tags: '{}'.to_json }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Script', name: name, project_id: project_id, path: 'script_path', repository: 'https://miau', tags: '{}'.to_json }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['name']).not_to be_empty
         end
 
         it 'checks git url error shows up' do
-          post '/api/v1/automations/', { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'not_a_url', tags: '{}'.to_json }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'not_a_url', tags: '{}'.to_json }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -342,7 +342,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'tags are filtered out' do
-          post '/api/v1/automations/', { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'http://uri', tags: 'not_json' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'http://uri', tags: 'not_json' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(201)
@@ -350,7 +350,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'ignores invalid environment' do
-          post '/api/v1/automations/', { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'https://miau', environment: '{ hase: ["igel"] }' }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Script', name: 'test_automation', project_id: project_id, path: 'script_path', repository: 'https://miau', environment: '{ hase: ["igel"] }' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
           expect(response.status).to eq(422)
@@ -371,7 +371,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'creates an automation' do
-          post '/api/v1/automations/', @automation.attributes, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: @automation.attributes, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(201)
           json = JSON.parse(response.body)
           expect(json['type']).to be == @automation.class.name
@@ -386,7 +386,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'creates an automation in the right project' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(201)
           expect(json['type']).to be == 'Chef'
@@ -394,14 +394,14 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'return an authorization error 401 if token not valid' do
-          post '/api/v1/automations/', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', tags: '{}'.to_json }, 'X-Auth-Token' => 'not_valid_token'
+          post '/api/v1/automations/', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', tags: '{}'.to_json }, headers: { 'X-Auth-Token' => 'token_no_valid' }
           expect(response.status).to eq(401)
         end
 
         it 'return status forbiden if token has no project' do
           # stub project id
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double('current_user').as_null_object)
-          post '/api/v1/automations/', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations/', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -414,7 +414,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -428,7 +428,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -441,80 +441,80 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'should be have generic fields present :type, :name' do
-          post '/api/v1/automations', { type: 'Chef', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['name']).not_to be_empty
 
-          post '/api/v1/automations', { name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['type']).not_to be_empty
         end
 
         it 'should set the project from the given tocken' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(201)
           expect(json['project_id']).to eq(token['project']['id'])
         end
 
         it 'should have chef fields present :repository, :repository_revision, :run_list' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['run_list']).not_to be_empty
 
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['repository']).not_to be_empty
 
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', repository_revision: '', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', repository_revision: '', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['repository_revision']).not_to be_empty
         end
 
         it 'should check runlist to be a list' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: 'test' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: 'test' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['run_list']).not_to be_empty
 
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(201)
         end
 
         it 'should check repository to have a valid url' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'cuack cuack', run_list: ['test'] }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'cuack cuack', run_list: ['test'] }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['repository']).not_to be_empty
         end
 
         it 'should check chef_attributes for valid json' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: 'test' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: 'test' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['chef_attributes']).not_to be_empty
 
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: 124 }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: 124 }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(422)
           expect(json['errors']['chef_attributes']).not_to be_empty
 
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: { 'docker-compos' => { 'miau' => 'bup' } } }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: { 'docker-compos' => { 'miau' => 'bup' } } }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(201)
           expect(json['chef_attributes']).to eq('docker-compos' => { 'miau' => 'bup' })
         end
 
         it 'should check chef_attributes for json string' do
-          post '/api/v1/automations', { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: '{"docker-compos":{"miau":"bup"}}' }, 'X-Auth-Token' => token_value
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: '{"docker-compos":{"miau":"bup"}}' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(201)
-          expect(json['chef_attributes']).to eq('docker-compos' => { 'miau' => 'bup' })
+          expect(json['chef_attributes']).to eq({ 'docker-compos' => { 'miau' => 'bup' } }.to_json)
         end
       end
     end
@@ -533,15 +533,16 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'updates chef_attributes' do
-          put "/api/v1/automations/#{chef.id}", { chef_attributes: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          res = { 'miau' => 'bup' }
+          put "/api/v1/automations/#{chef.id}", params: { chef_attributes: res }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(200)
 
           chef.reload
-          expect(chef.chef_attributes).to be_empty
+          expect(chef.chef_attributes).to eq(res)
         end
 
         it 'keeps chef_attributes' do
-          put "/api/v1/automations/#{chef.id}", { "name": 'nase' }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{chef.id}", params: { "name": 'nase' }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(200)
 
           chef.reload
@@ -549,7 +550,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'returns an authorization error 401 if token not valid' do
-          put "/api/v1/automations/#{chef.id}", { chef_attributes: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => 'not_valid_token'
+          put "/api/v1/automations/#{chef.id}", params: { chef_attributes: {} }, headers: { 'X-Auth-Token' => 'token_no_valid' }
 
           expect(response.status).to eq(401)
         end
@@ -558,7 +559,7 @@ RSpec.describe 'Test Automations API' do
           # stub project id
           allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(double('current_user').as_null_object)
 
-          put "/api/v1/automations/#{chef.id}", { chef_attributes: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{chef.id}", params: { chef_attributes: {} }, headers: { 'X-Auth-Token' => token_value }
 
           # test for the 403 status-code
           expect(response.status).to eq(403)
@@ -574,7 +575,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          put "/api/v1/automations/#{chef.id}", { chef_attributes: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{chef.id}", params: { chef_attributes: {} }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -587,7 +588,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          put "/api/v1/automations/#{chef.id}", { chef_attributes: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{chef.id}", params: { chef_attributes: {} }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -605,15 +606,16 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'update environment' do
-          put "/api/v1/automations/#{script.id}", { environment: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          res = { 'name' => 'test' }
+          put "/api/v1/automations/#{script.id}", params: { environment: res }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(200)
 
           script.reload
-          expect(script.environment).to be_empty
+          expect(script.environment).to eq(res)
         end
 
         it 'keeps environment' do
-          put "/api/v1/automations/#{script.id}", { "name": 'nase' }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{script.id}", params: { "name": 'nase' }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(200)
 
           script.reload
@@ -630,7 +632,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          put "/api/v1/automations/#{script.id}", { environment: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{script.id}", params: { environment: {} }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -644,7 +646,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          put "/api/v1/automations/#{script.id}", { environment: {} }.to_json, 'CONTENT_TYPE' => 'application/json', 'X-Auth-Token' => token_value
+          put "/api/v1/automations/#{script.id}", params: { environment: {} }, headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -663,7 +665,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'succeed' do
-          delete "/api/v1/automations/#{chef.id}", nil, 'X-Auth-Token' => token_value
+          delete "/api/v1/automations/#{chef.id}", headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(204)
         end
       end
@@ -677,7 +679,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          delete "/api/v1/automations/#{chef.id}", nil, 'X-Auth-Token' => token_value
+          delete "/api/v1/automations/#{chef.id}", headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end
@@ -691,7 +693,7 @@ RSpec.describe 'Test Automations API' do
         end
 
         it 'not allowed' do
-          delete "/api/v1/automations/#{chef.id}", nil, 'X-Auth-Token' => token_value
+          delete "/api/v1/automations/#{chef.id}", headers: { 'X-Auth-Token' => token_value }
           expect(response.status).to eq(403)
         end
       end

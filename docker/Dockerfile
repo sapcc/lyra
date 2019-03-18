@@ -1,4 +1,4 @@
-FROM  ruby:2.3.7-alpine
+FROM  ruby:2.4.0-alpine
 
 # pg_dump is part the "postgresql" server package on alpine.
 RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev
@@ -7,12 +7,14 @@ RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-d
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install hitimes -v 1.2.5 \
       && gem install nio4r -v 2.1.0 \
-      && gem install nokogiri -v 1.6.8 \
+      && gem install nokogiri -v 1.10.1 \
       && gem install pg -v 0.18.4 \
       && gem install posix-spawn -v 0.3.11 \
       && gem install puma -v 3.11.4  \
       && gem install thread_safe -v 0.3.5 \
       && gem install ffi -v 1.9.23 \
+      && gem install websocket-driver -v 0.7.0 \
+      && gem install json -v 1.8.6 \
       && runDeps="$( \
 		      scanelf --needed --nobanner --recursive /usr/local \
             | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
@@ -37,15 +39,17 @@ RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/dow
 
 WORKDIR /home/app/webapp
 
-#RUN gem install bundler -v 1.13.6
+RUN gem update --system && gem install bundler -v 2.0.1
+ENV BUNDLER_VERSION 2.0.1
 ADD Gemfile Gemfile.lock ./
 RUN bundle install --without development
 
 #appbundle berks
 RUN ln -s /home/app/webapp /tmp/berkshelf  \
+
     && appbundler /tmp/berkshelf /usr/local/bin  \
     && rm /tmp/berkshelf  \
-    && rm -f /usr/local/bundle/bin/berks \ 
+    && rm -f /usr/local/bundle/bin/berks \
     berks -v
 ADD . /home/app/webapp/
 

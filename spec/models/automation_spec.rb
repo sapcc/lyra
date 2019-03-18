@@ -73,7 +73,7 @@ RSpec.describe Automation, type: :model do
         end
 
         it 'nullifies an empty string' do
-          expect(FactoryGirl.create(:script, tags: '').tags).to be_nil
+          expect(FactoryGirl.create(:script, tags: '').tags).to be_empty
         end
 
         pending 'validate that tags are a simple key/value pairs'

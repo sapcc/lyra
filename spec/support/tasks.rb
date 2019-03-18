@@ -1,5 +1,6 @@
 # File: spec/support/tasks.rb
 require 'rake'
+require 'active_support/concern'
 
 # Task names should be used in the top-level describe, with an optional
 # "rake "-prefix for better documentation. Both of these will work:

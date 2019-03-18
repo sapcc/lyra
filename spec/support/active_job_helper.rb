@@ -1,7 +1,7 @@
-require 'rspec/active_job'
-
 RSpec.configure do |config|
-  config.include(RSpec::ActiveJob)
+  config.before(:each) do
+    ActiveJob::Base.queue_adapter = :test
+  end
 
   # clean out the queue after each spec
   config.after(:each) do

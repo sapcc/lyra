@@ -25,6 +25,9 @@ Rails.application.configure do
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
   config.static_cache_control = 'public, max-age=1800'
 
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  # config.active_storage.service = :local
+
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX

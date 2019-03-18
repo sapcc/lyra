@@ -5,7 +5,7 @@ RSpec.shared_examples 'model with pagination' do
 
   it 'should return default 10 entries' do
     # request
-    get @path, nil, 'X-Auth-Token' => token_value
+    get @path, headers: { 'X-Auth-Token' => token_value }
 
     json = JSON.parse(response.body)
 
@@ -18,7 +18,7 @@ RSpec.shared_examples 'model with pagination' do
 
   it 'should return max 25 entries' do
     # request
-    get "#{@path}?per_page=100", nil, 'X-Auth-Token' => token_value
+    get "#{@path}?per_page=100", headers: { 'X-Auth-Token' => token_value }
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
@@ -30,7 +30,7 @@ RSpec.shared_examples 'model with pagination' do
 
   it 'should paginate' do
     # request
-    get "#{@path}?page=1&per_page=5", nil, 'X-Auth-Token' => token_value
+    get "#{@path}?page=1&per_page=5", headers: { 'X-Auth-Token' => token_value }
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
@@ -42,7 +42,7 @@ RSpec.shared_examples 'model with pagination' do
 
   it 'should set headers' do
     # request
-    get "#{@path}?page=2&per_page=10", nil, 'X-Auth-Token' => token_value
+    get "#{@path}?page=2&per_page=10", headers: { 'X-Auth-Token' => token_value }
     json = JSON.parse(response.body)
 
     # test for the 200 status-code

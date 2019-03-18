@@ -25,7 +25,6 @@ RSpec.describe Run, type: :model do
 
   it 'serializer an owner_object' do
     run = FactoryGirl.create(:run, job_id: 'a-job_id', owner: current_user)
-
     expect(run.owner.keys).to match_array(%w[id name domain_id domain_name])
   end
 
@@ -48,8 +47,7 @@ RSpec.describe Run, type: :model do
     it 'creates an automation job' do
       # inject fixed job_id
       expect(SecureRandom).to receive(:uuid).and_return('768aa68e-f717-4cac-8708-f0a1ed60a17b')
-      expect(ChefAutomationJob).to have_been_enqueued.with(token_value, global_id(run.automation), 'bla=fasel')
-
+      expect(ChefAutomationJob).to have_been_enqueued.with(token_value, run.automation, 'bla=fasel')
       expect(run.job_id).to eq('768aa68e-f717-4cac-8708-f0a1ed60a17b')
     end
 

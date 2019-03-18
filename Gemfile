@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
+ruby '2.4.0'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
-gem 'rails-api'
+gem 'rails', '5.2.0'
+# removed rails-api because of https://github.com/rails-api/rails-api/issues/218
 
 gem 'puma'
 
@@ -23,7 +25,7 @@ gem 'active_model_serializers', '>= 0.10.0.rc4'
 
 # Asynchronous jobs via postgres
 gem 'que'
-#gem 'que-web' # at some point this should be remove and started standalone
+# gem 'que-web' # at some point this should be remove and started standalone
 
 # arc client
 gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
@@ -33,7 +35,7 @@ source 'https://gems.***REMOVED***' do
 end
 
 # Prometheus instrumentation
-gem 'prometheus-client'
+gem 'prometheus-client', '~>0.6.0'
 
 # Avoid g++ dependency https://github.com/knu/ruby-domain_name/issues/3
 # unf is pulled in by the ruby-arc-client
@@ -57,6 +59,7 @@ group :development, :test do
   gem 'quiet_safari'
   # load .env
   gem 'dotenv-rails'
+  gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'spring'
 
   # debugging
@@ -64,10 +67,11 @@ group :development, :test do
 
   # testing
   gem 'rspec-rails'
-  gem 'rspec-activejob'
+  # gem 'rspec-activejob' deprecated Since v3.5, rspec-rails defines matchers that provide the same functionality as those in rspec-activejob. See rspec-rails docs for more detail.
   gem 'json_matchers'
   gem 'factory_girl_rails'
-  gem 'database_cleaner'
+  # upgraded because of error https://github.com/DatabaseCleaner/database_cleaner/issues/476
+  gem 'database_cleaner', '~>1.6.0'
   gem 'capybara'
 
   # generate swagger.json from specs
@@ -75,6 +79,6 @@ group :development, :test do
 end
 
 group :berkshelf do
-  gem 'appbundler', require: false
+  gem 'appbundler', '~> 0.7.0', require: false
   gem 'berkshelf', '~> 6.1.0', require: false
 end
