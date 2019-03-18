@@ -2,8 +2,7 @@ class ApplicationController < ActionController::Base
   include MonsoonOpenstackAuth::Authentication
   include MonsoonOpenstackAuth::Authorization
   # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
+  protect_from_forgery unless: -> { request.format.json? }
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
   rescue_from 'MonsoonOpenstackAuth::Authentication::NotAuthorized', with: :render_401
