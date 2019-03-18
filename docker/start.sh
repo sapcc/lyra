@@ -10,14 +10,14 @@ dbs=$(psql -tlA)
 if echo "$dbs" | grep -q $PGDATABASE; then
   if psql -c "\dt schema_migrations" | grep -q "No matching relations found"; then
     echo "Table schema_migrations not found. Running db:setup"
-    rake db:setup
+    bundle exec rake db:setup
   else
     echo "Running db:migrate"
-    rake db:migrate
+    bundle exec rake db:migrate
   fi
 else
   echo "Database $PGDATABASE not found. Running db:setup"
-  rake db:setup
+  bundle exec rake db:setup
 fi
 unset PGHOST PGUSER PGPASSWORD PGDATABASE
 
