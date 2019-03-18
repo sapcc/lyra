@@ -1,4 +1,4 @@
-class Run < ActiveRecord::Migration
+class Run <ActiveRecord::Migration[5.2]
   def change
     create_table :runs do |t|
       t.string  :job_id,         null: false

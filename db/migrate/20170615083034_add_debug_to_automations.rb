@@ -1,4 +1,4 @@
-class AddDebugToAutomations < ActiveRecord::Migration
+class AddDebugToAutomations <ActiveRecord::Migration[5.2]
 
   def up
     add_column :automations, :debug, :boolean, default: false

@@ -1,4 +1,4 @@
-class ChangeOwnerToJson < ActiveRecord::Migration
+class ChangeOwnerToJson <ActiveRecord::Migration[5.2]
   def up 
     change_column :runs, :owner, :jsonb, using: %{('{"id":"' || "owner" || '"}')::jsonb}
   end

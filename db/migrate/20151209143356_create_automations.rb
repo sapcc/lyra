@@ -1,21 +1,21 @@
-class CreateAutomations < ActiveRecord::Migration
+class CreateAutomations < ActiveRecord::Migration[5.2]
   def change
     create_table :automations do |t|
       # Primary keys - By default, Active Record will use an integer column named id as the table's primary key.
       t.string :type, null: false
       t.string :name, null: false
-      t.string :project_id 
+      t.string :project_id
       t.string :repository
       t.string :repository_revision
       t.jsonb :tags
       t.integer :timeout, null: false, default: 3600
 
-      #Chef automation
+      # Chef automation
       t.string :run_list, array: true
       t.jsonb  :chef_attributes
       t.string :log_level
 
-      #Script automation
+      # Script automation
       t.string :path
       t.string :arguments, array: true
       t.jsonb  :environment
