@@ -1,10 +1,7 @@
-FROM  ruby:2.4.0-alpine
+FROM  ruby:2.4-alpine3.7
 
 # pg_dump is part the "postgresql" server package on alpine.
 RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev
-
-# fix vulnerabilities
-RUN apk --no-cache add musl zlib-dev
 
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install hitimes -v 1.2.5 \
@@ -48,14 +45,13 @@ RUN bundle install --without development
 
 #appbundle berks
 RUN ln -s /home/app/webapp /tmp/berkshelf  \
-
     && appbundler /tmp/berkshelf /usr/local/bin  \
     && rm /tmp/berkshelf  \
     && rm -f /usr/local/bundle/bin/berks \
     berks -v
 ADD . /home/app/webapp/
 
-RUN rake rswag:specs:swaggerize
+RUN bundle exec rake rswag:specs:swaggerize
 
 ENTRYPOINT ["dumb-init", "-c", "--", "docker/env.sh"]
 CMD ["docker/start.sh"]
