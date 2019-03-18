@@ -3,6 +3,8 @@ FROM  ruby:2.4.0-alpine
 # pg_dump is part the "postgresql" server package on alpine.
 RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev
 
+# fix vulnerabilities
+RUN apk --no-cache add musl zlib-dev
 
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install hitimes -v 1.2.5 \
