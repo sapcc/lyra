@@ -29,6 +29,7 @@ RSpec.describe ChefAutomationJob, type: :job do
 ./cookbooks/
 ./cookbooks/cookbook1/
 ./cookbooks/cookbook1/metadata.json
+./cookbooks/cookbook1/metadata.rb
 ./data_bags/
 ./data_bags/bla/
 ./data_bags/bla/item.json
