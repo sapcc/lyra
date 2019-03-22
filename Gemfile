@@ -44,7 +44,7 @@ gem 'prometheus-client', '~>0.6.0'
 gem 'unf', '>= 0.2.0beta2'
 gem 'posix-spawn'
 
-gem 'swift_client'
+gem 'swift_client', '>= 0.1.6'
 
 gem 'with_advisory_lock'
 

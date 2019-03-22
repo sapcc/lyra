@@ -499,15 +499,10 @@ RSpec.describe 'Test Automations API' do
           expect(response.status).to eq(422)
           expect(json['errors']['chef_attributes']).not_to be_empty
 
-          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: 124 }, headers: { 'X-Auth-Token' => token_value }
-          json = JSON.parse(response.body)
-          expect(response.status).to eq(422)
-          expect(json['errors']['chef_attributes']).not_to be_empty
-
-          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: { 'docker-compos' => { 'miau' => 'bup' } } }, headers: { 'X-Auth-Token' => token_value }
+          post '/api/v1/automations', params: { type: 'Chef', name: 'prod_auto', repository: 'https://miau', run_list: ['test'], chef_attributes: '{ "docker-compos" : { "miau" : "bup" } }' }, headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
           expect(response.status).to eq(201)
-          expect(json['chef_attributes']).to eq('docker-compos' => { 'miau' => 'bup' })
+          expect(json['chef_attributes']).to eq('{ "docker-compos" : { "miau" : "bup" } }')
         end
 
         it 'should check chef_attributes for json string' do

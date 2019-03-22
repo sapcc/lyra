@@ -64,7 +64,7 @@ RSpec.describe Automation, type: :model do
 
       describe 'tags' do
         it 'should validate json' do
-          expect(FactoryGirl.build(:script, tags: 'no_valid_json'.to_json)).not_to be_valid
+          expect(FactoryGirl.build(:script, tags: 'no_valid_json')).not_to be_valid
           expect(FactoryGirl.build(:script, tags: '{"this_is_json":"well_formated"}')).to be_valid
 
           # Test
