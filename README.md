@@ -1,5 +1,5 @@
 Lyra - Monsoon automation service
-==================
+=================
 
 **Rspec:** run the tests loading berkshelf:
 
