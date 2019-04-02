@@ -32,9 +32,7 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra'
 # arc client
 gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
 
-source 'https://gems.***REMOVED***' do
-  gem 'gitmirror'
-end
+gem 'gitmirror'
 
 # Prometheus instrumentation
 gem 'prometheus-client', '~>0.6.0'

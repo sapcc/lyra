@@ -30,7 +30,6 @@ GIT
 
 GEM
   remote: https://rubygems.org/
-  remote: https://gems.***REMOVED***/
   specs:
     actioncable (5.2.0)
       actionpack (= 5.2.0)
@@ -421,7 +420,7 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   ffi-libarchive
-  gitmirror!
+  gitmirror
   httpclient
   json_matchers
   listen (>= 3.0.5, < 3.2)
