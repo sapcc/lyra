@@ -135,7 +135,7 @@ class ChefAutomationJob < ActiveJob::Base
     omnitruck_url = ENV.fetch('OMNITRUCK_URL', nil)
 
     # ensure we don't install chef greater then 15 with latest
-    chef_version = '14' if chef_version.casecmp('latest').zero?
+    chef_version = '14' if chef_version.casecmp('latest').zero? || chef_version.blank?
 
     payload = { chef_version: chef_version }
     payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s if omnitruck_url
