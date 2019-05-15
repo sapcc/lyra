@@ -133,6 +133,10 @@ class ChefAutomationJob < ActiveJob::Base
   def ensure_chef_enabled(token, agents, chef_version)
     # check if onmitruck proxy is set and add to the payload
     omnitruck_url = ENV.fetch('OMNITRUCK_URL', nil)
+
+    # ensure we don't install chef greater then 15 with latest
+    chef_version = '14' if chef_version.casecmp('latest').zero?
+
     payload = { chef_version: chef_version }
     payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s if omnitruck_url
 
@@ -159,6 +163,7 @@ class ChefAutomationJob < ActiveJob::Base
         %w[completed complete failed].include? job.status
       end
       break if jids.empty?
+
       sleep 5
     end
     raise 'Failed to enable chef on all nodes' if failed
