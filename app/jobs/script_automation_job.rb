@@ -15,7 +15,9 @@ class ScriptAutomationJob < ActiveJob::Base
     agents = select_agents(selector)
     run.log agents.map {|a| "#{a.agent_id} #{a.facts["hostname"]}"}.join("\n") + "\n"
 
-    repo = Gitmirror::Repository.new(script_automation.repository)
+    repo = $repository_semaphore.get(script_automation.repository).synchronize do
+      Gitmirror::Repository.new(script_automation.repository)
+    end
     repo_path = repo.mirror()
     # TODO better error message when revision is not present
     sha = execute("git --git-dir=#{repo_path} rev-parse #{script_automation.repository_revision}").strip

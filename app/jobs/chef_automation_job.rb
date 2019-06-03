@@ -28,7 +28,9 @@ class ChefAutomationJob < ActiveJob::Base
     ensure_chef_enabled(token, agents, chef_automation.chef_version)
 
     # create or update local mirror of repository
-    repo = Gitmirror::Repository.new(chef_automation.repository)
+    repo = $repository_semaphore.get(chef_automation.repository).synchronize do
+      Gitmirror::Repository.new(chef_automation.repository)
+    end
     repo_path = repo.mirror
     # TODO: better error message when revision is not present
     sha = execute("git --git-dir=#{repo_path} rev-parse #{chef_automation.repository_revision}").strip
