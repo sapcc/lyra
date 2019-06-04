@@ -115,7 +115,7 @@ definitions:
       id: { type: string, readOnly: true }
       automation_id: { type: string, description: "The ID of the Automation to tun. Has to be defined in the same project" }
       automation_name: { type: string, readOnly: true, description: "The name of the executed automation" }
-      selector: { type: string, description: "Arc selector. Specifies which VMs the run should target. See https://gitHub.***REMOVED*** /pages/monsoon/arc/docs/api/api.html#filter_agents for more details." }
+      selector: { type: string, description: "Arc selector. Specifies which VMs the run should target." }
       repository_revision: { type: string, description: "Commit SHA of the autmation repository that was used in this run.", readOnly: true, 'x-nullable': true }
       automation_attributes: { type: object, description: "Snapshot of relevant attributes that were used in this run.", readOnly: true, 'x-nullable': true }
       state: {type: string, readOnly: true, enum: <%= Run::VALID_STATES %>, description: "Current state of the run.", 'x-nullable': true }
