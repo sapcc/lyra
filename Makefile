@@ -1,5 +1,5 @@
 SHELL       := /bin/sh
-REPOSITORY  := hub.***REMOVED***/monsoon/lyra
+REPOSITORY  := <sap-hub-path>/lyra
 TAG         ?= latest
 IMAGE       := $(REPOSITORY):$(TAG)
 
