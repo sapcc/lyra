@@ -63,3 +63,5 @@ The Lyra API documenation is shipped inline with the service. You can access the
 To run the application wiht bakcground jobs run also Que:
 
     bundle exec que --log-internals
+
+    
