@@ -12,15 +12,10 @@ info:
     The Lyra API provides a simple interface to define automations and then run them
     repeadeatly on VMs.
   title: Lyra Automation API
-  contact:
-    url: https://convergedcloud.slack.com/messages/C2YDG291Q
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: v1,<%= `git rev-parse --short HEAD`.strip %>
-externalDocs:
-  description: Additional information
-  url: https://documentation.***REMOVED***/docs/automation/details.html
 securityDefinitions:
   keystone:
     description: |
