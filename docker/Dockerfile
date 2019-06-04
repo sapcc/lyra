@@ -29,8 +29,7 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && rm -f /usr/local/bundle/cache/*
 
 ADD docker/certs/*.crt /usr/local/share/ca-certificates/
-RUN update-ca-certificates \
-    && curl https://gitHub.***REMOVED*** 
+RUN update-ca-certificates
 
 RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 && \
     chmod +x /usr/bin/dumb-init && \
