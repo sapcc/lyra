@@ -11,7 +11,7 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install posix-spawn -v 0.3.11 \
       && gem install puma -v 3.11.4  \
       && gem install thread_safe -v 0.3.5 \
-      && gem install ffi -v 1.9.23 \
+      && gem install ffi -v 1.9.24 \
       && gem install websocket-driver -v 0.7.0 \
       && gem install json -v 1.8.6 \
       && gem install libyajl2 -v 1.2.0 \

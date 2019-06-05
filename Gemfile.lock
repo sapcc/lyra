@@ -173,7 +173,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.23)
+    ffi (1.9.24)
     ffi-libarchive (0.2.0)
       ffi (~> 1.0)
     ffi-yajl (2.3.1)
