@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'gitmirror'
 require 'active_support/number_helper/number_to_human_size_converter'
 require 'berkshelf/version'
@@ -28,10 +30,12 @@ class ChefAutomationJob < ActiveJob::Base
     ensure_chef_enabled(token, agents, chef_automation.chef_version)
 
     # create or update local mirror of repository
-    repo = $repository_semaphore.get(chef_automation.repository).synchronize do
-      Gitmirror::Repository.new(chef_automation.repository)
+    repo = Gitmirror::Repository.new(chef_automation.repository)
+
+    repo_path = $repository_semaphore.get(chef_automation.repository).synchronize do
+      repo.mirror
     end
-    repo_path = repo.mirror
+
     # TODO: better error message when revision is not present
     sha = execute("git --git-dir=#{repo_path} rev-parse #{chef_automation.repository_revision}").strip
     run.update_attribute(:repository_revision, sha)
