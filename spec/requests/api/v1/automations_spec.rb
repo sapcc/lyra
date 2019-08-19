@@ -19,7 +19,7 @@ RSpec.describe 'Test Automations API' do
 
       it 'return all automation' do
         get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
 
         expect(json.length).to eq(2)
@@ -30,7 +30,7 @@ RSpec.describe 'Test Automations API' do
       it 'return an empty array if no automations found' do
         token['project']['id'] = '123456789'
         get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
       end
@@ -46,7 +46,7 @@ RSpec.describe 'Test Automations API' do
 
       it 'return all automation' do
         get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json.length).to eq(2)
         expect(json[0]['id']).to eq(@chef_automation.id)
@@ -56,7 +56,7 @@ RSpec.describe 'Test Automations API' do
       it 'return an empty array if no automations found' do
         token['project']['id'] = '123456789'
         get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
       end
@@ -72,7 +72,7 @@ RSpec.describe 'Test Automations API' do
 
       it 'not allowed' do
         get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
-        expect(response).to_not be_success
+        expect(response).to_not be_successful
         expect(response.status).to eq(403)
       end
     end
@@ -128,7 +128,7 @@ RSpec.describe 'Test Automations API' do
           get "/api/v1/automations/#{@script_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(json['id']).to be == @script_automation.id
           expect(json['name']).to be == @script_automation.name
           expect(json['type']).to be == @script_automation.class.name
@@ -142,7 +142,7 @@ RSpec.describe 'Test Automations API' do
           get "/api/v1/automations/#{@chef_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(json['id']).to be == @chef_automation.id
           expect(json['name']).to be == @chef_automation.name
           expect(json['type']).to be == @chef_automation.class.name
@@ -170,7 +170,7 @@ RSpec.describe 'Test Automations API' do
           get "/api/v1/automations/#{@script_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(json['id']).to be == @script_automation.id
           expect(json['name']).to be == @script_automation.name
           expect(json['type']).to be == @script_automation.class.name
@@ -184,7 +184,7 @@ RSpec.describe 'Test Automations API' do
           get "/api/v1/automations/#{@chef_automation.id}", headers: { 'X-Auth-Token' => token_value }
           json = JSON.parse(response.body)
 
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(json['id']).to be == @chef_automation.id
           expect(json['name']).to be == @chef_automation.name
           expect(json['type']).to be == @chef_automation.class.name
@@ -294,7 +294,7 @@ RSpec.describe 'Test Automations API' do
 
         it 'not allowed' do
           post '/api/v1/automations', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
-          expect(response).to_not be_success
+          expect(response).to_not be_successful
           expect(response.status).to eq(403)
         end
       end
@@ -309,7 +309,7 @@ RSpec.describe 'Test Automations API' do
 
         it 'not allowed' do
           post '/api/v1/automations', params: { type: 'Script', name: 'prod_auto', path: 'script_path', repository: 'https://miau' }, headers: { 'X-Auth-Token' => token_value }
-          expect(response).to_not be_success
+          expect(response).to_not be_successful
           expect(response.status).to eq(403)
         end
       end

@@ -10,7 +10,7 @@ RSpec.shared_examples 'model with pagination' do
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # check to make sure the right amount of messages are returned
     expect(json.length).to eq(10)
@@ -22,7 +22,7 @@ RSpec.shared_examples 'model with pagination' do
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # check to make sure the right amount of messages are returned
     expect(json.length).to eq(25)
@@ -34,7 +34,7 @@ RSpec.shared_examples 'model with pagination' do
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # check to make sure the right amount of messages are returned
     expect(json.length).to eq(5)
@@ -46,7 +46,7 @@ RSpec.shared_examples 'model with pagination' do
     json = JSON.parse(response.body)
 
     # test for the 200 status-code
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # check to make sure the right amount of messages are returned
     expect(json.length).to eq(10)
