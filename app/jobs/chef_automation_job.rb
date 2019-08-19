@@ -37,7 +37,7 @@ class ChefAutomationJob < ActiveJob::Base
     end
 
     # TODO: better error message when revision is not present
-    sha = execute("git --git-dir=#{repo_path} rev-parse #{chef_automation.repository_revision}").strip
+    sha = execute("git", "--git-dir=#{repo_path}", "rev-parse", chef_automation.repository_revision).strip
     run.update_attribute(:repository_revision, sha)
 
     # TODO: use advisory locks and cache based on sha hash
@@ -89,7 +89,7 @@ class ChefAutomationJob < ActiveJob::Base
         vendor_dir = ::File.join dir, 'berks'
         # do a berks package
         Bundler.with_clean_env do
-          execute "#{ENV.fetch('BERKS_BIN', 'berks')} vendor #{vendor_dir}/cookbooks --berksfile #{checkout_dir}/Berksfile"
+          execute(ENV.fetch('BERKS_BIN', 'berks'), "vendor", "#{vendor_dir}/cookbooks", "--berksfile", "#{checkout_dir}/Berksfile")
           %w[roles chef/roles].each do |r|
             roles_dir = File.join checkout_dir, r
             if Dir.exist? roles_dir
@@ -105,13 +105,13 @@ class ChefAutomationJob < ActiveJob::Base
             end
           end
           @run.log("Creating tarball...\n")
-          execute "tar -c -z -C #{vendor_dir} -f #{tarball} ."
+          execute("tar", "-c", "-z", "-C", vendor_dir, "-f", tarball, ".")
         end
       else
         @run.log("Creating tarball of repository content...\n")
         # TODO: check for correct folder structure
         # tar the checkout dir
-        execute "tar -c -z -C #{checkout_dir} -f #{tarball} ."
+        execute("tar", "-c", "-z", "-C", checkout_dir, "-f", tarball, ".")
       end
       publish_artifact(tarball, artifact_name(sha))
     end

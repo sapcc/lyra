@@ -1,5 +1,6 @@
 require 'swift'
 require 'arc-client'
+require 'open3'
 module AutomationBase
   extend ActiveSupport::Concern
 
@@ -32,10 +33,9 @@ module AutomationBase
     end
   end
 
-  def execute(command)
-    out = `#{command} 2>&1`
-    raise "Executing [#{command}] failed (#{$CHILD_STATUS.exitstatus}):\n#{out}" if $CHILD_STATUS.exitstatus != 0
-
+  def execute(command, *args)
+    out, status = Open3.capture2e(command, *args)
+    raise "Executing [#{command} #{args.join(" ")}] failed (#{status}):\n#{out}" if status.exitstatus != 0
     out
   end
 

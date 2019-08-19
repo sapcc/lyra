@@ -20,7 +20,7 @@ class ScriptAutomationJob < ActiveJob::Base
     end
     repo_path = repo.mirror()
     # TODO better error message when revision is not present
-    sha = execute("git --git-dir=#{repo_path} rev-parse #{script_automation.repository_revision}").strip
+    sha = execute("git", "--git-dir=#{repo_path}", "rev-parse", script_automation.repository_revision).strip
     run.update_attribute(:repository_revision, sha)
 
 
@@ -32,7 +32,7 @@ class ScriptAutomationJob < ActiveJob::Base
       else
         run.log "Creating artifact for revision #{sha}"
         create_artifact repo, sha
-      end 
+      end
     end
 
     execute_payload = {
@@ -46,17 +46,17 @@ class ScriptAutomationJob < ActiveJob::Base
     run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
 
     run.update!(jobs: jobs, state: 'executing')
-    #Schedule a lightweight job to track the run 
+    #Schedule a lightweight job to track the run
     TrackAutomationJob.perform_later(token, run.job_id)
-    
+
   end
 
-  private 
+  private
 
   def create_artifact(repo, sha)
     Dir.mktmpdir do |dir|
       tarball = ::File.join(dir, artifact_name(sha))
-      execute("git --git-dir=#{repo.path} archive -o #{tarball} #{sha}")
+      execute("git", "--git-dir=#{repo.path}", "archive", "-o", tarball, sha)
       publish_artifact(tarball, artifact_name(sha))
     end
   end
