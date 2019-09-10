@@ -6,7 +6,7 @@ RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-d
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install hitimes -v 1.2.5 \
       && gem install nio4r -v 2.3.1 \
-      && gem install nokogiri -v 1.10.3 \
+      && gem install nokogiri -v 1.10.4 \
       && gem install pg -v 0.18.4 \
       && gem install posix-spawn -v 0.3.13 \
       && gem install puma -v 3.11.4  \

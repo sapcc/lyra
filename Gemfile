@@ -52,6 +52,9 @@ gem 'httpclient' # The only faraday backend that handled no_proxy :|
 
 gem 'ffi-libarchive'
 
+# https://nvd.nist.gov/vuln/detail/CVE-2019-5477
+gem "nokogiri", ">= 1.10.4"
+
 group :development, :test do
   # annotate models with database schema
   gem 'annotate'
