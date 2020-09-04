@@ -1,4 +1,5 @@
 FROM  ruby:2.4-alpine3.7
+LABEL source_repository="https://github.com/sapcc/lyra"
 
 # pg_dump is part the "postgresql" server package on alpine.
 RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev
