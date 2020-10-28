@@ -34,7 +34,7 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra'
 # arc client
 gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
 
-gem 'gitmirror', git: 'https://github.com/sapcc/gitmirror.git', branch: 'master'
+gem 'gitmirror'
 
 # Prometheus instrumentation
 gem 'prometheus-client', '~>0.6.0'
