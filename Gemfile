@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
-ruby '2.4.10'
+ruby '2.4.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2.2.1'
@@ -53,7 +55,7 @@ gem 'httpclient' # The only faraday backend that handled no_proxy :|
 gem 'ffi-libarchive'
 
 # https://nvd.nist.gov/vuln/detail/CVE-2019-5477
-gem "nokogiri", ">= 1.10.4"
+gem 'nokogiri', '>= 1.10.4'
 
 group :development, :test do
   # annotate models with database schema

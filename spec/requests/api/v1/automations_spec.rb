@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_relative 'shared'
 
 RSpec.describe 'Test Automations API' do
   describe 'Get all automations' do
     before :each do
-      @script_automation = FactoryGirl.create(:script, project_id: project_id)
-      @chef_automation = FactoryGirl.create(:chef, project_id: project_id)
+      @script_automation = FactoryGirl.create(:script, project_id: project_id, repository_credentials: 'secret_password')
+      @chef_automation = FactoryGirl.create(:chef, project_id: project_id, repository_credentials: 'secret_password')
       FactoryGirl.create(:chef, project_id: 'some_other_project')
     end
 
@@ -34,6 +36,18 @@ RSpec.describe 'Test Automations API' do
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
       end
+
+      it 'displays repository_authentication_enabled if repository_credentials is set' do
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
+        expect(response).to be_successful
+        json = JSON.parse(response.body)
+
+        expect(json.length).to eq(2)
+        expect(json[0]['repository_credentials']).to eq(nil)
+        expect(json[0]['repository_authentication_enabled']).to eq(true)
+        expect(json[1]['repository_credentials']).to eq(nil)
+        expect(json[1]['repository_authentication_enabled']).to eq(true)
+      end
     end
 
     context 'automation_viewer' do
@@ -59,6 +73,18 @@ RSpec.describe 'Test Automations API' do
         expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json.length).to eq(0)
+      end
+
+      it 'displays repository_authentication_enabled if repository_credentials is set' do
+        get '/api/v1/automations', headers: { 'X-Auth-Token' => token_value }
+        expect(response).to be_successful
+        json = JSON.parse(response.body)
+
+        expect(json.length).to eq(2)
+        expect(json[0]['repository_credentials']).to eq(nil)
+        expect(json[0]['repository_authentication_enabled']).to eq(true)
+        expect(json[1]['repository_credentials']).to eq(nil)
+        expect(json[1]['repository_authentication_enabled']).to eq(true)
       end
     end
 
@@ -135,6 +161,24 @@ RSpec.describe 'Test Automations API' do
           expect(json['project_id']).to be == project_id
           expect(json['repository']).to be == @script_automation.repository
         end
+
+        it 'displays repository_authentication_enabled if repository_credentials is set' do
+          test_automation = FactoryGirl.create(:script, name: 'test_credential', project_id: project_id, repository_credentials: 'secret_password')
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'returns blank if repository_credentials is NOT set' do
+          test_automation = FactoryGirl.create(:script, name: 'test_credential', project_id: project_id)
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
+        end
       end
 
       context 'Chef' do
@@ -148,6 +192,24 @@ RSpec.describe 'Test Automations API' do
           expect(json['type']).to be == @chef_automation.class.name
           expect(json['project_id']).to be == project_id
           expect(json['repository']).to be == @chef_automation.repository
+        end
+
+        it 'displays repository_authentication_enabled if repository_credentials is set' do
+          test_automation = FactoryGirl.create(:chef, name: 'test_credential', project_id: project_id, repository_credentials: 'secret_password')
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'returns blank if repository_credentials is NOT set' do
+          test_automation = FactoryGirl.create(:chef, name: 'test_credential', project_id: project_id)
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
         end
       end
 
@@ -177,6 +239,23 @@ RSpec.describe 'Test Automations API' do
           expect(json['project_id']).to be == project_id
           expect(json['repository']).to be == @script_automation.repository
         end
+        it 'displays repository_authentication_enabled if repository_credentials is set' do
+          test_automation = FactoryGirl.create(:script, name: 'test_credential', project_id: project_id, repository_credentials: 'secret_password')
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'returns blank if repository_credentials is NOT set' do
+          test_automation = FactoryGirl.create(:script, name: 'test_credential', project_id: project_id)
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
+        end
       end
 
       context 'Chef' do
@@ -190,6 +269,23 @@ RSpec.describe 'Test Automations API' do
           expect(json['type']).to be == @chef_automation.class.name
           expect(json['project_id']).to be == project_id
           expect(json['repository']).to be == @chef_automation.repository
+        end
+        it 'displays repository_authentication_enabled if repository_credentials is set' do
+          test_automation = FactoryGirl.create(:chef, name: 'test_credential', project_id: project_id, repository_credentials: 'secret_password')
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'returns blank if repository_credentials is NOT set' do
+          test_automation = FactoryGirl.create(:chef, name: 'test_credential', project_id: project_id)
+          get "/api/v1/automations/#{test_automation.id}", headers: { 'X-Auth-Token' => token_value }
+          json = JSON.parse(response.body)
+          expect(response).to be_successful
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
         end
       end
 
@@ -239,7 +335,7 @@ RSpec.describe 'Test Automations API' do
     describe 'script' do
       context 'automation_admin' do
         before :each do
-          @automation = FactoryGirl.create(:script, environment: { test: 'test' }.to_json)
+          @automation = FactoryGirl.create(:script, environment: { test: 'test' }.to_json, repository_credentials: 'secret_password')
           @automation.attributes.delete('id')
           token['project']['id'] = project_id
           token['roles'].delete_if { |h| h['id'] == 'automation_role' }
@@ -259,6 +355,17 @@ RSpec.describe 'Test Automations API' do
           expect(json['path']).to be == @automation.path
           expect(json['arguments']).to be == @automation.arguments
           expect(json['environment']).to be == @automation.environment
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'creates an automation with default false repository_authentication_enabled' do
+          new_automation = FactoryGirl.create(:script, environment: { test: 'test' }.to_json, repository_credentials: '')
+          post '/api/v1/automations/', params: new_automation.attributes, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(201)
+          json = JSON.parse(response.body)
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
         end
 
         it 'creates an automation in the right project' do
@@ -362,7 +469,7 @@ RSpec.describe 'Test Automations API' do
     describe 'Chef' do
       context 'automation_admin' do
         before :each do
-          @automation = FactoryGirl.create(:chef, chef_attributes: { test: 'test' }.to_json)
+          @automation = FactoryGirl.create(:chef, chef_attributes: { test: 'test' }.to_json, repository_credentials: 'secret_password')
           @automation.attributes.delete('id')
           token['project']['id'] = project_id
           token['roles'].delete_if { |h| h['id'] == 'automation_role' }
@@ -381,8 +488,17 @@ RSpec.describe 'Test Automations API' do
           expect(json['timeout']).to be == @automation.timeout
           expect(json['run_list']).to be == @automation.run_list
           expect(json['chef_attributes']).to be == @automation.chef_attributes
-          expect(json['debug'].to_s).to be == @automation.debug.to_s
-          expect(json['chef_version']).to be == @automation.chef_version
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(true)
+        end
+
+        it 'creates an automation with default false repository_authentication_enabled' do
+          new_automation = FactoryGirl.create(:chef, chef_attributes: { test: 'test' }.to_json, repository_credentials: '')
+          post '/api/v1/automations/', params: new_automation.attributes, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(201)
+          json = JSON.parse(response.body)
+          expect(json['repository_credentials']).to eq(nil)
+          expect(json['repository_authentication_enabled']).to eq(false)
         end
 
         it 'creates an automation in the right project' do
@@ -544,6 +660,24 @@ RSpec.describe 'Test Automations API' do
           expect(chef.chef_attributes).to be == { 'test' => 'test' }
         end
 
+        it 'updates repository_credentials' do
+          put "/api/v1/automations/#{chef.id}", params: { "repository_credentials": 'new_passowrd' }, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(200)
+
+          chef.reload
+          expect(chef.repository_credentials).to eq('new_passowrd')
+          expect(chef.repository_authentication_enabled).to eq(true)
+        end
+
+        it 'set repository_authentication_enabled flag to false if repository_credentials removed' do
+          put "/api/v1/automations/#{chef.id}", params: { "repository_credentials": '' }, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(200)
+
+          chef.reload
+          expect(chef.repository_credentials).to eq('')
+          expect(chef.repository_authentication_enabled).to eq(false)
+        end
+
         it 'returns an authorization error 401 if token not valid' do
           put "/api/v1/automations/#{chef.id}", params: { chef_attributes: {} }, headers: { 'X-Auth-Token' => 'token_no_valid' }
 
@@ -615,6 +749,24 @@ RSpec.describe 'Test Automations API' do
 
           script.reload
           expect(script.environment).to be == { 'TEST' => 'BLA' }
+        end
+
+        it 'updates repository_credentials' do
+          put "/api/v1/automations/#{script.id}", params: { "repository_credentials": 'new_passowrd' }, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(200)
+
+          script.reload
+          expect(script.repository_credentials).to eq('new_passowrd')
+          expect(script.repository_authentication_enabled).to eq(true)
+        end
+
+        it 'set repository_authentication_enabled flag to false if repository_credentials removed' do
+          put "/api/v1/automations/#{script.id}", params: { "repository_credentials": '' }, headers: { 'X-Auth-Token' => token_value }
+          expect(response.status).to eq(200)
+
+          script.reload
+          expect(script.repository_credentials).to eq('')
+          expect(script.repository_authentication_enabled).to eq(false)
         end
       end
 

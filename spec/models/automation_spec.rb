@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Automation, type: :model do
@@ -110,6 +112,32 @@ RSpec.describe Automation, type: :model do
       #   found = Automation.find_by_id chef_automation.id, chef_automation.project_id
       #   expect(found.type).to be == 'Chef'
       # end
+    end
+  end
+
+  describe 'credentials' do
+    context 'chef' do
+      it 'should set credentials' do
+        chef = FactoryGirl.build(:chef, repository_credentials: 'secret_password')
+        expect(chef.repository_credentials).to eq('secret_password')
+        expect(chef.repository_authentication_enabled).to eq(true)
+      end
+    end
+
+    context 'script' do
+      it 'should set credentials' do
+        script = FactoryGirl.build(:script, repository_credentials: 'secret_password')
+        expect(script.repository_credentials).to eq('secret_password')
+        expect(script.repository_authentication_enabled).to eq(true)
+      end
+    end
+
+    context 'removing' do
+      it 'should remove credentials and enabled flag' do
+        script = FactoryGirl.build(:script, repository_credentials: '')
+        expect(script.repository_credentials).to eq('')
+        expect(script.repository_authentication_enabled).to eq(false)
+      end
     end
   end
 

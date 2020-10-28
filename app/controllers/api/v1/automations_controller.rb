@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::AutomationsController < ApplicationController
   api_authentication_required rescope: false # do not rescope after authentication
   authorization_required
@@ -52,7 +54,7 @@ class Api::V1::AutomationsController < ApplicationController
   end
 
   def automation_sliced_params(type = nil)
-    permitted = %i[name repository repository_revision timeout]
+    permitted = %i[name repository repository_revision repository_credentials timeout]
     if type.nil?
       permitted.push(:type)
       type = params[:type]

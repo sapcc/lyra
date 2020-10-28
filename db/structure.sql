@@ -248,7 +248,8 @@ CREATE TABLE public.automations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     chef_version character varying,
-    debug boolean DEFAULT false
+    debug boolean DEFAULT false,
+    repository_credentials character varying
 );
 
 
@@ -522,6 +523,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160318135530'),
 ('20160613124044'),
 ('20170615083034'),
-('20190319091627');
-
-
+('20190319091627'),
+('20201027110342');
