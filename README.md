@@ -15,7 +15,7 @@ The automation service provides different types of automations. Currently the se
 
 - **repository_credentials:** credentials needed to access the repository (e.g.: git token or ssh key). This attribute can just be set and it is not being displayed by listing or getting automations
 
-- **repository_credentials_enabled:** this attribute it is set to true when a repository_credentials is set (default: false)
+- **repository_authentication_enabled:** this attribute it is set to true when a repository_credentials is set (default: false)
 
 - **repository_revision:** a branch, tag, or commit to be synchronized with the repository (default: master)
 
