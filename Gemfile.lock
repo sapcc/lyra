@@ -179,7 +179,7 @@ GEM
     ffi-yajl (2.3.1)
       libyajl2 (~> 1.2)
     fuzzyurl (0.9.0)
-    gitmirror (0.1.1)
+    gitmirror (0.2.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hashie (3.6.0)
