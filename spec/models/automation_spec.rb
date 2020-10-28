@@ -120,7 +120,7 @@ RSpec.describe Automation, type: :model do
       it 'should set credentials' do
         chef = FactoryGirl.build(:chef, repository_credentials: 'secret_password')
         expect(chef.repository_credentials).to eq('secret_password')
-        expect(chef.repository_credentials_enabled).to eq(true)
+        expect(chef.repository_authentication_enabled).to eq(true)
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe Automation, type: :model do
       it 'should set credentials' do
         script = FactoryGirl.build(:script, repository_credentials: 'secret_password')
         expect(script.repository_credentials).to eq('secret_password')
-        expect(script.repository_credentials_enabled).to eq(true)
+        expect(script.repository_authentication_enabled).to eq(true)
       end
     end
 
@@ -136,7 +136,7 @@ RSpec.describe Automation, type: :model do
       it 'should remove credentials and enabled flag' do
         script = FactoryGirl.build(:script, repository_credentials: '')
         expect(script.repository_credentials).to eq('')
-        expect(script.repository_credentials_enabled).to eq(false)
+        expect(script.repository_authentication_enabled).to eq(false)
       end
     end
   end

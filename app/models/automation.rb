@@ -1,29 +1,27 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: automations
 #
-#  id                             :integer          not null, primary key
-#  type                           :string           not null
-#  name                           :string           not null
-#  project_id                     :string
-#  repository                     :string
-#  repository_revision            :string
-#  tags                           :jsonb
-#  timeout                        :integer          default(3600), not null
-#  run_list                       :string           is an Array
-#  chef_attributes                :jsonb
-#  log_level                      :string
-#  path                           :string
-#  arguments                      :string           is an Array
-#  environment                    :jsonb
-#  created_at                     :datetime         not null
-#  updated_at                     :datetime         not null
-#  chef_version                   :string
-#  debug                          :boolean          default(FALSE)
-#  repository_credentials         :string
-#  repository_credentials_enabled :boolean          default(FALSE)
+#  id                     :integer          not null, primary key
+#  type                   :string           not null
+#  name                   :string           not null
+#  project_id             :string
+#  repository             :string
+#  repository_revision    :string
+#  tags                   :jsonb
+#  timeout                :integer          default(3600), not null
+#  run_list               :string           is an Array
+#  chef_attributes        :jsonb
+#  log_level              :string
+#  path                   :string
+#  arguments              :string           is an Array
+#  environment            :jsonb
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  chef_version           :string
+#  debug                  :boolean          default(FALSE)
+#  repository_credentials :string
 #
 # Indexes
 #
@@ -46,9 +44,8 @@ class Automation < ActiveRecord::Base
 
   # validate project_id really exists??
 
-  def repository_credentials=(new_repository_credentials)
-    self[:repository_credentials] = new_repository_credentials
-    self[:repository_credentials_enabled] = new_repository_credentials.blank? ? false : true
+  def repository_authentication_enabled
+    self[:repository_credentials].blank? ? false : true
   end
 
   def self.by_project_all(project, page = nil, per_page = nil)

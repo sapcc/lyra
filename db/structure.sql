@@ -250,8 +250,7 @@ CREATE TABLE public.automations (
     updated_at timestamp without time zone NOT NULL,
     chef_version character varying,
     debug boolean DEFAULT false,
-    repository_credentials character varying,
-    repository_credentials_enabled boolean DEFAULT false
+    repository_credentials character varying
 );
 
 
