@@ -27,6 +27,8 @@
 #
 #  index_automations_on_project_id  (project_id)
 #
+#
+require 'git_url'
 
 class Automation < ActiveRecord::Base
   include Pagination
@@ -35,11 +37,29 @@ class Automation < ActiveRecord::Base
   validates_length_of :name, minimum: 3, maximum: 256
   validates :tags, json: true, allow_blank: true
   validates :timeout, inclusion: { in: 1..86_400, message: 'must be within 1-86400' }
+  validates_presence_of :repository
+  validate :validate_repository
 
   has_many :runs, dependent: :nullify, inverse_of: :automation
 
   default_scope do
     order('created_at DESC')
+  end
+
+
+  def validate_repository
+    begin
+      url = GitURL.parse repository
+      if url.host == "github.wdf.sap.corp"
+        errors.add(:repository, "git:// protocol not supported for github.wdf.sap.corp") if url.scheme == "git"
+        errors.add(:repository_credentials, "required for github.wdf.sap.corp") if repository_credentials.blank?
+      end
+      if url.scheme == "ssh" && repository_credentials.blank?
+        errors.add(:repository_credentials, "required for ssh repository urls")
+      end
+    rescue Exception => e
+      errors.add(:repository, e.to_s)
+    end
   end
 
   # validate project_id really exists??

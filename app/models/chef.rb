@@ -31,7 +31,7 @@ class Chef < Automation
   include Defaults
   default :repository_revision, 'master'
 
-  validates_presence_of :repository, :repository_revision, :run_list
+  validates_presence_of :repository_revision, :run_list
   validates :repository, format: { with: URI::DEFAULT_PARSER.make_regexp }
   validates :chef_attributes, json: true
 

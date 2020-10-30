@@ -141,13 +141,25 @@ RSpec.describe Automation, type: :model do
     end
   end
 
-  describe 'script' do
+  describe 'repository' do
     it 'should validate the repository url' do
       expect(FactoryGirl.build(:script, repository: 'not_valid_url')).not_to be_valid
       expect(FactoryGirl.build(:script, repository: 'http://valid_url')).to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'not_valid_url')).not_to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'http://valid_url')).to be_valid
+    end
+
+    it 'should require credentials for ssh urls' do
+      expect(FactoryGirl.build(:chef, repository: 'git@github.com:bla/fasel.git')).not_to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'git@github.com:bla/fasel.git', repository_credentials: "SOMETHING")).to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'https://github.com/bla/fasel.git')).to be_valid
+    end
+
+    it 'should require credentials for github.wdf.sap.corp' do
+      expect(FactoryGirl.build(:chef, repository: 'https://github.wdf.sap.corp/bla/fasel.git')).not_to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'https://github.wdf.sap.corp/bla/fasel.git', repository_credentials: "SOMETHING")).to be_valid
+      expect(FactoryGirl.build(:chef, repository: 'git://github.wdf.sap.corp/bla/fasel.git', repository_credentials: "SOMETHING")).not_to be_valid
     end
   end
 
-  describe 'chef' do
-  end
 end

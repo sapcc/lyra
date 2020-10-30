@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe ScriptAutomationJob, type: :job do
-  before(:all) { Gitmirror.cache_dir = ::File.join(tmp_path, 'gitmirror') }
+  before(:all) { 
+    Gitmirror.cache_dir = ::File.join(tmp_path, 'gitmirror') 
+    GitURL.class_variable_get(:@@transports).push 'file'
+  }
   before(:each) { clean_tmp_path } # make sure previous git repositories are gone
 
   let(:agent) do

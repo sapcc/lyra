@@ -28,7 +28,7 @@
 #
 
 class Script < Automation
-  validates_presence_of :repository, :path
+  validates_presence_of :path
   validates :repository, format: { with: URI::DEFAULT_PARSER.make_regexp }
   validates :environment, json: true
 

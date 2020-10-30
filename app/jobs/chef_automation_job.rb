@@ -66,7 +66,7 @@ class ChefAutomationJob < ActiveJob::Base
       nodes: all_agents.map { |a| agent_to_node a }
     }
 
-    # run jobs in chunks to reduce ohai accessing parallel to data service
+    # run jobs in chunks to reduce ohai accessing metadata service in parallel
     jobs = []
     slice_size = 3
     agents.each_slice(slice_size).with_index do |agents_chunk, _index|
@@ -74,7 +74,6 @@ class ChefAutomationJob < ActiveJob::Base
       jobs += schedule_jobs(agents_chunk, 'chef', 'zero', chef_automation.timeout, chef_payload)
       run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
     end
-    run.log("Scheduled #{jobs.length} #{'job'.pluralize(jobs.length)}:\n" + jobs.join("\n"))
 
     run.update!(jobs: jobs, state: 'executing')
     # Schedule a lightweight job to track the run
