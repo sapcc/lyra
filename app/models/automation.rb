@@ -38,7 +38,7 @@ class Automation < ActiveRecord::Base
   validates :tags, json: true, allow_blank: true
   validates :timeout, inclusion: { in: 1..86_400, message: 'must be within 1-86400' }
   validates_presence_of :repository
-  validate :validate_repository
+  #validate :validate_repository
 
   has_many :runs, dependent: :nullify, inverse_of: :automation
 

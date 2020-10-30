@@ -5,6 +5,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -25,8 +26,6 @@ $$;
 
 
 SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: que_jobs; Type: TABLE; Schema: public; Owner: -
@@ -231,7 +230,7 @@ CREATE TABLE public.ar_internal_metadata (
 --
 
 CREATE TABLE public.automations (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     type character varying NOT NULL,
     name character varying NOT NULL,
     project_id character varying,
@@ -258,7 +257,6 @@ CREATE TABLE public.automations (
 --
 
 CREATE SEQUENCE public.automations_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -326,7 +324,7 @@ WITH (fillfactor='90');
 --
 
 CREATE TABLE public.runs (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     job_id character varying NOT NULL,
     automation_id integer,
     selector character varying,
@@ -347,7 +345,6 @@ CREATE TABLE public.runs (
 --
 
 CREATE SEQUENCE public.runs_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -441,6 +438,14 @@ ALTER TABLE ONLY public.runs
 
 
 --
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
 -- Name: index_automations_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -490,13 +495,6 @@ CREATE INDEX que_poll_idx ON public.que_jobs USING btree (queue, priority, run_a
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
-
-
---
 -- Name: que_jobs que_job_notify; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -525,3 +523,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170615083034'),
 ('20190319091627'),
 ('20201027110342');
+
+
