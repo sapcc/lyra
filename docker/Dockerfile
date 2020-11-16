@@ -1,4 +1,4 @@
-FROM ruby:2.4-alpine3.10
+FROM keppel.eu-de-1.cloud.sap/ccloud-dockerhub-mirror/library/ruby:2.4-alpine
 LABEL source_repository="https://github.com/sapcc/lyra"
 
 ENV FORCE_REBUILD=sucks5
