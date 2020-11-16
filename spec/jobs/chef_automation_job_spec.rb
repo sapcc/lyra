@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'git_url'
 
 RSpec.describe ChefAutomationJob, type: :job do
   before(:all) { 
@@ -50,30 +51,33 @@ EOT
       expect(TrackAutomationJob).to have_been_enqueued.with(token_value, job.job_id)
     end
 
-    it 'perfom with chunks' do
-      agents = mock_agent(7)
-      chef_automation = FactoryGirl.create(:chef, repository: 'file://' + remote_git_repo('test'))
+     it 'uses repository credentials for the same host with https' do
+      skip "missing TEST_REPO_HTTPS_URL/TEST_REPO_HTTPS_PASSWORD" unless ENV['TEST_REPO_HTTPS_URL'] && ENV['TEST_REPO_HTTPS_PASSWORD']
+      chef_automation = FactoryGirl.create(:chef, repository: ENV['TEST_REPO_HTTPS_URL'], repository_credentials: ENV['TEST_REPO_HTTPS_PASSWORD'])
       job = ChefAutomationJob.new(token_value, chef_automation, 'bla=fasel')
-      job.perform_sleep_time = 0.1
       run = FactoryGirl.create(:run, token: token_value, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
 
-      expect(job).to receive(:list_agents).with('bla=fasel').and_return(agents)
-      expect(job).to receive(:list_agents).with('', instance_of(Array)).and_return(agents)
+      expect(job).to receive(:list_agents).with('bla=fasel').and_return([agent])
+      expect(job).to receive(:list_agents).with('', instance_of(Array)).and_return([agent])
       expect(job).to receive(:artifact_published?).and_return false
-      expect(job).to receive(:create_artifact).and_return('http://url')
+      expect(job).to receive(:publish_artifact).and_return('http://url')
       expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: 'http://url'
-
-      jobs = []
-      agents.each_slice(3) do |chunk|
-        res = chunk.map(&:agent_id)
-        jobs += res
-        expect(job).to receive(:schedule_jobs).with(chunk, 'chef', 'zero', 3600, expected_payload).and_return(res)
-      end
-
+      expect(job).to receive(:schedule_jobs).with([agent], 'chef', 'zero', 3600, expected_payload).and_return(['a-job-jid'])
       ChefAutomationJob.perform_now(job)
-      run.reload
-      expect(run.state).to eq('executing')
-      expect(run.jobs).to eq(jobs)
+    end
+    it 'uses repository credentials for git references' do
+      skip "missing TEST_REPO_SSH_URL/TEST_REPO_SSH_KEY" unless ENV['TEST_REPO_SSH_URL'] && ENV['TEST_REPO_SSH_KEY']
+      chef_automation = FactoryGirl.create(:chef, repository: ENV['TEST_REPO_SSH_URL'], repository_credentials: ENV['TEST_REPO_SSH_KEY'], repository_revision: 'ssh')
+      job = ChefAutomationJob.new(token_value, chef_automation, 'bla=fasel')
+      run = FactoryGirl.create(:run, token: token_value, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
+
+      expect(job).to receive(:list_agents).with('bla=fasel').and_return([agent])
+      expect(job).to receive(:list_agents).with('', instance_of(Array)).and_return([agent])
+      expect(job).to receive(:artifact_published?).and_return false
+      expect(job).to receive(:publish_artifact).and_return('http://url')
+      expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: 'http://url'
+      expect(job).to receive(:schedule_jobs).with([agent], 'chef', 'zero', 3600, expected_payload).and_return(['a-job-jid'])
+      ChefAutomationJob.perform_now(job)
     end
   end
 
@@ -101,6 +105,32 @@ EOT
       expect(run.repository_revision).to eq('033e3e01379f8b81596c4367fdc91a8d22f47c85')
       expect(TrackAutomationJob).to have_been_enqueued.with(token_value, job.job_id)
     end
+  end
+
+  it 'perfom with chunks' do
+    agents = mock_agent(7)
+    chef_automation = FactoryGirl.create(:chef, repository: 'file://' + remote_git_repo('test'))
+    job = ChefAutomationJob.new(token_value, chef_automation, 'bla=fasel')
+    job.perform_sleep_time = 0.1
+    run = FactoryGirl.create(:run, token: token_value, project_id: chef_automation.project_id, automation: chef_automation, job_id: job.job_id)
+
+    expect(job).to receive(:list_agents).with('bla=fasel').and_return(agents)
+    expect(job).to receive(:list_agents).with('', instance_of(Array)).and_return(agents)
+    expect(job).to receive(:artifact_published?).and_return false
+    expect(job).to receive(:create_artifact).and_return('http://url')
+    expected_payload = hash_including run_list: %w{recipe[cookbook] role[a-role]}, recipe_url: 'http://url'
+
+    jobs = []
+    agents.each_slice(3) do |chunk|
+      res = chunk.map(&:agent_id)
+      jobs += res
+      expect(job).to receive(:schedule_jobs).with(chunk, 'chef', 'zero', 3600, expected_payload).and_return(res)
+    end
+
+    ChefAutomationJob.perform_now(job)
+    run.reload
+    expect(run.state).to eq('executing')
+    expect(run.jobs).to eq(jobs)
   end
 
   it 'fails when an agent is offline' do

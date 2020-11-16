@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'git_url'
 
 RSpec.describe ScriptAutomationJob, type: :job do
   before(:all) { 

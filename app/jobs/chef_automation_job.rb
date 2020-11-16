@@ -3,6 +3,7 @@
 require 'gitmirror'
 require 'active_support/number_helper/number_to_human_size_converter'
 require 'berkshelf/version'
+require 'git_url'
 
 class ChefAutomationJob < ActiveJob::Base
   include PrometheusMetrics
@@ -52,7 +53,7 @@ class ChefAutomationJob < ActiveJob::Base
         artifact_url(artifact_name(sha))
       else
         run.log "Creating artifact for revision #{sha}"
-        create_artifact repo, sha
+        create_artifact chef_automation, repo, sha
       end
     end
 
@@ -82,7 +83,7 @@ class ChefAutomationJob < ActiveJob::Base
 
   private
 
-  def create_artifact(repo, sha)
+  def create_artifact(chef_automation, repo, sha)
     Dir.mktmpdir do |dir|
       checkout_dir = ::File.join dir, 'repo'
       tarball = ::File.join dir, artifact_name(sha)
@@ -90,9 +91,24 @@ class ChefAutomationJob < ActiveJob::Base
       if File.exist?(::File.join(checkout_dir, 'Berksfile'))
         @run.log("Berksfile detected. Running berks vendor. Using Berkshelf version #{Berkshelf::VERSION}\n")
         vendor_dir = ::File.join dir, 'berks'
+        if chef_automation.repository_credentials.present?
+          repo_uri = GitURL.parse repo.url
+          case repo_uri.scheme
+          when "https"
+            #for https automations against a github instance we inject the credentials into git to support cookbook references in the Berksfile
+            if repo_uri.host.include? 'github'
+              ::File.open(::File.join(dir, '.gitconfig'), 'w') {|f| f.write(%{[credential "https://#{repo_uri.host}"]\n\tusername = #{chef_automation.repository_credentials}\n[core]\n\taskPass = #{ENV.fetch('GIT_EMPTY_ASKPASS', '/bin/true')}}) }
+            end
+          when "ssh"
+            private_key = ::File.join dir, "key"
+            ::File.open(private_key, 'w', 0600) { |f|f.write chef_automation.repository_credentials }
+            ::File.open(::File.join(dir, '.gitconfig'), 'w') {|f| f.write(%{[core]\n\tsshCommand = ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o BatchMode=yes -i #{private_key}}) }
+          end
+
+        end
         # do a berks package
-        Bundler.with_clean_env do
-          execute(ENV.fetch('BERKS_BIN', 'berks'), 'vendor', "#{vendor_dir}/cookbooks", '--berksfile', "#{checkout_dir}/Berksfile")
+        Bundler.with_original_env do
+          execute(ENV.fetch('BERKS_BIN', 'berks'), 'vendor', "#{vendor_dir}/cookbooks", '--berksfile', "#{checkout_dir}/Berksfile", {"HOME"=> dir})
           %w[roles chef/roles].each do |r|
             roles_dir = File.join checkout_dir, r
             if Dir.exist? roles_dir

@@ -34,7 +34,11 @@ module AutomationBase
   end
 
   def execute(command, *args)
-    out, status = Open3.capture2e(command, *args)
+    env={}
+    if args.last.is_a?(Hash)
+      env = args.pop
+    end
+    out, status = Open3.capture2e(env, command, *args)
     raise "Executing [#{command} #{args.join(" ")}] failed (#{status}):\n#{out}" if status.exitstatus != 0
     out
   end
