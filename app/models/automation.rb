@@ -38,7 +38,7 @@ class Automation < ActiveRecord::Base
   validates :tags, json: true, allow_blank: true
   validates :timeout, inclusion: { in: 1..86_400, message: 'must be within 1-86400' }
   validates_presence_of :repository
-  #validate :validate_repository
+  validate :validate_repository
 
   has_many :runs, dependent: :nullify, inverse_of: :automation
 
@@ -50,6 +50,9 @@ class Automation < ActiveRecord::Base
   def validate_repository
     begin
       url = GitURL.parse repository
+      if url.password.present?
+        errors.add(:repository, "Specifying the password in the repository url is forbidden. Please use the dedicated credential field.")
+      end
       if url.host == "github.wdf.sap.corp"
         errors.add(:repository, "git:// protocol not supported for github.wdf.sap.corp") if url.scheme == "git"
         errors.add(:repository_credentials, "required for github.wdf.sap.corp") if repository_credentials.blank?
