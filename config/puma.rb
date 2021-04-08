@@ -5,7 +5,7 @@ threads_count = Integer(ENV['MAX_THREADS'] || 10)
 threads threads_count, threads_count
 
 # http keep alive idle timeout
-persistent_timeout Integer(ENV['PERSISTENT_TIMEOUT'] || 101 )
+persistent_timeout Integer(ENV['PERSISTENT_TIMEOUT'] || 61 )
 
 # rackup      DefaultRackup
 port        ENV['PORT'] || 3000
