@@ -66,7 +66,6 @@ To run the application wiht bakcground jobs run also Que:
 
     bundle exec que --log-internals    
 
-
 ---
 
 ##### Key Value Pair:
