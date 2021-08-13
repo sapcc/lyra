@@ -64,10 +64,10 @@ To run the application wiht bakcground jobs run also Que:
 
 ---
 
-##### Key Value Pair:
+##### Key Value Pair
 
 Key-value pairs are separated by ':' or '='. Start a new pair by hitting the Enter key. You can also copy and paste a string containing tags following this pattern: 'key1:value1¡key2=value2...'
 
-##### Array of Strings:
+##### Array of Strings
 
 Array of strings are separated by ','. Start a new entry by hitting the Enter key. You can also copy and paste a string containing strings following this pattern: 'value1¡value2...'
