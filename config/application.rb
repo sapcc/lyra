@@ -39,7 +39,6 @@ module MonsoonAutomation
     config.middleware.insert_after ActionDispatch::DebugExceptions, Prometheus::Client::Rack::Collector do |env|
       {
         method: env['REQUEST_METHOD'].downcase,
-        host: env['HTTP_HOST'].to_s,
         # just take the first component of the path as a label
         path: env.fetch('REQUEST_PATH', '')[0, env.fetch('REQUEST_PATH', '').index('/', 1) || 20],
         controller: env.fetch('action_dispatch.request.path_parameters', {}).fetch(:controller, ''),
