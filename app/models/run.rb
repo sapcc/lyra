@@ -41,7 +41,6 @@ class Run < ActiveRecord::Base
 
   validates_presence_of :owner, :automation
   validates_presence_of :token, on: :create, if: proc { job_id.blank? }
-  validates_associated :automation
 
   before_save :update_project_id
   before_create :create_job, if: proc { job_id.blank? }
