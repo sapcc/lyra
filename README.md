@@ -54,7 +54,7 @@ The Lyra API documenation is shipped inline with the service. You can access the
 
 ## Lyra CLI
 
-[Lyra CLI](https://github.com/sapcc/lyra-cli) enables you to interact with the SAPCC automation services using commands in your command-line shell. It is currently supported on Windows, Linux and Mac.
+[Lyra CLI](https://github.com/sapcc/lyra-cli) enables you to interact with the SAPCC automation services using commands in your command-line shell. It is currently supported on Windows, Linux and Mac (also M1 architecture).
 
 ## Development setup
 
