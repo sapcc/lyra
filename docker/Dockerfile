@@ -7,7 +7,7 @@ ENV FORCE_REBUILD=sucks5
 RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev openssh-client
 
 # install bundler before gems to avoid error "Ignoring <gem> because its extensions are not built"
-RUN gem update --system && gem install bundler -v 2.0.1
+RUN gem update --system && gem install bundler -v 2.2.25
 ENV BUNDLER_VERSION 2.0.1
 
 RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
@@ -23,6 +23,7 @@ RUN apk --no-cache add build-base postgresql-dev --virtual .builddeps \
       && gem install json -v 1.8.6 \
       && gem install libyajl2 -v 1.2.0 \
       && gem install ffi-yajl -v 2.3.1 \
+      && gem install mimemagic -v 0.3.10 \
       && runDeps="$( \
       scanelf --needed --nobanner --recursive /usr/local \
         | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
