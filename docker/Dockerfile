@@ -4,7 +4,7 @@ LABEL source_repository="https://github.com/sapcc/lyra"
 ENV FORCE_REBUILD=sucks5
 
 # pg_dump is part the "postgresql" server package on alpine.
-RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev openssh-client
+RUN apk --no-cache add git curl tzdata postgresql postgresql-client libarchive-dev openssh-client shared-mime-info
 
 # install bundler before gems to avoid error "Ignoring <gem> because its extensions are not built"
 RUN gem update --system && gem install bundler -v 2.2.25
