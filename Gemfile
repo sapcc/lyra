@@ -26,10 +26,10 @@ gem 'monsoon-openstack-auth',
 gem 'active_model_serializers', '>= 0.10.0.rc4'
 
 # Asynchronous jobs via postgres
-gem 'que', '~>1.0.0.beta3'
+# before upgrading to version 1.3.0 there is an action required see here
+# https://github.com/que-rb/que/blob/master/CHANGELOG.md#130-2022-02-25
+gem 'que', '1.2.0'
 gem 'que-web' # at some point this should be remove and started standalone
-# You must use the master branch of Sinatra for que-web. See https://github.com/sinatra/sinatra/issues/1071
-gem 'sinatra', git: 'https://github.com/sinatra/sinatra'
 
 # arc client
 gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'

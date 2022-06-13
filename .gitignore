@@ -29,3 +29,4 @@ features/screenshots
 /website/.bundle
 /vendor/bundle
 /public/swagger.json
+.vscode
