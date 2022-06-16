@@ -58,9 +58,17 @@ The Lyra API documenation is shipped inline with the service. You can access the
 
 ## Development setup
 
-To run the application wiht bakcground jobs run also Que:
+Run rails:
 
-    bundle exec que --log-internals
+```bash
+bundle exec rails server -p 3000
+```
+
+To run the application with bakcground jobs run also Que:
+
+```bash
+bundle exec que --log-internals
+```
 
 ---
 
