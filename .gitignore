@@ -30,3 +30,5 @@ features/screenshots
 /vendor/bundle
 /public/swagger.json
 .vscode
+*/.DS_Store
+.DS_Store

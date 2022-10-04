@@ -1,6 +1,11 @@
 # workers Integer(ENV['WEB_CONCURRENCY'] || 2)
 # preload_app!
 
+# https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#threads
+# Puma allows you to configure your thread pool with a min and max setting, controlling the number of 
+# threads each Puma instance uses. The min threads setting allows your application to spin down resources 
+# when not under load. This feature is not needed on Heroku as your application can consume all of the 
+# esources on a given dyno. We recommend setting min to equal max.
 threads_count = Integer(ENV['MAX_THREADS'] || 10)
 threads threads_count, threads_count
 
