@@ -163,7 +163,7 @@ class ChefAutomationJob < ActiveJob::Base
     chef_version = '14' if chef_version.blank? || chef_version.to_s.casecmp('latest').zero?
 
     payload = { chef_version: chef_version }
-    payload[:omnitruck_url] = URI.join(omnitruck_url, '/chef/metadata').to_s if omnitruck_url
+    payload[:omnitruck_url] = URI.join(omnitruck_url, '/stable/chef/metadata').to_s if omnitruck_url
 
     jids = agents.find_all { |a| a.facts['agents']['chef'] == 'disabled' }.map do |agent|
       # TODO: handle individual errors
