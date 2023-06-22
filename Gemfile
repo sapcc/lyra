@@ -37,7 +37,7 @@ gem 'arc-client', git: 'https://github.com/sapcc/arc-client.git'
 gem 'gitmirror'
 
 # Prometheus instrumentation
-gem 'prometheus-client', '~>0.6.0'
+gem 'prometheus-client', '~>0.10.0'
 
 # Avoid g++ dependency https://github.com/knu/ruby-domain_name/issues/3
 # unf is pulled in by the ruby-arc-client
