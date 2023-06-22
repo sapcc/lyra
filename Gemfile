@@ -28,7 +28,7 @@ gem 'active_model_serializers', '>= 0.10.0.rc4'
 # Asynchronous jobs via postgres
 # before upgrading to version 1.3.0 there is an action required see here
 # https://github.com/que-rb/que/blob/master/CHANGELOG.md#130-2022-02-25
-gem 'que', '1.2.0'
+gem 'que', '1.4.1'
 gem 'que-web' # at some point this should be remove and started standalone
 
 # arc client
