@@ -76,7 +76,7 @@ group :development, :test do
   gem 'json_matchers'
   gem 'factory_girl_rails'
   # upgraded because of error https://github.com/DatabaseCleaner/database_cleaner/issues/476
-  gem 'database_cleaner', '~>1.6.0'
+  gem 'database_cleaner', '~>1.99.0'
   gem 'capybara'
 
   # generate swagger.json from specs
