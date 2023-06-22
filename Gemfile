@@ -16,7 +16,7 @@ gem 'rails_stdout_logging', require: 'rails_stdout_logging/rails'
 
 # Database
 gem 'pg', '~> 0.15'
-gem 'will_paginate', '~> 3.0.6'
+gem 'will_paginate', '~> 3.3.0'
 
 # Openstack
 gem 'monsoon-openstack-auth',
