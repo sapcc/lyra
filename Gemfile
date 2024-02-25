@@ -64,7 +64,7 @@ group :development, :test do
   gem 'quiet_safari'
   # load .env
   gem 'dotenv-rails'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen', '>= 3.0.5', '< 3.9.1'
   gem 'spring'
 
   # debugging
