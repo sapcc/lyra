@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 ruby '2.4.10'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.2.1'
+gem 'rails', '6.1.7.7'
 # removed rails-api because of https://github.com/rails-api/rails-api/issues/218
 
 gem 'puma'
