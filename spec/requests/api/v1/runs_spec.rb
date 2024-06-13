@@ -163,6 +163,12 @@ RSpec.describe 'Test Run API' do
         expect(response).to match_response_schema('run')
       end
 
+      it 'creates a run for an existing github.wdf.sap.corp automation without authentication' do
+        a = FactoryGirl.build(:chef, project_id: project_id, repository: 'git://github.wdf.sap.corp').tap { |a| a.save(validate:false) }
+        post '/api/v1/runs', params: { automation_id: a.id }, headers: { 'X-Auth-Token' => token_value }
+        expect(response.status).to eq(201)
+      end
+
       it 'ensures runs are only created for automations in the same project' do
         post '/api/v1/runs', params: { automation_id: FactoryGirl.create(:chef).id }, headers: { 'X-Auth-Token' => token_value }
         expect(response.status).to eq(404)
